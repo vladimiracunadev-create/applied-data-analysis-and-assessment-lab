@@ -9,6 +9,14 @@ los archivos de verdad.
 > los metadatos del portal de datos abiertos. Los archivos de origen no se versionan;
 > sí se versionan el registro de procedencia y las tablas de resultado.
 
+> **¿Vienes a aprender a hacerlo?** Empieza por el
+> **[cuaderno de trabajo](CUADERNO.md)**: los doce pasos con el código de Pandas, la
+> salida que devuelve de verdad, y la fórmula de Excel equivalente. Se lee de arriba
+> abajo sin abrir nada más.
+>
+> Este README cuenta **qué se encontró**, que es otra cosa: sirve para auditar el
+> resultado, no para aprender a producirlo.
+
 Metadatos completos: [`case.json`](case.json). Procedencia:
 [`procedencia.json`](procedencia.json).
 

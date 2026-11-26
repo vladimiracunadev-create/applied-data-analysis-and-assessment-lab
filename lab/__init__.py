@@ -1,6 +1,7 @@
 """Núcleo del Applied Data Analysis and Assessment Lab.
 
 Componentes
+    `cuaderno`    cuadernos de trabajo: Pandas, su salida real y el equivalente Excel.
     `core`        utilidades de lectura, perfilado, cruce auditado y exportación.
     `contracts`   contratos de datos y validación con informe de hallazgos.
     `metrics`     indicadores, estadística descriptiva y razones seguras.
@@ -38,6 +39,7 @@ __all__ = [
     "catalog",
     "console",
     "contracts",
+    "cuaderno",
     "core",
     "dates",
     "excel",
