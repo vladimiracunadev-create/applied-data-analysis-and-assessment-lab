@@ -109,7 +109,10 @@ representaciones de la misma cosa, y compararlas detecta filas corruptas sin
 necesidad de ninguna fuente externa. Es el mismo principio de la validación
 Pandas ↔ SQL, aplicado a geometría.
 
-**Estado:** disponible.
+**Estado:** **resuelto** como parte de
+[`cases/correspondencia_metro`](../cases/correspondencia_metro/README.md), que lo
+necesitaba para conciliar los dos inventarios. La validación interna de P01 se
+amplía allí a cuatro detectores, cada uno con su punto ciego medido.
 
 ### P04. Normalizar comuna y entidad para poder agrupar
 
@@ -248,17 +251,30 @@ se interpretan y quedan fijados como prueba.
 **La pregunta.** ¿Qué estaciones de Metro tienen paradas de bus a menos de 200 metros,
 y cuántos servicios distintos las sirven?
 
-**Datos.** GTFS (`route_type = 1` son las 7 líneas de Metro; las paradas de bus son
-`location_type = 0`) + el archivo de Metro de bip! (143 filas con coordenadas).
+**Datos.** GTFS (`route_type = 1` son las 7 líneas de Metro, `location_type = 1` sus
+126 estaciones) + el archivo de Metro de bip! (143 filas con coordenadas).
 
-**Tecnología.** Proximidad + agregación por estación.
+**Tecnología.** Conciliación de inventarios con grano distinto, dos criterios de
+emparejamiento independientes —nombre normalizado y proximidad— y auditoría de la
+cobertura de los propios detectores de error.
 
-**Qué enseña.** Cruzar dos fuentes que describen la misma realidad con
-identificadores distintos, y validar una contra la otra: las estaciones del GTFS y las
-del archivo de bip! deberían coincidir en ubicación. Donde no coincidan, hay algo que
-explicar.
+**Qué enseña.** Que **toda comprobación de calidad tiene un punto ciego y el punto
+ciego es medible**. La validación de coordenadas de P01 compara las dos
+representaciones de cada fila y no puede ver un error que afecte a las dos por igual:
+once estaciones están a más de 500 m de donde el GTFS las pone y ninguna quedó
+marcada. Y que **tres de los cuatro detectores no necesitan ninguna fuente externa**:
+el archivo podía delatar sus propios errores.
 
-**Estado:** disponible.
+**El resultado.** Las **126** estaciones tienen al menos una parada de bus a 200 m —el
+100 %—, con una mediana de **13 servicios** distintos y un máximo de 55 en Santa Lucía.
+El grano cuadra con una identidad que hay que escribir: 126 − 17 combinaciones + 34
+filas de desdoble = 143. Y la advertencia: calculada con las coordenadas de bip! en
+lugar de las del GTFS, la respuesta cambia en **48 de 125 estaciones**.
+
+**Estado:** **resuelto** —
+[`cases/correspondencia_metro`](../cases/correspondencia_metro/README.md). Resuelve
+además P03, que pedía la validación cruzada de coordenadas: la amplía de la validación
+interna de P01 a cuatro detectores con su punto ciego declarado.
 
 ---
 
@@ -413,6 +429,9 @@ orden por rendimiento es:
 6. **P09** (cobertura nocturna) — **resuelto**: léalo al final. Es el más difícil de
    los resueltos y el único cuya respuesta es un intervalo en lugar de una cifra. Si
    en una evaluación le toca un indicador con datos faltantes, este es el patrón.
-7. **P16** (informe) — porque la interpretación se corrige aparte del cálculo.
+7. **P10** (conciliación de inventarios) — **resuelto**: léalo si el ejercicio incluye
+   dos archivos que describen lo mismo. Enseña a nombrar el grano antes de cruzar, y a
+   preguntarle a un control de calidad qué no mira.
+8. **P16** (informe) — porque la interpretación se corrige aparte del cálculo.
 
 El resto amplía, no prepara.

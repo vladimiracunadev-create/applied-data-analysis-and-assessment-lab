@@ -1,0 +1,13 @@
+stop_id,stop_name,paradas_de_bus,servicios_distintos
+SL,Santa Lucía,9,55
+LM,La Moneda,7,50
+EL,Estación Central,11,47
+LH-HE,Los Héroes,13,44
+CH-UCH,Universidad de Chile,7,43
+PM,Plaza de Maipú,10,38
+BA-BQ,Baquedano,6,37
+RP,República,6,37
+AH,San Alberto Hurtado,7,36
+LA,Unión Latinoamericana,5,35
+LC-LCI,La Cisterna,11,35
+UC,Universidad Católica,6,35

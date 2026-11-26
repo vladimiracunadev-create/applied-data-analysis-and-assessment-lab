@@ -1,0 +1,11 @@
+indicador,valor,unidad,definicion
+estaciones_a_conciliar,126.0,estaciones,Las del GTFS
+cruzan_por_nombre,125.0,estaciones,Con el sufijo de línea quitado y el nombre normalizado
+cruzan_por_nombre_pct,99.21,%,
+sin_par_por_nombre,1.0,estaciones,Un cruce solo por nombre las perdería en silencio
+los_dos_criterios_coinciden,113.0,estaciones,El par por nombre es además el más cercano geográficamente
+los_criterios_discrepan,13.0,estaciones,Donde hay que mirar: o el nombre o la coordenada está mal
+desvio_mediano_m,67.4,m,"Entre las dos fuentes, donde cruzan por nombre"
+desvio_maximo_m,13147.7,m,El peor caso usando la MEDIANA de las filas de la estación
+desvio_maximo_peor_fila_m,26243.3,m,El mismo caso usando la peor de sus filas. La diferencia con la cifra anterior es lo que el agregado por mediana esconde
+estaciones_con_filas_discrepantes,4.0,estaciones,"Sus filas de bip! no coinciden entre sí, de modo que cualquier agregado de sus coordenadas inventa un punto intermedio"

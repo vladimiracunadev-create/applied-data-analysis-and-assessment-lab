@@ -1,0 +1,111 @@
+{
+  "slug": "correspondencia_metro",
+  "titulo": "Conciliar dos inventarios de la misma realidad, y descubrir que cada comprobación tiene su punto ciego",
+  "disciplina": "gestion-de-datos",
+  "industria": "transporte",
+  "dificultad": "avanzado",
+  "metodologia": "conciliación de inventarios con grano distinto, dos criterios de emparejamiento independientes, y auditoría de la cobertura de los propios detectores de error",
+  "competencias": [
+    "cruce-consolidacion",
+    "calidad-datos",
+    "limpieza-normalizacion",
+    "validacion-independiente",
+    "gobernanza-datos",
+    "agregacion-indicadores",
+    "comunicacion-resultados",
+    "reproducibilidad",
+    "apoyo-decision"
+  ],
+  "estado": "implementado",
+  "tiempo_sugerido_min": 150,
+  "contexto": "Dos archivos públicos describen la misma realidad —las estaciones de Metro de Santiago— con identificadores distintos y sin ningún campo en común. El feed GTFS del DTPM trae 126 estaciones con location_type 1; el Excel de bip!, 143 filas. Ninguno de los dos declara su grano, y la diferencia de 17 filas parece un problema de completitud hasta que se nombra.",
+  "problema": "Determinar qué estaciones de Metro tienen paradas de bus a menos de 200 metros y cuántos servicios distintos las sirven, lo que exige antes conciliar los dos inventarios y decidir cuál de las dos fuentes provee la coordenada de cada estación.",
+  "objetivos": [
+    "Establecer y documentar el grano de cada fuente antes de cualquier cruce.",
+    "Conciliar los dos inventarios con dos criterios independientes —nombre normalizado y proximidad— y comparar sus resultados entre sí.",
+    "Medir qué esconde reducir el grano promediando coordenadas, en lugar de aplicarlo en silencio.",
+    "Auditar la cobertura del propio detector de errores de P01: qué clase de error no puede ver, y cuántos de esos hay.",
+    "Construir tres detectores adicionales, de los cuales dos no necesitan ninguna fuente externa.",
+    "Responder la pregunta de correspondencia de bus con la fuente elegida, y medir cuánto cambia la respuesta si la provee la otra."
+  ],
+  "restricciones": [
+    "Dos horas y media de trabajo.",
+    "El entorno mínimo del laboratorio: sin dependencias geoespaciales.",
+    "No se incorpora ninguna tercera fuente: la conciliación se resuelve con los dos archivos y con lo que cada uno dice de sí mismo.",
+    "El emparejamiento por similitud de cadenas queda descartado: un acierto por casualidad no se distingue de un acierto.",
+    "Ninguna de las dos fuentes se versiona: el feed tiene licencia no verificada y los Excel son CC BY-NC 2.0."
+  ],
+  "fuentes": [
+    "Estaciones, paradas y servicios: feed GTFS estático de la Red Metropolitana de Movilidad, DTPM, archivo GTFS_20261114_v2.zip descargado el 26 de noviembre de 2026 de https://www.dtpm.cl/index.php/gtfs-vigente, sha256 ff0cda445cc4…, 12 829 198 bytes. LICENCIA NO VERIFICADA: el sitio no publica condiciones de uso.",
+    "Inventario de estaciones de Metro con coordenadas: dataset de bip! del Ministerio de Transportes, de acceso público en el portal de datos abiertos datos.gob.cl, con licencia Creative Commons Atribución-NoComercial 2.0, verificada. Consolidado por el caso bip_lugares_carga (P01).",
+    "El radio de 200 m lo fija el enunciado de P10 en docs/problemas-de-la-instancia.md. No es una norma publicada: describe una caminata dentro de una combinación, que es otra cosa que los 300 m de P08, y por eso se declara aparte."
+  ],
+  "datasets": [
+    "No versiona datos de terceros. Versiona catorce tablas agregadas en cases/correspondencia_metro/resultados/, entre ellas la correspondencia de bus de las 126 estaciones.",
+    "Los insumos se obtienen con: python scripts/fetch_data.py gtfs-red-movilidad bip-metro bip-puntos bip-centros-alto-estandar bip-centros-estandar bip-retail"
+  ],
+  "diccionario": "clave: nombre de estación normalizado, que es la llave de conciliación construida. nombre_estacion: el nombre de bip! sin el sufijo de línea; nombre conserva el original para poder auditar la transformación. id_compuesto: si el stop_id del GTFS lleva guion, lo que delata una estación de combinación. desvio_m: distancia entre la coordenada del GTFS y la mediana de las filas de bip! de esa estación. dispersion_interna_m: distancia máxima de una fila de bip! a la mediana de sus hermanas; es lo que el agregado esconde. desvio_peor_fila_m: el desvío que resultaría de tomar la peor fila en lugar de la mediana. coinciden_los_criterios: si el par por nombre es además el más cercano geográficamente.",
+  "supuestos": [
+    "Una estación del GTFS es una fila con location_type 1. Las paradas de andén, que son dos por estación y por sentido, no se cuentan: la jerarquía de la especificación existe para no tener que adivinar esto.",
+    "El sufijo de línea del nombre de bip! es el patrón declarado al final del nombre. No se deduce por parecido, para que una estación que legítimamente termine en algo similar no quede mutilada en silencio.",
+    "Dos filas de bip! que nombran la misma estación describen el mismo lugar. Donde no lo hacen, hay un error, y es lo que mide el detector 2.",
+    "La coordenada del GTFS es la que se usa para responder la pregunta. No se afirma que sea la verdadera: se sostiene algo más modesto y suficiente, que es que las dos fuentes discrepan y que en los casos inspeccionados la DIRECCIÓN que trae el propio Excel coincide con la posición del GTFS y no con su propia coordenada.",
+    "Una estación grande tiene accesos a unos 200 m del punto que la representa; a 500 m ya no es eso, y por eso el umbral del detector externo está ahí.",
+    "La referencia de comuna del detector 3 es la mediana y no el promedio, porque una fila a 26 km arrastra un promedio y ciega al detector contra sí mismo."
+  ],
+  "metodologias_alternativas": [
+    "Dos criterios independientes y la comparación entre ellos, que es lo implementado: con un solo criterio no hay con qué detectar un emparejamiento equivocado.",
+    "Emparejamiento por similitud de cadenas (lab.textual.similarity): descartado porque produce aciertos por casualidad que no se distinguen de los aciertos, y porque con 126 nombres el sufijo declarado resuelve el 99,2 % sin ambigüedad.",
+    "Cruce solo por proximidad: resolvería el caso del nombre cambiado, y aceptaría en silencio un par equivocado donde dos estaciones son vecinas. Doce estaciones de este archivo tienen un vecino más cercano que su propio par.",
+    "Cruce solo por nombre: es lo que haría la mayoría, y perdería una estación sin avisar y aceptaría como buenas las once coordenadas equivocadas.",
+    "Una tabla de correspondencia escrita a mano entre los dos inventarios: defendible con 126 filas y es lo que hay que hacer si los nombres divergen más. Descartada porque no sobrevive a una nueva versión del feed y porque esconde la medición de cuánto coinciden."
+  ],
+  "implementaciones": [
+    "cases/correspondencia_metro/solution.py — resolución completa.",
+    "cases/bip_lugares_carga/solution.py — la consolidación de los cinco Excel y el umbral de coordenada sospechosa, reutilizados.",
+    "lab/textual.py — normalize_key para construir la llave de conciliación.",
+    "lab/geo.py — haversine por bloques y búsqueda del punto más cercano.",
+    "lab/metrics.py — indicator_table, que obliga a declarar unidad y definición de cada cifra."
+  ],
+  "soluciones": "cases/correspondencia_metro/solution.py, documentada paso a paso en el README del caso. Se ejecuta con: python -m cases.correspondencia_metro.solution",
+  "resultados": "cases/correspondencia_metro/resultados/ con catorce tablas. La respuesta: las 126 estaciones de Metro tienen al menos una parada de bus a 200 m —el 100 %—, con una mediana de 13 servicios distintos por estación, P90 de 34 y máximo de 55 en Santa Lucía. El hallazgo colateral, que vale más: 11 estaciones están a más de 500 m de donde el GTFS las pone, hasta 13,1 km, y NINGUNA fue detectada por la validación interna de coordenadas de P01. Calculada con las coordenadas de bip! en lugar de las del GTFS, la respuesta cambia en 48 de 125 estaciones —el 38,4 %— y tres estaciones aparecerían sin ninguna parada de bus cerca.",
+  "validaciones": [
+    "El grano se comprueba con una identidad: estaciones del GTFS − combinaciones + filas con sufijo debe dar las filas de bip!. Para el archivo real, 126 − 17 + 34 = 143.",
+    "Quitar el sufijo de línea debe dejar exactamente tantas estaciones distintas como trae el GTFS: 126 y 126.",
+    "Los dos criterios de emparejamiento se calculan por separado y se comparan: coinciden en 113 de 126 estaciones, y las 13 discrepancias se listan una por una con su causa.",
+    "El detector 2 se prueba con dos filas hermanas separadas 10 km exactos, construidas con lab.geo.grados_por_km, y con dos filas en el mismo punto que deben dar separación cero.",
+    "Se prueba que la mediana de dos filas separadas 10 km produce un desvío de 5 km y que el informe publica además el desvío de la peor fila, que es 10 km: la diferencia entre las dos cifras es lo que el agregado esconde.",
+    "Se prueba el punto ciego de cada detector: que el detector 2 no vea la estación de una sola fila, y que el detector 4 sí la vea.",
+    "El umbral entre filas hermanas se comprueba igual al de P01, para que el mismo tipo de juicio use el mismo criterio en los dos casos.",
+    "La correspondencia de bus se prueba con paradas colocadas a 100 m y a 1 km de la estación, y con dos paradas del mismo servicio para comprobar que un servicio no se cuenta dos veces.",
+    "Las pruebas no usan los datos reales: construyen un inventario sintético de cuatro estaciones con todas las distancias calculables a mano."
+  ],
+  "interpretacion": "La respuesta a la pregunta de P10 es cómoda —el 100 % de las estaciones tiene bus cerca— y no es lo que el caso enseña. Lo que enseña es que una comprobación de calidad solo encuentra la clase de error que fue diseñada para encontrar, y que esa limitación es medible. P01 validó las coordenadas comparando las dos representaciones de cada fila y encontró tres errores en 1 928: una comprobación correcta, con un punto ciego del tamaño exacto de un error que afecte a las dos representaciones por igual. Once estaciones de Metro están a más de 500 m de donde el GTFS las pone, hasta 13,1 km, y ninguna quedó marcada. Lo importante es que tres de los cuatro detectores de este caso no necesitan ninguna fuente externa: el archivo podía delatar sus propios errores —comparando las filas hermanas de una misma estación, y comparando cada coordenada con la comuna que la propia fila declara— y nadie le hizo esas preguntas. De ahí la lección práctica: antes de confiar en un informe de calidad hay que preguntarle qué no mira. Y una advertencia sobre el resultado principal: la elección de qué fuente provee la coordenada, que casi nunca se declara porque las dos son oficiales, decide el 38,4 % de las filas del informe de correspondencia.",
+  "limitaciones": [
+    "No se demuestra que el GTFS tenga razón. Lo que se sostiene es que las dos fuentes discrepan y que, en los dos casos inspeccionados a mano, la dirección postal que trae el propio Excel coincide con la posición del GTFS y no con su propia coordenada. Eso es evidencia, no prueba, y queda declarado como tal.",
+    "El detector 3 es una señal y no un veredicto. A 3 km marca 227 locales, que son demasiados para ser todos errores en comunas extensas; a 10 km marca 8. La curva completa se publica para que la elección del umbral quede a la vista.",
+    "La correspondencia es geométrica. No se considera si el acceso a la estación está del lado correcto de la avenida, si hay un cruce semaforizado, ni si la combinación está habilitada tarifariamente.",
+    "Los servicios se cuentan sobre la oferta programada del feed. Un recorrido que pasa por la parada no implica que el pasajero pueda usarlo en ese sentido ni a cualquier hora.",
+    "El radio de 200 m lo fija el enunciado del problema, no una norma publicada.",
+    "Las 143 filas de bip! son el archivo de Metro. Las estaciones de la Línea 7 y las extensiones en construcción no aparecen en ninguna de las dos fuentes.",
+    "Describe el feed del 14 de noviembre de 2026 y los Excel del 26 de noviembre de 2026."
+  ],
+  "conocimiento_adquirido": [
+    "Antes de cruzar dos inventarios hay que nombrar el grano de cada uno. 126 contra 143 no es un problema de completitud: una fuente tiene una fila por estación y la otra una por estación y línea, y la identidad 126 − 17 + 34 = 143 lo demuestra.",
+    "Cuando el grano difiere, la fuente suele delatarlo en un campo inesperado: en el GTFS, con un identificador compuesto por guion; en el Excel, con la línea pegada al texto del nombre porque el campo de código no identifica nada.",
+    "Un solo criterio de emparejamiento no tiene con qué equivocarse a la vista. Dos criterios independientes y la comparación entre ellos convierten un cruce en una medición: aquí coinciden en 113 de 126, y las 13 discrepancias son exactamente donde hay algo que explicar.",
+    "Reducir el grano promediando coordenadas suaviza un error en lugar de mostrarlo. La mediana de dos filas separadas 26 km cae en un punto donde no hay ninguna estación y reduce el desvío aparente a la mitad exacta.",
+    "Toda comprobación de calidad tiene un punto ciego, y el punto ciego es medible. La validación de P01 —comparar las dos representaciones de una fila— no puede ver un error que afecte a las dos por igual, y hay once estaciones así.",
+    "Tres de los cuatro detectores de este caso no necesitan ninguna fuente externa. Antes de concluir que hace falta otra fuente, conviene preguntarle al archivo si se contradice consigo mismo: filas hermanas que deberían coincidir, y coordenadas que deberían ser compatibles con la comuna que la propia fila declara.",
+    "La dirección postal y la coordenada son dos afirmaciones independientes sobre el mismo lugar, y cuando se contradicen una de las dos está mal. En Santa Lucía la dirección es correcta y la coordenada está 12,7 km equivocada.",
+    "Qué fuente provee cada campo es una decisión metodológica que casi nunca se declara porque todas las fuentes son oficiales. Aquí decide el 38,4 % de las filas del informe."
+  ],
+  "capacidades_reutilizables": [
+    "La identidad del grano —filas de A − casos de fusión + filas de desdoble = filas de B— se aplica a cualquier conciliación de inventarios: sucursales y centros de costo, productos y SKU, personas y contratos, cuentas y titulares.",
+    "El patrón de dos criterios independientes y la comparación entre ellos sirve para cualquier emparejamiento sin clave: por nombre y por dirección, por monto y por fecha, por identificador externo y por atributos.",
+    "Medir qué esconde un agregado, en lugar de aplicarlo en silencio, es general: cualquier promedio, mediana o primer valor que reduzca varias filas a una debería venir con la dispersión de lo que reemplazó.",
+    "Auditar la cobertura de los propios controles de calidad —qué clase de error no puede ver cada uno— es aplicable a cualquier conjunto de validaciones, y es la pregunta que falta en la mayoría de los informes de calidad de datos.",
+    "El detector de coherencia entre una coordenada y la unidad administrativa que la fila declara funciona en cualquier catastro georreferenciado con un campo de comuna, región, sucursal o zona, y no necesita capa cartográfica.",
+    "La comparación entre dos afirmaciones independientes de la misma fila —dirección contra coordenada, razón social contra identificador tributario, fecha de nacimiento contra edad declarada— es el patrón general de validación intrarregistro."
+  ]
+}

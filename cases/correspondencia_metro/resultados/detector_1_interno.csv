@@ -1,0 +1,5 @@
+indicador,valor,unidad,definicion
+filas_evaluadas,143.0,filas,Las de Metro del Excel
+marcadas_sospechosas,0.0,filas,Las dos coordenadas de la fila difieren más de 200 m
+desvio_interno_mediano_m,60.9,m,El desvío sistemático entre las dos representaciones
+punto_ciego,0.0,filas,"Errores que este detector no puede ver: los que afectan a las dos representaciones por igual. Se cuentan con los detectores 2, 3 y 4"

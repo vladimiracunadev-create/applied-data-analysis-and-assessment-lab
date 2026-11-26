@@ -1,0 +1,8 @@
+indicador,valor,unidad,definicion
+estaciones_gtfs,126.0,estaciones,location_type 1
+filas_bip,143.0,filas,Una por estación y línea: otro grano
+concilian_por_nombre,125.0,estaciones,Tras quitar el sufijo de línea y normalizar
+correspondencia_de_bus_pct,100.0,%,Estaciones con al menos una parada de bus a 200 m
+servicios_mediana,13.0,servicios,Servicios de bus distintos por estación
+estaciones_mal_ubicadas_en_bip,11.0,estaciones,"A más de 500 m de donde el GTFS las pone, ninguna detectada por la validación interna de P01"
+peor_desvio_m,26243.3,m,"Plaza de Armas, tomando la peor de sus dos filas. Sus filas de L3 y L5 están separadas 26,2 km entre sí"

@@ -6,6 +6,100 @@ Este proyecto usa [versionado semántico](https://semver.org/lang/es/).
 La **primera versión oficial es la 0.1.0**. Los prototipos anteriores no se consideran
 releases y no se publican como tales.
 
+## [0.8.0] — 2026-11-26
+
+### Agregado
+
+- **P10 resuelto: `cases/correspondencia_metro`.** Dos archivos públicos describen la
+  misma realidad —las estaciones de Metro de Santiago— con identificadores distintos y
+  sin ningún campo en común: el feed GTFS trae 126 estaciones y el Excel de bip!, 143
+  filas. La respuesta a la pregunta es cómoda: las **126** estaciones tienen al menos
+  una parada de bus a 200 m —el 100 %—, con una mediana de **13 servicios** distintos,
+  P90 de 34 y máximo de **55** en Santa Lucía.
+
+- **El grano, escrito como identidad.** 126 contra 143 no es un problema de
+  completitud: una fuente tiene una fila por estación y la otra una por estación y
+  línea. `126 − 17 combinaciones + 34 filas de desdoble = 143`. El GTFS delata su grano
+  con identificadores compuestos (`AN-NA`, `BA-BQ`); el Excel, con la línea pegada al
+  **texto del nombre** (`SAN PABLO L1`), porque su campo `codigo` vale la línea y no
+  identifica nada. Quitado el sufijo quedan 126 estaciones, de las cuales **125
+  coinciden por nombre normalizado**.
+
+- **Dos criterios de emparejamiento independientes.** Nombre y proximidad, calculados
+  por separado y comparados entre sí: coinciden en 113 de 126, y las 13 discrepancias
+  son exactamente donde hay algo que explicar. Un cruce solo por nombre perdería una
+  estación sin avisar (`Presidente Pedro Aguirre Cerda` contra `PEDRO AGUIRRE CERDA`,
+  que están a 1,4 m); uno solo por proximidad aceptaría en silencio pares equivocados.
+
+- **P03 resuelto de paso**, y ampliado. Pedía la validación cruzada de coordenadas, que
+  P01 ya hacía comparando las dos representaciones de cada fila. Aquí pasa a ser
+  **cuatro detectores, cada uno con su punto ciego declarado y medido**.
+
+- **Cinco registros nuevos en la base de conocimiento**, que pasa de 35 a 40:
+  `grano-antes-de-cruzar`, `punto-ciego-del-control`, `agregado-que-suaviza`,
+  `dos-afirmaciones-de-la-misma-fila` y `que-fuente-provee-el-campo`.
+
+- **31 pruebas nuevas** (`tests/test_correspondencia_metro.py`), sobre un inventario
+  sintético de cuatro estaciones con todas las distancias calculables a mano. La suite
+  pasa de 628 a **659**.
+
+### Hallazgo sobre el propio laboratorio
+
+- **La validación de coordenadas de P01 tenía un punto ciego medible, y ahora está
+  medido.** Comparar las dos representaciones de una fila —UTM contra latitud/longitud—
+  encuentra errores de conversión y de digitación de una de las dos, y **no puede ver un
+  error que afecte a las dos por igual**. De las 143 filas de Metro, **ninguna** quedó
+  marcada como sospechosa. Y once estaciones están a más de 500 m de donde el GTFS las
+  pone, hasta 13,1 km.
+
+  Lo que importa del hallazgo: **tres de los cuatro detectores no necesitan ninguna
+  fuente externa**. El archivo podía delatar sus propios errores comparando las filas
+  hermanas de una misma estación —Plaza de Armas tiene dos, separadas **26,2 km**— y
+  comparando cada coordenada con la comuna que la propia fila declara —Santa Lucía está
+  a 12,0 km de la mediana de su comuna—. Nadie le hizo esas preguntas.
+
+  En los dos casos la **dirección postal del propio Excel** coincide con la posición del
+  GTFS y no con su propia coordenada. Eso es evidencia de dónde está el error, y queda
+  declarado como evidencia y no como prueba: no se afirma que el GTFS tenga razón.
+
+### Corregido
+
+- **Reducir el grano por mediana escondía la mitad del error.** Para comparar las filas
+  de bip! con el GTFS hay que llevarlas al grano de estación, y la mediana de las dos
+  filas de Plaza de Armas —separadas 26,2 km— cae a 13,1 km de cada una, en un punto
+  donde no hay ninguna estación. El desvío aparente se reducía a la **mitad exacta**. El
+  caso publica ahora tres columnas en lugar de una: el desvío con el agregado, el desvío
+  de la peor fila, y la dispersión interna, que es lo que el agregado reemplazó.
+  Registrado en `agregado-que-suaviza`.
+
+### Declarado como medido
+
+- **Qué fuente provee la coordenada decide el 38,4 % del informe.** Calculada con las
+  coordenadas de bip! en lugar de las del GTFS, la correspondencia de bus cambia en **48
+  de 125 estaciones**, el total de servicios baja un 9 % y **tres estaciones aparecerían
+  sin ninguna parada de bus cerca** cuando sí la tienen. Es una decisión metodológica que
+  casi nunca se declara, porque las dos fuentes son oficiales y ninguna se presenta como
+  aproximada.
+
+- **El detector de coherencia contra la comuna declarada es una señal, no un veredicto.**
+  A 3 km marca 227 locales, que son demasiados para ser todos errores en comunas
+  extensas; a 10 km marca 8, de los cuales 3 son estaciones con error verificado. Se
+  publica la curva completa de umbrales en lugar de esconder la elección en una
+  constante. Usa la mediana y no el promedio: con una fila a 26 km, un promedio arrastra
+  la referencia y el detector se ciega contra sí mismo.
+
+### Límites declarados
+
+- **No se demuestra que el GTFS tenga razón**, solo que las dos fuentes discrepan y que
+  la evidencia interna del Excel apunta al GTFS en los casos inspeccionados.
+- **La correspondencia es geométrica**: no considera de qué lado de la avenida está el
+  acceso, si hay cruce semaforizado, ni si la combinación está habilitada
+  tarifariamente.
+- **El radio de 200 m lo fija el enunciado del problema**, no una norma publicada, y
+  describe otra cosa que los 300 m de P08.
+- **Faltan estaciones en las dos fuentes**: la Línea 7 y las extensiones en construcción
+  no aparecen en ninguna.
+
 ## [0.7.0] — 2026-11-26
 
 ### Agregado

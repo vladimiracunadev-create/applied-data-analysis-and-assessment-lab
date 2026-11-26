@@ -1,0 +1,7 @@
+indicador,valor,unidad,definicion
+estaciones_gtfs,126,filas,Filas con location_type 1: una por estación
+filas_bip,143,filas,"Una por estación y línea: es otro grano, no un error"
+estaciones_de_combinacion_gtfs,17,estaciones,"Identificador compuesto con guion (AN-NA, BA-BQ): delata la fusión de dos códigos de línea"
+filas_con_sufijo_de_linea_bip,34,filas,Nombres como «SAN PABLO L1»: la línea va pegada al nombre porque el campo codigo vale la línea y no identifica nada
+relacion_entre_los_dos_granos,143,filas,estaciones − combinaciones + filas con sufijo. Debe dar las filas de bip!
+estaciones_bip_tras_quitar_el_sufijo,126,estaciones,"Si coincide con las del GTFS, el grano quedó reducido correctamente"

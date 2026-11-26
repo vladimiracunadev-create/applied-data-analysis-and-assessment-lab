@@ -1,0 +1,9 @@
+indicador,valor,unidad,definicion
+estaciones_evaluadas,126.0,estaciones,Las 126 del feed
+con_parada_de_bus_cerca,126.0,estaciones,Con al menos una parada a 200 m
+con_parada_de_bus_pct,100.0,%,
+sin_ninguna,0.0,estaciones,Estaciones sin correspondencia de bus
+servicios_mediana,13.0,servicios,Servicios de bus distintos por estación
+servicios_p90,33.5,servicios,
+servicios_maximo,55.0,servicios,El máximo de la red
+paradas_mediana,5.0,paradas,Paradas de bus a 200 m de la estación

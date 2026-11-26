@@ -1,0 +1,8 @@
+indicador,valor,unidad,definicion
+estaciones_comparables,125.0,estaciones,Las que cruzan por nombre
+cambia_el_conteo_de_servicios,48.0,estaciones,Solo por elegir la otra coordenada de la misma estación
+cambia_pct,38.4,%,
+aparecerian_sin_bus,3.0,estaciones,Con la coordenada de bip! parecerían no tener ninguna parada cerca
+aparecerian_con_bus,0.0,estaciones,El caso contrario
+servicios_totales_con_gtfs,2014.0,servicios,"Suma sobre las estaciones, con repetición entre estaciones"
+servicios_totales_con_bip,1834.0,servicios,

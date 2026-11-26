@@ -1,0 +1,5 @@
+detector,compara,fuente_externa,hallazgos,unidad,ciego_a
+1. Dos representaciones de una fila,"UTM contra latitud/longitud, dentro de la fila",no,0,filas de Metro,un error que afecte a las dos representaciones por igual
+2. Filas hermanas de la misma estación,fila contra fila que nombra lo mismo,no,4,estaciones,la estación que tiene una sola fila
+3. Coordenada contra comuna declarada,fila contra la mediana de sus pares de comuna,no,3,estaciones,un error dentro de la propia comuna
+4. Contra otra fuente,bip! contra el feed GTFS,sí,11,estaciones,un error que las dos fuentes compartan
