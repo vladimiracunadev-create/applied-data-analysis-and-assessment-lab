@@ -11,9 +11,12 @@ repositorio.
 Los **cuadernos de trabajo** son el problema resuelto paso a paso, con el código de
 Pandas, la salida real y la fórmula de Excel equivalente, en un solo archivo.
 
-| Cuaderno | Pasos |
-| --- | --- |
-| [P01 · Consolidar cinco Excel heterogéneos](../cases/bip_lugares_carga/CUADERNO.md) | 12 |
+| Cuaderno | Pasos | Descargables |
+| --- | --- | --- |
+| [P01 · Consolidar cinco Excel heterogéneos](../cases/bip_lugares_carga/CUADERNO.md) | 12 | [`pasos.py`](../cases/bip_lugares_carga/cuaderno/pasos.py) · [`practica.xlsx`](../cases/bip_lugares_carga/cuaderno/practica.xlsx) |
+
+El Excel de cada paso va dibujado como hoja, con la fórmula en su celda y el resultado a
+la vista.
 
 Se generan ejecutando el caso, con `python scripts/build_cuadernos.py`. Los otros quince
 están pendientes; el estado de cada problema está en el

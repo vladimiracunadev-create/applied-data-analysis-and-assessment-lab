@@ -41,6 +41,22 @@ salida es la que devolvió. Si el código deja de funcionar, el cuaderno no se g
 | --- | --- | --- |
 | [P01 · Consolidar cinco Excel heterogéneos](cases/bip_lugares_carga/CUADERNO.md) | 12 | `CONTAR.SI` para medir si una columna es clave, `CONTAR.SI` con `"?*"` para la cobertura de un campo, `FRECUENCIA` para el histograma, haversine en una celda, y Power Query para anexar los cinco archivos |
 
+El Excel de cada paso va **dibujado como hoja**: la barra de fórmulas con su celda, las
+letras de columna, la columna donde va la fórmula resaltada, y el resultado en su sitio.
+Una fórmula en prosa no dice dónde va ni sobre qué rango opera.
+
+Y cada cuaderno trae sus descargables al lado:
+
+| Archivo | Qué es |
+| --- | --- |
+| [`cuaderno/pasos.py`](cases/bip_lugares_carga/cuaderno/pasos.py) | los pasos seguidos. Se corre y **muestra las doce salidas** |
+| [`cuaderno/practica.xlsx`](cases/bip_lugares_carga/cuaderno/practica.xlsx) | las fórmulas como texto y **el resultado que deben dar**, para corregirse solo |
+| [`cuaderno/svg/`](cases/bip_lugares_carga/cuaderno/svg) | las nueve figuras: siete hojas de Excel y dos gráficos |
+
+El libro de práctica **no trae los datos**: los archivos del portal son NoComercial y el
+repositorio no los redistribuye. Se pega el consolidado que uno obtuvo, que además es
+parte del ejercicio.
+
 Los otros quince cuadernos están **pendientes**: nueve corresponden a problemas ya
 resueltos y necesitan solo el cuaderno; seis —P07, P12 a P16— no están resueltos, de modo
 que ahí el cuaderno y el análisis son el mismo trabajo. El estado real de cada uno está en
