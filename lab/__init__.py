@@ -32,7 +32,7 @@ Los submódulos se importan de forma explícita (`from lab import metrics`) para
 costo de importar matplotlib o pandas se pague solo cuando se usa.
 """
 
-__version__ = "0.10.0"
+__version__ = "0.11.0"
 
 __all__ = [
     "agents",

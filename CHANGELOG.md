@@ -6,6 +6,107 @@ Este proyecto usa [versionado semántico](https://semver.org/lang/es/).
 La **primera versión oficial es la 0.1.0**. Los prototipos anteriores no se consideran
 releases y no se publican como tales.
 
+## [0.11.0] — 2026-11-26
+
+### Agregado
+
+- **El cuaderno de trabajo pasa a tener cinco secciones**, en un orden que no es casual:
+  **1** el problema, **2** la solución que se va a aplicar, **3** los pasos, **4** el
+  resultado, **5** qué queda aprendido. Sin la primera, los pasos son manipulaciones sin
+  motivo; sin la segunda, no se sabe a dónde va cada paso antes de darlo.
+
+- **El problema explicado como problema.** De dónde sale la pregunta, a quién le
+  importa, y qué la vuelve difícil. En P01: no es el volumen —son 1 928 filas— sino que
+  ninguno de los seis defectos del archivo produce un error. Cada uno produce una tabla
+  que se puede sumar, graficar y presentar, con un número equivocado.
+
+- **El plan antes de ejecutarlo.** Los doce pasos agrupados en cinco bloques que van de
+  lo que no se puede suponer a lo que sí se puede afirmar: leer lo que no está ordenado,
+  armonizar lo que no coincide, comprobar lo que se supone, responder y declarar el
+  límite, validar sin fuente externa.
+
+- **`lab/diagrama_svg.py`**: dos diagramas por cuaderno. `render_flujo` dibuja el
+  problema —los cinco archivos entrando, la tabla saliendo, con lo que pasa en cada
+  etapa— y `render_mapa` dibuja el mapa mental de la solución. El mapa **no es radial**
+  a propósito: con seis ramas de cuatro elementos el texto se solapa o hay que rotarlo, y
+  con el centro a la izquierda y las ramas apiladas queda siempre horizontal.
+
+- **`caso-completo.zip`**: todo el caso en un archivo. Los 36 archivos de P01 —el
+  cuaderno, el script, el libro de Excel, las once figuras, el código de la solución, los
+  metadatos, la procedencia y las dieciséis tablas de resultado—, 332 KB sin comprimir.
+  Sin datos de terceros, igual que todo lo que el repositorio versiona.
+
+- **Navegación.** `docs/cuadernos.md` es el índice de los dieciséis problemas, generado
+  para que no se desvíe, y cada cuaderno abre y cierra con el hilo —anterior, índice,
+  siguiente— más una lista de lo que toca y se trata a fondo en otro sitio. Cada paso
+  vuelve al recorrido con un enlace.
+
+  El índice **distingue el cuaderno propio del problema cubierto dentro del cuaderno de
+  otro**: P02 y P04 están en los pasos 7 y 8 de P01, y decir «abrir» sin más haría creer
+  que tienen uno dedicado.
+
+- **`lab/hoja_svg.py`**: el Excel de cada paso dibujado como hoja —barra de fórmulas con
+  su celda, letras de columna, la columna de la fórmula resaltada, filas de muestra y el
+  resultado en su sitio—. Una fórmula en prosa no dice dónde va ni sobre qué rango opera,
+  y copiarla de un párrafo arrastra las comillas curvas.
+
+- **`cuaderno/pasos.py`**, el código seguido, que **corre y muestra cada salida**: la
+  última expresión de cada paso se envuelve en un `print` con su cabecera. La partición
+  entre lo que se ejecuta y lo que se imprime se hace con `ast` y no contando líneas,
+  porque un `def` de varias líneas o un diccionario por comprensión rompen cualquier
+  partición por renglones.
+
+- **`cuaderno/practica.xlsx`**, con las fórmulas y **el resultado que deben dar**. No
+  trae los datos: los archivos del portal son NoComercial y el laboratorio no los
+  redistribuye, de modo que quien practica pega el consolidado que obtuvo él mismo, que
+  además es parte del ejercicio.
+
+### Corregido
+
+- **`tests/conftest.py` esconde los datos descargados durante toda la sesión de
+  pruebas.** Local e integración continua son ahora el mismo entorno, y una función de
+  informe con una lectura de disco dentro falla en el acto en lugar de dos versiones más
+  tarde. Verificado con una prueba trampa que lee los datos reales y debe fallar aunque
+  los archivos estén descargados. Es la corrección de fondo a lo que `v0.9.1` había
+  dejado documentado en `CONTRIBUTING.md`: pedir que alguien recuerde un comando extra no
+  es un control.
+
+- **El paso de la cobertura del horario daba 18,1 % y el esperado decía 18,06 %.** No era
+  un redondeo: son 349/1928 y 348/1927, la misma medición sobre dos poblaciones. El paso
+  muestra ahora las dos cifras y su trampa pasó a ser que el denominador es una decisión.
+
+- **Las fórmulas del libro de práctica salían como `0`**, porque Excel evalúa todo lo que
+  empieza por `=`. `lab.excel.write_workbook` admite ahora `strings_to_formulas=False`,
+  con el comportamiento por omisión intacto.
+
+- **El nombre de cada SVG dependía de si la ejecución escribía archivos**, de modo que
+  `--check` producía un documento distinto al publicado y lo marcaba desfasado siempre.
+  Un control que miente es peor que no tenerlo. Ahora el nombre es determinista.
+
+- **La trampa se renderizaba envuelta en `**` con negritas dentro**, y salían asteriscos a
+  la vista en lugar de texto en negrita.
+
+- **El primer paso hablaba de la hoja de locales cerrados mostrando un archivo que tiene
+  una sola hoja.** Ahora lista las hojas de los cinco, y la salida deja visible algo que
+  no se había notado: no se llaman igual en ninguno —`Abiertos`, `Abierto`, `PCMA`—, de
+  modo que tampoco sirve pedir una hoja por nombre.
+
+- **El paso de coordenadas afirmaba que el desvío es bimodal mostrando un `describe`**
+  cuyos percentiles 50, 90 y 99 caen todos en 61 m: lo contrario de la evidencia. Ahora
+  muestra el histograma, donde los dos grupos se ven —109 filas en torno a 0 m y 1 768 en
+  torno a 61 m—, y la trampa del paso pasó a ser esa.
+
+### Declarado como pendiente
+
+- **Quince de los dieciséis cuadernos.** Dos problemas más —P02 y P04— quedan cubiertos
+  dentro del de P01. De los que faltan, siete corresponden a casos ya resueltos y
+  necesitan solo el cuaderno; seis no están resueltos, de modo que ahí el cuaderno y el
+  análisis son el mismo trabajo.
+
+- **La corrección de la práctica en Python no existe.** El libro de Excel ya corrige a
+  medias con su columna «debe dar»; en Python no hay nada que tome un intento y diga qué
+  difiere del resultado de referencia. Está en la hoja de ruta como brecha 2.3.
+
 ## [0.10.0] — 2026-11-26
 
 ### Agregado

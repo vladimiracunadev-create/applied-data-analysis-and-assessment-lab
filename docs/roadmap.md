@@ -11,13 +11,13 @@ Los recuentos se obtienen con los comandos indicados, no de memoria.
 
 | Componente | Estado | Cómo comprobarlo |
 | --- | --- | --- |
-| Núcleo (`lab/`): 24 módulos | implementado | `python -m pytest` |
+| Núcleo (`lab/`): 26 módulos | implementado | `python -m pytest` |
 | Casos de estudio (9): 6 con datos públicos reales, 3 sintéticos | implementado | `python -m pytest tests/test_catalog.py` |
 | Cruce espacial por proximidad sin dependencias geoespaciales | implementado | `python -m pytest tests/test_cobertura_de_carga.py` |
 | Intérprete de horarios en texto libre, con lo ilegible como desconocido | implementado | `python -m pytest tests/test_schedules.py` |
 | Conciliación de inventarios con grano distinto y dos criterios | implementado | `python -m pytest tests/test_correspondencia_metro.py` |
 | Análisis de claves: candidatas mínimas y clave subrogada determinista | implementado | `python -m pytest tests/test_keys.py` |
-| Cuadernos de trabajo generados ejecutando el caso (1 de 16) | **parcial** | `python scripts/build_cuadernos.py` |
+| Cuadernos de trabajo con problema, plan, diagramas, ZIP y navegación (1 de 16) | **parcial** | `python scripts/build_cuadernos.py` |
 | Simulaciones de cuatro horas (3) | implementado | `simulations/0{1,2,3}_enunciado.md` |
 | Solución de referencia en Pandas | implementado | `python solutions/reference.py 1` |
 | Segunda implementación en SQL | implementado | `python solutions/sql_reference.py 1` |
@@ -80,7 +80,8 @@ y no **cómo se produce**, que es lo que hace falta para practicar Excel y Panda
 
 | Problemas | Qué falta |
 | --- | --- |
-| P02, P03, P04, P05, P06, P08, P09, P10, P11 | el cuaderno: el análisis ya está resuelto |
+| P02, P04 | nada: quedan cubiertos en los pasos 7 y 8 del cuaderno de P01 |
+| P03, P05, P06, P08, P09, P10, P11 | el cuaderno: el análisis ya está resuelto |
 | P07, P12, P13, P14, P15, P16 | el análisis **y** el cuaderno |
 
 P14 y P15 necesitan además descargar feeds históricos del DTPM, que se publican desde
