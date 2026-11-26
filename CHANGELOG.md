@@ -17,6 +17,13 @@ releases y no se publican como tales.
   recibe la tabla del detector 3 como argumento, que `analizar` ya calculaba, de modo
   que además deja de calcularla dos veces.
 
+  **El defecto se introdujo en la 0.8.0 y estuvo dos versiones sin corregir: las
+  etiquetas `v0.8.0` y `v0.9.0` quedaron con integración continua en rojo.** La causa de
+  que no se notara fue un error de método al leer el resultado: se consultaba la última
+  ejecución de la rama justo después de empujar, y a esa altura la ejecución del commit
+  nuevo todavía no existía, de modo que se leía la del commit anterior. El resultado hay
+  que pedirlo **por SHA del commit**, no por «la última».
+
   La prueba que debía cubrirlo tenía el mismo defecto heredado: se le pasa ahora una
   tabla sintética, y se agregó una que comprueba el caso sin hallazgos.
 
@@ -24,7 +31,8 @@ releases y no se publican como tales.
 
 - **La comprobación que faltaba en CONTRIBUTING**: cómo correr la suite sin los archivos
   descargados, que es como corre en integración continua. Verificado que las 702
-  pruebas pasan con `data/original/` apartada. La corrección cuando falla es recibir la
+  pruebas pasan con `data/original/` apartada, y que la ejecución de este commit en
+  integración continua está verde en los seis trabajos. La corrección cuando falla es recibir la
   tabla como argumento, no marcar la prueba como omitida.
 
 ## [0.9.0] — 2026-11-26
