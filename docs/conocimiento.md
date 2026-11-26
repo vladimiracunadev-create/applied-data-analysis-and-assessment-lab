@@ -2,7 +2,7 @@
 
 # Índice de la base de conocimiento
 
-**22 registros**. Búsqueda: `python -m lab.knowledge "consulta"`.
+**25 registros**. Búsqueda: `python -m lab.knowledge "consulta"`.
 
 ## Por tipo
 
@@ -13,8 +13,8 @@
 | error | 5 |
 | formula | 2 |
 | leccion | 2 |
-| metodologia | 2 |
-| patron | 5 |
+| metodologia | 4 |
+| patron | 6 |
 
 ## Registros
 
@@ -36,9 +36,12 @@
 | leccion | [`defecto-que-no-existe`](../knowledge/defecto-que-no-existe.md) | Un cruce que falla puede estar diciendo que el cruce no correspondía | calidad-datos, cruce-consolidacion, pensamiento-critico, datos-reales, errores-frecuentes |
 | leccion | [`dos-coordenadas-un-lugar`](../knowledge/dos-coordenadas-un-lugar.md) | Un dato redundante permite validar el archivo contra sí mismo | validacion-independiente, calidad-datos, gobernanza-datos, datos-reales, geoespacial |
 | metodologia | [`cobertura-de-un-indicador`](../knowledge/cobertura-de-un-indicador.md) | Informar la cobertura junto con el indicador | calidad-datos, indicadores, comunicacion-resultados, metodologia |
+| metodologia | [`denominador-es-una-decision`](../knowledge/denominador-es-una-decision.md) | El denominador de un indicador oficial es una decisión, no un dato | indicadores, gobernanza-datos, denominadores, metodologia, datos-reales |
 | metodologia | [`hecho-inferencia-hipotesis`](../knowledge/hecho-inferencia-hipotesis.md) | Distinguir hecho, evidencia, inferencia, interpretación e hipótesis | metodologia, investigacion-aplicada, comunicacion-resultados, pensamiento-critico |
+| metodologia | [`supuesto-medido`](../knowledge/supuesto-medido.md) | Un supuesto que no se puede resolver se mide | metodologia, incertidumbre, comunicacion-resultados, gobernanza-datos, datos-reales |
 | patron | [`cruce-con-cardinalidad`](../knowledge/cruce-con-cardinalidad.md) | Cruzar tablas controlando la cardinalidad | cruce-consolidacion, calidad-datos, pandas, sql, excel, equivalencias |
 | patron | [`denominador-cero`](../knowledge/denominador-cero.md) | Razones con denominador cero o ausente | indicadores, calidad-datos, excel, pandas, errores-frecuentes |
 | patron | [`encabezado-no-esta-en-la-primera-fila`](../knowledge/encabezado-no-esta-en-la-primera-fila.md) | Detectar la fila del encabezado en una planilla maquetada para imprimir | excel, hojas-de-calculo, lectura-escritura-datos, datos-reales, calidad-datos |
 | patron | [`expandir-frecuencias`](../knowledge/expandir-frecuencias.md) | Expandir una ventana con cadencia a sus eventos reales | agregacion-indicadores, pandas, gtfs, datos-reales, denominadores |
 | patron | [`normalizar-antes-de-agrupar`](../knowledge/normalizar-antes-de-agrupar.md) | Normalizar para agrupar y conservar la etiqueta para informar | limpieza-normalizacion, cruce-consolidacion, pandas, datos-reales, comunicacion-resultados |
+| patron | [`regla-redundante`](../knowledge/regla-redundante.md) | Distinguir una regla redundante por construcción de una redundante por azar | indicadores, gobernanza-datos, metodologia, datos-reales, pensamiento-critico |

@@ -1,0 +1,93 @@
+{
+  "slug": "calendario_medicion",
+  "titulo": "Reconstruir el calendario de medición de un indicador oficial y auditar sus reglas",
+  "disciplina": "gobernanza-de-datos",
+  "industria": "administracion-publica",
+  "dificultad": "avanzado",
+  "metodologia": "reconstrucción de una metodología publicada, con auditoría del aporte de cada regla",
+  "competencias": [
+    "fechas-horarios",
+    "agregacion-indicadores",
+    "gobernanza-datos",
+    "calidad-datos",
+    "validacion-independiente",
+    "comunicacion-resultados",
+    "reproducibilidad",
+    "apoyo-decision"
+  ],
+  "estado": "implementado",
+  "tiempo_sugerido_min": 150,
+  "contexto": "El índice de variación de tiempos de viaje de la red vial básica de Santiago es un indicador oficial del Ministerio de Transportes, con valores publicados en los documentos presupuestarios del Estado. Su fórmula ocupa dos líneas y sus reglas de exclusión ocupan media página de notas al pie, incluida una que descarta los días 28 y 29 de cada mes porque algunos incidentes empiezan la tarde anterior.",
+  "problema": "Para un año dado, determinar qué días entran en la medición del indicador, y auditar cuánto aporta cada una de las ocho reglas de exclusión al denominador real.",
+  "objetivos": [
+    "Expresar las ocho reglas de la metodología publicada como objetos con su cita.",
+    "Validar de forma independiente el listado de feriados que las reglas necesitan.",
+    "Medir la exclusión exclusiva de cada regla, distinguiéndola de la exclusión bruta.",
+    "Cruzar el calendario de elegibilidad con el calendario trimestral de medición para obtener el denominador real.",
+    "Distinguir las reglas redundantes por construcción de las redundantes por azar del calendario.",
+    "Medir el efecto del supuesto sobre las vacaciones de invierno, que la metodología no especifica."
+  ],
+  "restricciones": [
+    "Dos horas y media de trabajo.",
+    "El entorno mínimo del laboratorio.",
+    "El calendario escolar del año no está disponible: hay que declarar un supuesto y medirlo.",
+    "La API de feriados del gobierno no resuelve: hay que usar un tercero declarándolo."
+  ],
+  "fuentes": [
+    "Reglas de exclusión y calendario de medición: DIPRES, documento público «VERSIÓN LEY AÑO 2019», Partida 19 Ministerio de Transporte y Telecomunicaciones, Capítulo 01, nota 1 del indicador de variación de tiempos de viaje. Descargado el 26 de noviembre de 2026 de https://www.dipres.gob.cl/597/articles-188560_doc_pdf.pdf",
+    "Listado de feriados de Chile: api.boostr.cl, que es un TERCERO y NO la fuente oficial. La fuente oficial es la Ley 19.973 y el listado de la Dirección del Trabajo. La API del gobierno (apis.digital.gob.cl) no resolvía. Licencia no verificada. La parte movible del listado se valida contra el cálculo del Domingo de Pascua."
+  ],
+  "datasets": [
+    "cases/calendario_medicion/feriados.csv, versionado, con los feriados de 2024 a 2027 y su procedencia declarada por fila. Se regenera con: python -m cases.calendario_medicion.solution --actualizar-feriados <año>"
+  ],
+  "diccionario": "feriados.csv: fecha (ISO), nombre, irrenunciable (booleano), anio, fuente, url, validado_contra_pascua (booleano que marca Viernes y Sábado Santo, las dos fechas verificables con el algoritmo de Pascua).",
+  "supuestos": [
+    "Las vacaciones de invierno son las dos semanas que empiezan el primer lunes completo de julio. La metodología dice «dos semanas, considerando los calendarios escolares» sin fechas, y el calendario escolar no se obtuvo. El efecto del supuesto se mide con un análisis de sensibilidad.",
+    "La semana de fiestas patrias es la semana de lunes a domingo que contiene el 18 de septiembre.",
+    "El Día del joven combatiente es el 29 de marzo.",
+    "El listado de feriados del tercero es completo. Solo se verifica su parte movible pascual y la presencia de los feriados de fecha fija.",
+    "Los días 28 y 29 se excluyen en todos los meses, no solo en los de medición.",
+    "El año se analiza completo, del 1 de enero al 31 de diciembre."
+  ],
+  "metodologias_alternativas": [
+    "Reglas como objetos auditables, que es lo implementado: permite medir el aporte de cada una y comparar años.",
+    "Una lista explícita de fechas excluidas, más simple de escribir y imposible de auditar: no dice por qué falta un día.",
+    "Una tabla de calendario en una base de datos con una columna por regla, preferible si el calendario tiene que consultarse desde varios sistemas."
+  ],
+  "implementaciones": [
+    "cases/calendario_medicion/solution.py — resolución completa.",
+    "lab/calendars.py — reglas, calendario, exclusión exclusiva, solapamiento y cálculo de Pascua.",
+    "lab/sources.py — la fuente de feriados, declarada como tercero no oficial."
+  ],
+  "soluciones": "cases/calendario_medicion/solution.py, documentada paso a paso en el README del caso.",
+  "resultados": "cases/calendario_medicion/resultados/ con doce tablas. Resultado central para 2026: de 261 días laborales quedan 164 elegibles (62,84 %) y 78 medibles tras cruzar con los meses de medición. Cuatro de las ocho reglas no cambian el denominador ese año, y tres de ellas no lo cambian en ningún año analizado.",
+  "validaciones": [
+    "El Domingo de Pascua se calcula con el algoritmo gregoriano anónimo y se contrasta en las pruebas con diez fechas publicadas entre 1900 y 2027, además de comprobar que siempre cae en domingo entre el 22 de marzo y el 25 de abril para doscientos años.",
+    "El listado de feriados se valida antes de guardarse: si no contiene el Viernes Santo calculado, no se escribe.",
+    "La identidad suma_de_exclusiones − solapamiento = días_excluidos se comprueba en las pruebas del núcleo.",
+    "La matriz de solapamiento debe ser simétrica y su diagonal debe coincidir con el total de cada regla.",
+    "El aporte de cada regla al denominador se calcula quitando la regla y reconstruyendo el calendario, no por diferencia algebraica.",
+    "La clasificación de redundancias se comprueba sobre cuatro años, de modo que lo estructural se distinga de lo accidental."
+  ],
+  "interpretacion": "El denominador del indicador son 78 días en 2026 y varía entre 70 y 78 según el año, una diferencia del 11 % producida solo por cómo cae el calendario. Comparar el índice entre años compara promedios calculados sobre cantidades distintas de días. Que cuatro reglas no afecten al denominador no significa que la metodología esté mal: una regla redundante puede existir por prudencia o por herencia. Lo que el caso aporta es saber cuáles lo son y por qué.",
+  "limitaciones": [
+    "No calcula el indicador: construye su denominador. Los tiempos de viaje medidos por GPS en los 17 ejes no son públicos.",
+    "El listado de feriados no se verifica contra la ley; sus feriados movibles por la Ley 19.973 quedan declarados como no verificados.",
+    "El calendario escolar real no se usó: las vacaciones de invierno son un supuesto, cuyo efecto se mide.",
+    "El análisis cubre 2024 a 2027. Una conclusión sobre redundancia estructural vale para esos años y para la estructura del calendario de medición, no para cualquier año imaginable."
+  ],
+  "conocimiento_adquirido": [
+    "El denominador de un indicador oficial es una decisión documentada, no una propiedad de los datos: ocho reglas, siete de ellas en una nota al pie, y una que descarta los días 28 y 29 de cada mes.",
+    "La exclusión bruta de una regla no mide su aporte: ocho reglas excluyen 201 días mientras la suma de sus exclusiones individuales es 256. El solapamiento es de 55 días.",
+    "El aporte de una regla al denominador REAL se mide sobre los días que efectivamente se miden, no sobre el año: excluir enero, febrero y diciembre descarta 90 días del año y cero días medibles.",
+    "Hay dos clases de redundancia que no se pueden confundir: la estructural, que no afecta en ningún año por construcción, y la accidental, que no afecta este año por cómo cayó el calendario. Quitar una accidental funciona un año y falla el siguiente.",
+    "Un supuesto que no se puede resolver se mide: mover las vacaciones de invierno dentro de julio no cambia nada, y moverlas a junio quita seis días medibles. Eso convierte una incertidumbre en un riesgo acotado y nombrado.",
+    "El algoritmo de Pascua permite validar de forma independiente la parte movible de cualquier listado de feriados, sin consultar otra fuente."
+  ],
+  "capacidades_reutilizables": [
+    "lab.calendars sirve para auditar el denominador de cualquier indicador con calendario declarado: días hábiles de un acuerdo de nivel de servicio, días de bolsa en una serie financiera, días de clase en un indicador educativo, turnos en uno industrial.",
+    "El patrón de medir el aporte marginal quitando una regla y reconstruyendo el resultado se aplica a cualquier conjunto de filtros encadenados, no solo a fechas.",
+    "La distinción entre redundancia estructural y accidental se aplica a cualquier regla de negocio heredada: antes de simplificar un filtro hay que comprobar si su inutilidad es permanente o circunstancial.",
+    "El patrón de validar un dato de entrada antes de almacenarlo, y no guardarlo si falla, es general para cualquier adquisición de datos."
+  ]
+}

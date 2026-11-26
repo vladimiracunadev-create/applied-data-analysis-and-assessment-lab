@@ -74,7 +74,9 @@ correspondencia, no adivinándola.
 `Abiertos`. Son 1 de 1 928 filas: no mueve el total, pero el revisor que la busca
 sabe si se mira el nombre de las hojas o no.
 
-**Estado:** disponible.
+**Estado:** **resuelto** — [`cases/bip_lugares_carga`](../cases/bip_lugares_carga/README.md).
+Incluye P02 (la clave), P03 (validación cruzada de coordenadas, que encontró tres
+errores de hasta 10,3 km) y P04 (normalización).
 
 ### P02. ¿El código es una clave?
 
@@ -255,8 +257,10 @@ documentada**, no una propiedad de los datos. Y que reconstruirlo exige leer la 
 pie, que es donde vive la metodología. Ver
 [`indicadores-oficiales-transporte.md`](indicadores-oficiales-transporte.md).
 
-**Estado:** disponible. Es el problema que más se parece a lo que se pide en una
-evaluación de gestión de datos del sector público.
+**Estado:** **resuelto** — [`cases/calendario_medicion`](../cases/calendario_medicion/README.md).
+De 261 días laborales quedan 164 elegibles y **78 medibles**. Y el hallazgo: cuatro de
+las ocho reglas no cambian el denominador en 2026, tres de ellas en ningún año
+analizado.
 
 ### P12. Implementar el ICF sobre la oferta programada
 
@@ -369,10 +373,10 @@ La parte más importante del inventario. Prometer cualquiera de estas sería inv
 Si el objetivo es prepararse para una evaluación de cuatro horas en Excel y Pandas, el
 orden por rendimiento es:
 
-1. **P01** (consolidar los cinco Excel) — es el ejercicio más parecido a lo que se pide
-   y concentra nueve defectos reales.
-2. **P11** (calendario con reglas de exclusión oficiales) — denominadores y
-   metodología documentada.
+1. **P01** (consolidar los cinco Excel) — **resuelto**: léalo y rehágalo sin mirar. Es
+   el ejercicio más parecido a lo que se pide y concentra nueve defectos reales.
+2. **P11** (calendario con reglas de exclusión oficiales) — **resuelto**: léalo. Es el
+   que más se parece al trabajo real del cargo.
 3. **P06** (ya resuelto: leerlo y rehacerlo) — volumen, fechas y el error del atajo.
 4. **P04** y **P02** (normalización y claves) — rápidos, y aparecen siempre.
 5. **P08** (proximidad) — el cruce sin clave.

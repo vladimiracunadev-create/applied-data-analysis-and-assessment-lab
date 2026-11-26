@@ -1,0 +1,9 @@
+regla,medibles_con_la_regla,medibles_sin_la_regla,dias_medibles_que_quita,afecta_al_denominador
+fin_de_semana,78,103,25,sí
+semana_fiestas_patrias,78,82,4,sí
+dias_28_y_29,78,80,2,sí
+once_de_septiembre,78,79,1,sí
+vacaciones_invierno,78,78,0,NO
+meses_completos,78,78,0,NO
+feriados,78,78,0,NO
+dia_joven_combatiente,78,78,0,NO

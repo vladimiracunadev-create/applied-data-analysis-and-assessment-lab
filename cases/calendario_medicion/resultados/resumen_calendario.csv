@@ -1,0 +1,9 @@
+indicador,valor,unidad
+dias_del_rango,365.0,días
+dias_laborales,261.0,días
+dias_incluidos,164.0,días
+dias_excluidos,201.0,días
+inclusion_pct,44.93,%
+inclusion_sobre_laborales_pct,62.84,%
+suma_de_exclusiones_por_regla,256.0,días
+solapamiento_total,55.0,días

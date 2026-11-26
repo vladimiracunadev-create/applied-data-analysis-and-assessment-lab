@@ -6,6 +6,88 @@ Este proyecto usa [versionado semántico](https://semver.org/lang/es/).
 La **primera versión oficial es la 0.1.0**. Los prototipos anteriores no se consideran
 releases y no se publican como tales.
 
+## [0.5.0] — 2026-11-26
+
+Resuelve el problema **P11**: reconstruir el calendario de medición de un indicador
+oficial y auditar sus reglas. Es el caso que más se parece al trabajo real de un gestor
+de datos del sector público.
+
+### Agregado
+
+- **Instancia `cases/calendario_medicion`.** Toma las ocho reglas de exclusión del
+  índice de variación de tiempos de viaje, publicadas en un documento de DIPRES, y
+  reconstruye el denominador del indicador. Resultado para 2026: de **261** días
+  laborales quedan **164** elegibles (62,84 %) y **78 medibles** tras cruzar con los
+  meses de medición.
+- **`lab.calendars`: calendarios por reglas.** Cada regla es un objeto con su fuente
+  citada. Mide la **exclusión exclusiva** de cada una —cuántos días solo ella
+  excluye— y la matriz de solapamiento. Incluye el cálculo del Domingo de Pascua con
+  el algoritmo gregoriano anónimo, validado en las pruebas contra diez fechas
+  publicadas entre 1900 y 2027 y contra sus propiedades en doscientos años.
+- **Fuente de feriados en el catálogo**, declarada explícitamente como **tercero, no
+  oficial**: la API del gobierno no resolvía. El listado se descarga una vez, se
+  valida y se **versiona** dentro del caso, porque depender de un servicio de tercero
+  en cada ejecución haría el caso irreproducible.
+- Tres registros de conocimiento: `denominador-es-una-decision`, `regla-redundante` y
+  `supuesto-medido`.
+
+### Los tres hallazgos
+
+**1. La mitad de las reglas no cambia el denominador.** Al medir cuántos días medibles
+recuperaría el quitar cada regla:
+
+| Regla | Días medibles que quita |
+| --- | --- |
+| fin de semana | 25 |
+| semana de fiestas patrias | 4 |
+| días 28 y 29 | 2 |
+| 11 de septiembre | 1 |
+| vacaciones de invierno | **0** |
+| meses completos (enero, febrero, diciembre) | **0** |
+| feriados | **0** |
+| día del joven combatiente | **0** |
+
+Excluir enero, febrero y diciembre descarta 90 días del año y **ninguno** de los que se
+miden, porque la medición ocurre en marzo, junio, septiembre y noviembre.
+
+**2. Hay dos clases de redundancia, y confundirlas cuesta.** Comparando 2024 a 2027:
+
+| Clasificación | Reglas |
+| --- | --- |
+| Efectiva (quita días todos los años) | fin de semana, días 28 y 29, semana de fiestas patrias |
+| **Redundante accidental** | feriados (cero en 2026, tres en 2027), 11 de septiembre (cero en 2027) |
+| **Redundante estructural** | meses completos, vacaciones de invierno, día del joven combatiente |
+
+Quitar una estructuralmente redundante no cambia nada nunca; quitar una accidental
+funciona este año y falla el siguiente. El «Día del joven combatiente» es el 29 de
+marzo y la regla de los días 28 y 29 ya lo descarta: exclusión exclusiva cero.
+
+**3. El denominador cambia entre años.** 70, 74, 78 y 75 días medibles para 2024, 2025,
+2026 y 2027: una variación del **11 %** producida solo por cómo cae el calendario. El
+valor anual del indicador es el promedio de cuatro mediciones trimestrales, de modo que
+comparar dos años compara promedios calculados sobre cantidades distintas de días.
+
+### El supuesto que no se pudo resolver, medido
+
+La metodología dice «vacaciones de invierno (dos semanas, considerando los calendarios
+escolares)» **sin fechas**, y el calendario escolar no se obtuvo. En lugar de elegir
+unas fechas en silencio, el caso declara el supuesto y mide su efecto: moverlo dentro
+de julio no cambia nada, y moverlo a la segunda mitad de junio —que sí es mes de
+medición— baja el denominador de 78 a 72 días. Eso convierte una incertidumbre en un
+riesgo acotado: hay que conseguir el calendario escolar **solo si** el receso empieza
+antes del 1 de julio.
+
+### Validación
+
+- El listado de feriados **no se guarda** si no contiene el Viernes Santo calculado: un
+  dato de entrada que no pasa su propia validación no entra.
+- La identidad `suma_de_exclusiones − solapamiento = días_excluidos` se comprueba en
+  las pruebas.
+- El aporte de cada regla se calcula **quitándola y reconstruyendo** el calendario, no
+  por diferencia algebraica, que se equivoca con los solapamientos.
+- Las pruebas del caso corren **sin red**, y la descarga desde la API de tercero se
+  ejerce contra un servidor falso para comprobar que valida antes de guardar.
+
 ## [0.4.0] — 2026-11-26
 
 Resuelve el problema **P01** del mapa: consolidar cinco Excel públicos heterogéneos.

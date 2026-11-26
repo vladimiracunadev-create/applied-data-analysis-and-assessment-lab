@@ -1,0 +1,9 @@
+indicador,valor,unidad,definicion
+dias_del_anio,365.0,días,Días calendario del año
+dias_laborales,261.0,días,De lunes a viernes
+dias_elegibles,164.0,días,Tras aplicar las ocho reglas de exclusión
+dias_en_meses_de_medicion,121.0,días,"Marzo, junio, septiembre y noviembre"
+laborales_en_meses_de_medicion,87.0,días,Días laborales de esos cuatro meses
+dias_medibles,78.0,días,Elegibles Y en un mes de medición: el denominador real
+retencion_sobre_laborales_pct,62.83524904214559,%,Qué proporción de los días laborales sobrevive a las exclusiones
+medibles_sobre_laborales_del_trimestre_pct,89.65517241379311,%,Proporción de los días laborales de los cuatro meses que es medible

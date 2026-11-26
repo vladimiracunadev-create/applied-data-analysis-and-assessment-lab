@@ -1,0 +1,9 @@
+regla,clasificacion,anios_sin_efecto,minimo_que_quita,maximo_que_quita,nota
+fin_de_semana,efectiva,0,25,30,quita días medibles todos los años
+dias_28_y_29,efectiva,0,2,4,quita días medibles todos los años
+semana_fiestas_patrias,efectiva,0,2,4,quita días medibles todos los años
+feriados,redundante accidental,1,0,3,sin efecto solo en 2026; depende de cómo cae el calendario
+once_de_septiembre,redundante accidental,1,0,1,sin efecto solo en 2027; depende de cómo cae el calendario
+meses_completos,redundante estructural,4,0,0,no afecta en ningún año analizado
+vacaciones_invierno,redundante estructural,4,0,0,no afecta en ningún año analizado
+dia_joven_combatiente,redundante estructural,4,0,0,no afecta en ningún año analizado

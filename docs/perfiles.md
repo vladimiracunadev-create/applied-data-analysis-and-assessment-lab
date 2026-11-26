@@ -18,13 +18,13 @@ No se aspira a 100 % en todos: la columna de faltantes es la lista de trabajo, y
 | Gestor de datos | 8 | 8 | 100.0 | — |
 | Ingeniero de datos | 6 | 5 | 83.3 | automatizacion |
 | Científico de datos | 6 | 3 | 50.0 | inferencia-estadistica, modelamiento, investigacion-aplicada |
-| Analista de negocios | 4 | 3 | 75.0 | apoyo-decision |
+| Analista de negocios | 4 | 4 | 100.0 | — |
 | Especialista en inteligencia de negocios | 4 | 4 | 100.0 | — |
 | Investigador aplicado | 4 | 2 | 50.0 | investigacion-aplicada, inferencia-estadistica |
 | Especialista en calidad de datos | 4 | 4 | 100.0 | — |
 | Especialista en visualización | 2 | 2 | 100.0 | — |
 | Arquitecto de soluciones de datos | 4 | 3 | 75.0 | modelamiento |
-| Especialista en investigación de operaciones | 3 | 0 | 0.0 | modelamiento, investigacion-aplicada, apoyo-decision |
+| Especialista en investigación de operaciones | 3 | 1 | 33.3 | modelamiento, investigacion-aplicada |
 
 ## Perfiles
 

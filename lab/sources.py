@@ -390,6 +390,52 @@ def citations(records: Iterable[Provenance]) -> str:
 #: página índice, porque el nombre del archivo cambia en cada publicación. La licencia
 #: figura como no verificada: la página de descarga se abrió y se leyó, sus términos de
 #: uso no. Mientras siga así, el laboratorio **no redistribuye** estos datos.
+#: Feriados legales de Chile. **Es una fuente de tercero, no oficial.**
+#:
+#: La fuente oficial son la Ley 19.973 y sus modificaciones, y el listado que publica
+#: la Dirección del Trabajo. La API del gobierno (`apis.digital.gob.cl`) no resolvía al
+#: momento de escribir esto, de modo que se usa este tercero **declarándolo**, y la
+#: parte movible del listado se valida de forma independiente con
+#: `lab.calendars.easter_sunday`.
+#:
+#: El listado se descarga una vez y se versiona dentro del caso que lo usa: depender de
+#: una API de tercero en cada ejecución haría el caso irreproducible el día que esa API
+#: deje de existir.
+_FERIADOS_CL = DataSource(
+    name="feriados-cl",
+    url="https://api.boostr.cl/holidays.json",
+    publisher="api.boostr.cl (tercero, NO es la fuente oficial)",
+    description=(
+        "Listado de feriados legales de Chile del año en curso. La fuente oficial es la "
+        "Ley 19.973 y el listado de la Dirección del Trabajo; este servicio es un "
+        "tercero y su listado debe contrastarse."
+    ),
+    licence=UNVERIFIED_LICENCE,
+    media_type="application/json",
+)
+
+
+def feriados_cl(year: int | None = None) -> DataSource:
+    """Fuente de feriados de Chile para un año concreto.
+
+    Args:
+        year: año a consultar. Sin año, el servicio devuelve el año en curso.
+
+    La fuente **no es oficial** y así lo declara. Quien use el listado tiene que
+    contrastarlo: `lab.calendars.easter_relative` permite verificar la parte movible.
+    """
+    if year is None:
+        return _FERIADOS_CL
+    return DataSource(
+        name=f"feriados-cl-{year}",
+        url=f"https://api.boostr.cl/holidays/{year}.json",
+        publisher=_FERIADOS_CL.publisher,
+        description=f"{_FERIADOS_CL.description} Año consultado: {year}.",
+        licence=_FERIADOS_CL.licence,
+        media_type=_FERIADOS_CL.media_type,
+    )
+
+
 CATALOG: dict[str, DataSource] = {
     "gtfs-red-movilidad": DataSource(
         name="gtfs-red-movilidad",
@@ -471,6 +517,7 @@ CATALOG: dict[str, DataSource] = {
         licence_url="http://creativecommons.org/licenses/by-nc/2.0/",
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     ),
+    "feriados-cl": _FERIADOS_CL,
     "bip-retail": DataSource(
         name="bip-retail",
         url=("https://datos.gob.cl/dataset/f0fad229-d59a-4992-8c7a-489d1e9ff58c/"

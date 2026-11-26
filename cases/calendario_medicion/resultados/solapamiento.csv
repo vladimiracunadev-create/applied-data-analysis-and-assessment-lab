@@ -1,0 +1,9 @@
+regla,fin_de_semana,feriados,meses_completos,vacaciones_invierno,semana_fiestas_patrias,once_de_septiembre,dia_joven_combatiente,dias_28_y_29
+fin_de_semana,104,6,25,4,2,0,1,7
+feriados,6,16,3,1,2,0,0,1
+meses_completos,25,3,90,0,0,0,0,5
+vacaciones_invierno,4,1,0,14,0,0,0,0
+semana_fiestas_patrias,2,2,0,0,7,0,0,0
+once_de_septiembre,0,0,0,0,0,1,0,0
+dia_joven_combatiente,1,0,0,0,0,0,1,1
+dias_28_y_29,7,1,5,0,0,0,1,23

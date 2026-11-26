@@ -6,6 +6,7 @@ Componentes
     `metrics`     indicadores, estadística descriptiva y razones seguras.
     `dates`       fechas, duraciones y bandas horarias.
     `textual`     normalización de texto para agrupar y cruzar.
+    `calendars`   calendarios por reglas, con auditoría de exclusiones.
     `geo`         distancias sobre la esfera y conversión de UTM.
     `stats`       inferencia estadística sin dependencias externas.
     `sources`     adquisición de datos públicos con registro de procedencia.
@@ -26,11 +27,12 @@ Los submódulos se importan de forma explícita (`from lab import metrics`) para
 costo de importar matplotlib o pandas se pague solo cuando se usa.
 """
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 
 __all__ = [
     "agents",
     "assessment",
+    "calendars",
     "catalog",
     "console",
     "contracts",

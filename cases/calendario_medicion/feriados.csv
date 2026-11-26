@@ -1,0 +1,71 @@
+fecha,nombre,irrenunciable,anio,fuente,url,validado_contra_pascua
+2024-01-01,Año Nuevo,True,2024,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2024.json,False
+2024-03-29,Viernes Santo,False,2024,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2024.json,True
+2024-03-30,Sábado Santo,False,2024,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2024.json,True
+2024-05-01,Día Nacional del Trabajo,True,2024,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2024.json,False
+2024-05-21,Día de las Glorias Navales,False,2024,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2024.json,False
+2024-06-09,Elecciones Primarias Alcaldes y Gobernadores,False,2024,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2024.json,False
+2024-06-20,Día Nacional de los Pueblos Indígenas,False,2024,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2024.json,False
+2024-06-29,San Pedro y San Pablo,False,2024,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2024.json,False
+2024-07-16,Día de la Virgen del Carmen,False,2024,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2024.json,False
+2024-08-15,Asunción de la Virgen,False,2024,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2024.json,False
+2024-09-18,Independencia Nacional,True,2024,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2024.json,False
+2024-09-19,Día de las Glorias del Ejército,True,2024,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2024.json,False
+2024-09-20,Feriado Adicional Fiestas Patrias,False,2024,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2024.json,False
+2024-10-12,Encuentro de Dos Mundos,False,2024,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2024.json,False
+2024-10-27,"Elecciones Municipales, Consejeros Regionales y Gobernadores Regionales",True,2024,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2024.json,False
+2024-10-31,Día de las Iglesias Evangélicas y Protestantes,False,2024,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2024.json,False
+2024-11-01,Día de Todos los Santos,False,2024,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2024.json,False
+2024-11-24,Segunda Vuelta Elección Gobernadores Regionales,True,2024,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2024.json,False
+2024-12-08,Inmaculada Concepción,False,2024,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2024.json,False
+2024-12-25,Navidad,True,2024,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2024.json,False
+2025-01-01,Año Nuevo,True,2025,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2025.json,False
+2025-04-18,Viernes Santo,False,2025,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2025.json,True
+2025-04-19,Sábado Santo,False,2025,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2025.json,True
+2025-05-01,Día Nacional del Trabajo,True,2025,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2025.json,False
+2025-05-21,Día de las Glorias Navales,False,2025,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2025.json,False
+2025-06-20,Día Nacional de los Pueblos Indígenas,False,2025,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2025.json,False
+2025-06-29,San Pedro y San Pablo,False,2025,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2025.json,False
+2025-07-16,Día de la Virgen del Carmen,False,2025,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2025.json,False
+2025-08-15,Asunción de la Virgen,False,2025,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2025.json,False
+2025-09-18,Independencia Nacional,True,2025,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2025.json,False
+2025-09-19,Día de las Glorias del Ejército,True,2025,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2025.json,False
+2025-10-12,Encuentro de Dos Mundos,False,2025,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2025.json,False
+2025-10-31,Día de las Iglesias Evangélicas y Protestantes,False,2025,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2025.json,False
+2025-11-01,Día de Todos los Santos,False,2025,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2025.json,False
+2025-11-16,Elecciones Presidenciales y Parlamentarias,True,2025,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2025.json,False
+2025-12-08,Inmaculada Concepción,False,2025,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2025.json,False
+2025-12-25,Navidad,True,2025,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2025.json,False
+2026-01-01,Año Nuevo,True,2026,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2026.json,False
+2026-04-03,Viernes Santo,False,2026,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2026.json,True
+2026-04-04,Sábado Santo,False,2026,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2026.json,True
+2026-05-01,Día Nacional del Trabajo,True,2026,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2026.json,False
+2026-05-21,Día de las Glorias Navales,False,2026,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2026.json,False
+2026-06-21,Día Nacional de los Pueblos Indígenas,False,2026,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2026.json,False
+2026-06-29,San Pedro y San Pablo,False,2026,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2026.json,False
+2026-07-16,Día de la Virgen del Carmen,False,2026,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2026.json,False
+2026-08-15,Asunción de la Virgen,False,2026,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2026.json,False
+2026-09-18,Independencia Nacional,True,2026,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2026.json,False
+2026-09-19,Día de las Glorias del Ejército,True,2026,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2026.json,False
+2026-10-12,Encuentro de Dos Mundos,False,2026,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2026.json,False
+2026-10-31,Día de las Iglesias Evangélicas y Protestantes,False,2026,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2026.json,False
+2026-11-01,Día de Todos los Santos,False,2026,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2026.json,False
+2026-12-08,Inmaculada Concepción,False,2026,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2026.json,False
+2026-12-25,Navidad,True,2026,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2026.json,False
+2027-01-01,Año Nuevo,True,2027,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2027.json,False
+2027-03-26,Viernes Santo,False,2027,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2027.json,True
+2027-03-27,Sábado Santo,False,2027,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2027.json,True
+2027-05-01,Día Nacional del Trabajo,True,2027,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2027.json,False
+2027-05-21,Día de las Glorias Navales,False,2027,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2027.json,False
+2027-06-21,Día Nacional de los Pueblos Indígenas,False,2027,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2027.json,False
+2027-06-28,San Pedro y San Pablo,False,2027,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2027.json,False
+2027-07-16,Día de la Virgen del Carmen,False,2027,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2027.json,False
+2027-08-15,Asunción de la Virgen,False,2027,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2027.json,False
+2027-09-17,Feriado Adicional Fiestas Patrias,False,2027,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2027.json,False
+2027-09-18,Independencia Nacional,True,2027,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2027.json,False
+2027-09-19,Día de las Glorias del Ejército,True,2027,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2027.json,False
+2027-10-11,Encuentro de Dos Mundos,False,2027,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2027.json,False
+2027-10-31,Día de las Iglesias Evangélicas y Protestantes,False,2027,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2027.json,False
+2027-11-01,Día de Todos los Santos,False,2027,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2027.json,False
+2027-12-08,Inmaculada Concepción,False,2027,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2027.json,False
+2027-12-25,Navidad,True,2027,"api.boostr.cl (tercero, NO es la fuente oficial)",https://api.boostr.cl/holidays/2027.json,False
