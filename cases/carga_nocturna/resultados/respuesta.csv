@@ -1,0 +1,6 @@
+situacion,paradas,porcentaje,permite_afirmar
+con carga abierta verificada,0,0.0,sí
+sin local a 300 m,4225,40.2,sí
+sin carga abierta (verificado),759,7.2,sí
+indeterminado: local cercano sin horario,5536,52.6,no
+TOTAL con servicio nocturno,10520,100.0,—

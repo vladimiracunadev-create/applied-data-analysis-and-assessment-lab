@@ -1,0 +1,4 @@
+service_id,dias_de_la_semana,ventanas,salidas,ventanas_que_empiezan_antes_de_las_5,ventanas_que_terminan_a_las_24,intervalo_mediano_nocturno_min
+D,1,3643,36875,309,554,30.0
+L,5,6641,62747,392,575,30.0
+S,1,4236,42744,333,555,30.0

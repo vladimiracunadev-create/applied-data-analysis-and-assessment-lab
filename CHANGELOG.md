@@ -6,6 +6,99 @@ Este proyecto usa [versionado semántico](https://semver.org/lang/es/).
 La **primera versión oficial es la 0.1.0**. Los prototipos anteriores no se consideran
 releases y no se publican como tales.
 
+## [0.7.0] — 2026-11-26
+
+### Agregado
+
+- **P09 resuelto: `cases/carga_nocturna`.** Donde hay servicio de buses de madrugada,
+  ¿hay dónde cargar la tarjeta? El servicio nocturno existe y no es marginal: **367 251
+  llegadas** en **10 520 paradas**, el 84,2 % de la red, con una mediana de 23 llegadas
+  por parada en las cinco horas de la ventana.
+
+  La respuesta es **cero**: ninguna de esas paradas tiene a 300 m un local que declare
+  abrir en la madrugada, y **ninguno de los 1 927 locales abiertos** lo declara —el más
+  tardío cierra a las 23:00—. Pero la cifra sola miente por omisión. El reparto:
+  4 225 paradas (40,2 %) sin ningún local cerca, 759 (7,2 %) con locales cerca todos
+  verificados cerrados, y **5 536 (52,6 %) indeterminadas**.
+
+  De modo que el resultado no es un número sino un **intervalo: entre 0,0 % y 52,6 %**.
+  El ancho —52,6 puntos— no lo produce la red ni la geografía: lo produce una columna
+  vacía.
+
+- **`lab/schedules.py`**, módulo nuevo del núcleo: interpreta horarios de atención
+  escritos en texto libre. La regla que lo gobierna es que **lo que no se entiende es
+  desconocido, nunca «cerrado»**, y por eso `is_open` tiene tres respuestas —`True`,
+  `False` y `None`— y el `None` se propaga hasta el informe. Sobre el archivo real
+  interpreta los 348 valores con horario, que son solo **10 textos distintos**, incluido
+  uno con saltos de línea dentro de la celda. No resuelve festivos: recibe el indicador
+  y no lo averigua, declarado en el docstring.
+
+- **P05 resuelto de paso.** Pedía interpretar los horarios escritos en texto libre, que
+  es exactamente lo que P09 necesitaba. Los diez formatos del archivo quedan fijados
+  como caso de prueba: si el publicador agrega un local nocturno, la prueba cae, y debe
+  caer, porque la conclusión de P09 dejaría de ser válida.
+
+- **El hallazgo de gobernanza, que es el resultado que vale.** El campo
+  `horario referencial` está completo al **100 % en cuatro de los cinco archivos y al
+  0 % en el quinto**, que es el que tiene 1 579 de los 1 927 locales. Un vacío uniforme
+  es un problema de captura; concentrado en un archivo, es una decisión de publicación.
+  Y la consecuencia está medida: **1 546 de esos locales están a menos de 300 m de una
+  parada con servicio nocturno**, de modo que completar esos registros —el 97,9 % de los
+  que faltan— vuelve contestable el 52,6 % de la red nocturna. Eso es un pedido
+  priorizado al publicador, no una queja.
+
+- **Cinco registros nuevos en la base de conocimiento**, que pasa de 30 a 35:
+  `tres-respuestas-no-dos`, `intervalo-en-vez-de-cifra`, `vacio-concentrado`,
+  `atajo-verosimil` y `progresion-sin-expandir`.
+
+- **84 pruebas nuevas** (`tests/test_schedules.py` y `tests/test_carga_nocturna.py`),
+  sobre un feed sintético con aritmética temporal calculable a mano. La suite pasa de
+  544 a **628** y sigue corriendo sin descargar ningún dato.
+
+### Corregido
+
+- **`lab.schedules` leía `pd.NA` como si fuera texto.** La comprobación de nulos era
+  `isinstance(valor, float) and pd.isna(valor)`, y `pd.NA` —que es lo que trae una
+  columna de tipo `string`— no es un `float`. Pasaba de largo, se convertía en la cadena
+  `«<NA>»` y el informe de calidad decía «no se reconoce ningún rango de horas» en lugar
+  de «sin dato». Eran los 1 579 registros donde está el hallazgo del caso: el motivo
+  equivocado justamente en la fila que importa. Las dos causas piden acciones distintas
+  —una se completa, la otra se corrige—, de modo que confundirlas no es cosmético.
+
+### Declarado como medido, no como supuesto
+
+- **El atajo que daba una cifra verosímil y falsa.** Filtrar `arrival_time` entre
+  `00:00:00` y `04:59:59` devuelve 851 773 filas y **12 201 paradas** donde hay 10 520.
+  El 100 % de esas filas son de expediciones de frecuencia, cuyo `arrival_time` es un
+  desplazamiento desde el inicio del viaje y no una hora: el atajo no está midiendo
+  horas en absoluto. Y sobreestima apenas un **16 %**, lo bastante poco para que nada
+  parezca roto. El caso implementa el atajo junto al cálculo correcto y publica la
+  comparación.
+
+- **Las 00:00–05:00 de reloj son dos intervalos de segundos de servicio**, `[0, 18 000)`
+  y `[86 400, 104 400)`, porque un bus que sale a las 23:40 llega a sus paradas finales
+  pasada la medianoche. **1 490 paradas** tienen servicio nocturno únicamente por esa
+  segunda vía.
+
+- **El conteo se hace sin expandir nada.** Las llegadas de una ventana de frecuencia a
+  una parada forman una progresión aritmética; contar cuántas caen en un intervalo son
+  dos techos acotados y una resta. Expandir las 142 366 salidas contra 1,1 millones de
+  filas de `stop_times` produciría cientos de millones de filas para responder una
+  pregunta de sí o no por parada.
+
+### Límites declarados
+
+- **La ventana de 00:00 a 05:00 es una elección del caso.** No se encontró ninguna
+  definición oficial de «servicio nocturno» para la red.
+- **El horario, donde existe, es de cadena y no de local**: diez textos para 348
+  registros, 311 de ellos con solo dos. El campo describe la política de quien agrupa
+  los locales, y el propio archivo lo llama «referencial».
+- **El pliegue entre el día de servicio y el día del calendario no se resuelve**: una
+  llegada a las 24:30 de un viernes de servicio ocurre un sábado. El caso lo evita
+  preguntando por el día más favorable de los siete, lo que da una cota superior. Como
+  ningún local abre ningún día, aquí no cambia nada; con otros datos cambiaría, y queda
+  dicho.
+
 ## [0.6.0] — 2026-11-26
 
 ### Agregado

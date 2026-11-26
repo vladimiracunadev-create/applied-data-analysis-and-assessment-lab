@@ -16,9 +16,10 @@ En orden, de lo que más rinde a lo que menos:
 | 2 | [`cases/bip_lugares_carga`](../cases/bip_lugares_carga/README.md) | **P01 resuelto**: consolidar cinco Excel reales con nueve defectos. Es lo más parecido a una prueba de cuatro horas |
 | 3 | [`cases/calendario_medicion`](../cases/calendario_medicion/README.md) | **P11 resuelto**: reconstruir el denominador de un indicador oficial |
 | 4 | [`cases/cobertura_de_carga`](../cases/cobertura_de_carga/README.md) | **P08 resuelto en parte**: el cruce que no tiene clave, y cuánto del resultado lo pone el analista |
-| 5 | [Equivalencias SQL / Pandas / Excel / R](equivalencias.md) | La tabla de traducción, con una columna de **trampas** donde las versiones «equivalentes» dejan de serlo |
-| 6 | [Indicadores oficiales del transporte](indicadores-oficiales-transporte.md) | Las fórmulas, el grano, las fuentes y las reglas de exclusión reales, citadas |
-| 7 | [`cases/transport`](../cases/transport/README.md) | Las tres simulaciones de cuatro horas y qué se corrige en cada una |
+| 5 | [`cases/carga_nocturna`](../cases/carga_nocturna/README.md) | **P09 y P05 resueltos**: un indicador con datos faltantes, publicado como intervalo en lugar de cifra |
+| 6 | [Equivalencias SQL / Pandas / Excel / R](equivalencias.md) | La tabla de traducción, con una columna de **trampas** donde las versiones «equivalentes» dejan de serlo |
+| 7 | [Indicadores oficiales del transporte](indicadores-oficiales-transporte.md) | Las fórmulas, el grano, las fuentes y las reglas de exclusión reales, citadas |
+| 8 | [`cases/transport`](../cases/transport/README.md) | Las tres simulaciones de cuatro horas y qué se corrige en cada una |
 
 Lo que **no** encontrarás: nada sobre el contenido de ninguna prueba real. No se
 conoce, y queda dicho en el mapa de problemas.
@@ -33,8 +34,8 @@ conoce, y queda dicho en el mapa de problemas.
 | [Metodología de 18 etapas](metodologia.md) | La versión completa y auditable, implementada en `lab.method` |
 | [Método de investigación](research-method.md) | La versión corta, para un análisis acotado |
 | [Arquitectura](arquitectura.md) | Los contratos entre módulos y las decisiones técnicas con sus alternativas descartadas |
-| [Base de conocimiento](conocimiento.md) | 30 registros de cosas que costó descubrir. Búsqueda: `python -m lab.knowledge "consulta"` |
-| [Catálogo de casos](catalogo-casos.md) | Los siete casos con sus metadatos y la cobertura de competencias |
+| [Base de conocimiento](conocimiento.md) | 35 registros de cosas que costó descubrir. Búsqueda: `python -m lab.knowledge "consulta"` |
+| [Catálogo de casos](catalogo-casos.md) | Los ocho casos con sus metadatos y la cobertura de competencias |
 
 ---
 

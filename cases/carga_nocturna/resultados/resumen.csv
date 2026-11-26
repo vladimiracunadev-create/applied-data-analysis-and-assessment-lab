@@ -1,0 +1,9 @@
+indicador,valor,unidad,definicion
+paradas_de_embarque,12497.0,paradas,Todas las paradas donde sube gente
+con_servicio_nocturno,10520.0,paradas,"Con al menos una llegada en [00:00, 05:00)"
+proporcion_nocturna_pct,84.2,%,El servicio de madrugada no es marginal
+llegadas_nocturnas,367251.0,llegadas,Sumadas sobre los tres servicios con ventanas de frecuencia
+llegadas_medianas_por_parada,23.0,llegadas,En las cinco horas de la ventana
+locales_que_abren_de_noche,0.0,locales,"De los 1 927 abiertos, cuántos declaran abrir en la madrugada"
+cobertura_verificada_pct,0.0,%,"Paradas nocturnas con carga abierta a 300 m, verificada"
+indeterminadas_pct,52.6,%,Paradas sobre las que el dato no permite concluir nada

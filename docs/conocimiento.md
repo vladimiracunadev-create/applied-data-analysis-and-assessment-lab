@@ -2,7 +2,7 @@
 
 # Índice de la base de conocimiento
 
-**30 registros**. Búsqueda: `python -m lab.knowledge "consulta"`.
+**35 registros**. Búsqueda: `python -m lab.knowledge "consulta"`.
 
 ## Por tipo
 
@@ -11,10 +11,10 @@
 | concepto | 3 |
 | definicion | 3 |
 | error | 7 |
-| formula | 2 |
-| leccion | 3 |
+| formula | 3 |
+| leccion | 5 |
 | metodologia | 5 |
-| patron | 7 |
+| patron | 9 |
 
 ## Registros
 
@@ -35,9 +35,12 @@
 | error | [`sesgo-con-eje`](../knowledge/sesgo-con-eje.md) | La distancia euclídea sobre grados no es una aproximación: es un sesgo con eje | geoespacial, errores-frecuentes, estadistica, pandas, datos-reales |
 | formula | [`duracion-en-minutos-tres-herramientas`](../knowledge/duracion-en-minutos-tres-herramientas.md) | Duración en minutos en Pandas, Excel y SQL | fechas-horarios, pandas, excel, sql, equivalencias |
 | formula | [`intervalo-de-confianza`](../knowledge/intervalo-de-confianza.md) | Intervalo de confianza de una media y de una proporción | estadistica, inferencia-estadistica, formulas, incertidumbre |
+| formula | [`progresion-sin-expandir`](../knowledge/progresion-sin-expandir.md) | Contar eventos periódicos en una ventana no necesita generar los eventos | pandas, fechas-horarios, ingenieria-datos, formulas, gtfs |
+| leccion | [`atajo-verosimil`](../knowledge/atajo-verosimil.md) | El atajo peligroso no es el que da una cifra absurda, es el que da una cifra verosímil | errores-frecuentes, pensamiento-critico, calidad-datos, gtfs, fechas-horarios |
 | leccion | [`cambiar-la-pregunta`](../knowledge/cambiar-la-pregunta.md) | Cuando el dato no está, a veces lo honesto es cambiar la pregunta y no el dato | pensamiento-critico, gobernanza-datos, comunicacion-resultados, metodologia, incertidumbre |
 | leccion | [`defecto-que-no-existe`](../knowledge/defecto-que-no-existe.md) | Un cruce que falla puede estar diciendo que el cruce no correspondía | calidad-datos, cruce-consolidacion, pensamiento-critico, datos-reales, errores-frecuentes |
 | leccion | [`dos-coordenadas-un-lugar`](../knowledge/dos-coordenadas-un-lugar.md) | Un dato redundante permite validar el archivo contra sí mismo | validacion-independiente, calidad-datos, gobernanza-datos, datos-reales, geoespacial |
+| leccion | [`vacio-concentrado`](../knowledge/vacio-concentrado.md) | Un vacío uniforme es un problema de captura; concentrado en un archivo, es una decisión | gobernanza-datos, calidad-datos, datos-reales, pensamiento-critico, comunicacion-resultados |
 | metodologia | [`cobertura-de-un-indicador`](../knowledge/cobertura-de-un-indicador.md) | Informar la cobertura junto con el indicador | calidad-datos, indicadores, comunicacion-resultados, metodologia |
 | metodologia | [`cruce-sin-clave`](../knowledge/cruce-sin-clave.md) | Cuando no hay clave compartida, el criterio de emparejamiento es la mitad del resultado | cruce-consolidacion, metodologia, geoespacial, pensamiento-critico, datos-reales |
 | metodologia | [`denominador-es-una-decision`](../knowledge/denominador-es-una-decision.md) | El denominador de un indicador oficial es una decisión, no un dato | indicadores, gobernanza-datos, denominadores, metodologia, datos-reales |
@@ -47,6 +50,8 @@
 | patron | [`denominador-cero`](../knowledge/denominador-cero.md) | Razones con denominador cero o ausente | indicadores, calidad-datos, excel, pandas, errores-frecuentes |
 | patron | [`encabezado-no-esta-en-la-primera-fila`](../knowledge/encabezado-no-esta-en-la-primera-fila.md) | Detectar la fila del encabezado en una planilla maquetada para imprimir | excel, hojas-de-calculo, lectura-escritura-datos, datos-reales, calidad-datos |
 | patron | [`expandir-frecuencias`](../knowledge/expandir-frecuencias.md) | Expandir una ventana con cadencia a sus eventos reales | agregacion-indicadores, pandas, gtfs, datos-reales, denominadores |
+| patron | [`intervalo-en-vez-de-cifra`](../knowledge/intervalo-en-vez-de-cifra.md) | Cuando el denominador tiene huecos, el indicador es un intervalo y su ancho es otro indicador | indicadores, incertidumbre, comunicacion-resultados, gobernanza-datos, denominadores |
 | patron | [`normalizar-antes-de-agrupar`](../knowledge/normalizar-antes-de-agrupar.md) | Normalizar para agrupar y conservar la etiqueta para informar | limpieza-normalizacion, cruce-consolidacion, pandas, datos-reales, comunicacion-resultados |
 | patron | [`regla-redundante`](../knowledge/regla-redundante.md) | Distinguir una regla redundante por construcción de una redundante por azar | indicadores, gobernanza-datos, metodologia, datos-reales, pensamiento-critico |
+| patron | [`tres-respuestas-no-dos`](../knowledge/tres-respuestas-no-dos.md) | Un indicador construido sobre datos incompletos necesita tres respuestas, no dos | calidad-datos, gobernanza-datos, indicadores, incertidumbre, comunicacion-resultados |
 | patron | [`unidad-de-la-decision`](../knowledge/unidad-de-la-decision.md) | El error de un método se mide en la unidad de la decisión, no en la del cálculo | pensamiento-critico, comunicacion-resultados, calidad-datos, estadistica, indicadores |

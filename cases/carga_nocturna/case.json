@@ -1,0 +1,115 @@
+{
+  "slug": "carga_nocturna",
+  "titulo": "Cobertura de carga en el servicio nocturno: cuando la respuesta es un intervalo porque falta una columna",
+  "disciplina": "gobernanza-de-datos",
+  "industria": "transporte",
+  "dificultad": "avanzado",
+  "metodologia": "cruce de dos dimensiones —espacio y tiempo— con propagación explícita de lo desconocido y cuantificación del dato que falta",
+  "competencias": [
+    "fechas-horarios",
+    "cruce-consolidacion",
+    "limpieza-normalizacion",
+    "agregacion-indicadores",
+    "gobernanza-datos",
+    "calidad-datos",
+    "validacion-independiente",
+    "comunicacion-resultados",
+    "reproducibilidad",
+    "apoyo-decision"
+  ],
+  "estado": "implementado",
+  "tiempo_sugerido_min": 180,
+  "contexto": "Entre las 00:00 y las 05:00 la Red Metropolitana de Movilidad tiene servicio real: 367 251 llegadas de bus repartidas en 10 520 paradas, el 84,2 % de las paradas de embarque de la red, con una mediana de 23 llegadas por parada en esas cinco horas. Para subir hay que llevar saldo en la tarjeta bip!, y el saldo se carga en locales físicos que publican su horario en un campo de texto libre. Ese campo está presente en el 18,06 % de los locales.",
+  "problema": "Donde hay servicio de buses de madrugada, determinar si hay dónde cargar la tarjeta: cruzar la dimensión espacial (hay un local a 300 m) con la temporal (está abierto en esa ventana), y establecer qué proporción de la red nocturna queda cubierta.",
+  "objetivos": [
+    "Calcular correctamente qué paradas tienen servicio en la ventana nocturna, sin confundir desplazamientos relativos con horas de reloj.",
+    "Contar las llegadas que ocurren después de la medianoche del día de servicio, que son servicio nocturno real y que un filtro por hora pierde.",
+    "Interpretar el horario de atención escrito en texto libre, con una regla explícita: lo que no se entiende es desconocido, nunca cerrado.",
+    "Clasificar cada parada nocturna en cuatro situaciones excluyentes, una de las cuales es «no se puede saber».",
+    "Expresar la respuesta como un intervalo entre lo verificado y la cota superior, y medir su ancho.",
+    "Cuantificar exactamente qué registros habría que completar para cerrar ese intervalo, para que el hallazgo sea accionable y no una queja.",
+    "Medir la intensidad del servicio nocturno por parada, porque «tiene servicio» es un sí o no que esconde la diferencia entre un bus cada trece minutos y uno solo en cinco horas."
+  ],
+  "restricciones": [
+    "Tres horas de trabajo.",
+    "El entorno mínimo del laboratorio: sin dependencias geoespaciales ni de procesamiento de lenguaje.",
+    "La tabla de horarios del feed tiene 1 098 717 filas y no se puede expandir por salida: hay que resolver la pregunta sin materializar el producto.",
+    "Ninguna de las dos fuentes se versiona: el feed tiene licencia no verificada y los Excel son CC BY-NC 2.0.",
+    "No se incorpora ninguna fuente nueva para suplir el horario que falta: el vacío es parte del resultado."
+  ],
+  "fuentes": [
+    "Servicio: feed GTFS estático de la Red Metropolitana de Movilidad, DTPM, archivo GTFS_20261114_v2.zip descargado el 26 de noviembre de 2026 de https://www.dtpm.cl/index.php/gtfs-vigente, sha256 ff0cda445cc4…, 12 829 198 bytes. LICENCIA NO VERIFICADA: el sitio no publica condiciones de uso.",
+    "Horarios y ubicación de los lugares de carga: cinco datasets de bip! del Ministerio de Transportes, de acceso público en el portal de datos abiertos datos.gob.cl, con licencia Creative Commons Atribución-NoComercial 2.0, verificada. Consolidados por el caso bip_lugares_carga (P01).",
+    "Radio de 300 m: heredado del caso cobertura_de_carga (P08), que lo toma por analogía del manual de diseño de paradas del DTPM (febrero de 2026, p. 36). El manual asocia esa distancia a una caminata de 3 a 5 minutos pero lo hace para el espaciamiento entre paradas: no fija ningún criterio de distancia a un lugar de carga.",
+    "La ventana de 00:00 a 05:00 es una elección de este caso, no una definición oficial. No se encontró ninguna definición publicada de «servicio nocturno» para la red."
+  ],
+  "datasets": [
+    "No versiona datos de terceros. Versiona once tablas agregadas en cases/carga_nocturna/resultados/.",
+    "Los insumos se obtienen con: python scripts/fetch_data.py gtfs-red-movilidad bip-metro bip-puntos bip-centros-alto-estandar bip-centros-estandar bip-retail"
+  ],
+  "diccionario": "llegadas_noche: llegadas de bus a la parada en [00:00, 05:00), sumadas sobre los tres servicios con ventanas de frecuencia. tras_medianoche: cuántas de ellas provienen del intervalo de segundos de servicio [86 400, 104 400), es decir buses que salieron antes de medianoche. clase: una de cuatro situaciones excluyentes —con carga abierta verificada, sin local a 300 m, sin carga abierta (verificado), indeterminado—. locales_a_300m y locales_con_horario: cuántos locales hay en el radio y de cuántos se conoce el horario; su diferencia es lo que vuelve indeterminada a la parada.",
+  "supuestos": [
+    "El servicio nocturno es el de la ventana [00:00, 05:00), con el fin exclusivo. No es una definición oficial: no se encontró ninguna publicada.",
+    "Un local da cobertura si está a 300 m o menos, con la misma advertencia de analogía que P08.",
+    "Un local cuyo horario no se puede interpretar está en estado DESCONOCIDO, no cerrado. Es la decisión que gobierna todo el resultado.",
+    "Para preguntar si un local abre de madrugada se usa el día de la semana más favorable de los siete. Es deliberadamente holgado: el mapeo entre el día de servicio del feed y el día del calendario tiene un pliegue —una llegada a las 24:30 de un viernes de servicio ocurre un sábado— y resolverlo exigiría fechas. Preguntando por el día más favorable el resultado es una cota superior, y como ningún local abre ningún día, el pliegue no cambia nada.",
+    "Las llegadas se cuentan sobre la oferta programada del feed. No hay datos de operación real.",
+    "Los tres servicios con ventanas de frecuencia (L, S, D) se suman para la cifra global y se desagregan aparte. No se ponderan por cuántos días del año representa cada uno."
+  ],
+  "metodologias_alternativas": [
+    "Intersección de progresión aritmética con intervalo, que es lo implementado: las llegadas de una ventana a una parada son `primero + k·intervalo`, y contar cuántas caen en un rango son dos techos acotados y una resta. Exacto y sin materializar nada.",
+    "Expandir las 142 366 salidas y unirlas a las paradas de cada recorrido: es lo natural y produce cientos de millones de filas para responder una pregunta de sí o no por parada. Descartado por tamaño, no por corrección.",
+    "DuckDB o Polars sobre la tabla expandida: resolvería el problema de tamaño sin cambiar el método. Descartado porque la aritmética lo evita por completo, y porque añadir un motor al entorno para no pensar el cálculo es el intercambio equivocado.",
+    "Clasificar los horarios a mano: con 10 textos distintos sería viable y más rápido. Descartado porque no se puede auditar, no sobrevive a un cambio del publicador, y porque el intérprete es reutilizable en cualquier campo de horario de atención.",
+    "Expresiones regulares ad hoc dentro del caso, en lugar de un módulo del núcleo: descartado porque la regla difícil —propagar lo desconocido— no es del dominio del transporte y vale para cualquier dato administrativo."
+  ],
+  "implementaciones": [
+    "cases/carga_nocturna/solution.py — resolución completa.",
+    "lab/schedules.py — intérprete de horarios en texto libre, con lo ilegible como desconocido y las tres respuestas de is_open.",
+    "cases/cobertura_de_carga/solution.py — el radio, el criterio de proximidad y la carga de paradas y locales, reutilizados tal cual.",
+    "cases/bip_lugares_carga/solution.py — la consolidación de los cinco Excel, por vía de cobertura_de_carga.",
+    "lab/geo.py — haversine por bloques para el radio de 300 m.",
+    "lab/dates.py — parse_hms_seconds, que admite horas de 24 o más y relleno de ceros irregular."
+  ],
+  "soluciones": "cases/carga_nocturna/solution.py, documentada paso a paso en el README del caso. Se ejecuta con: python -m cases.carga_nocturna.solution",
+  "resultados": "cases/carga_nocturna/resultados/ con once tablas. Resultado central: de las 10 520 paradas con servicio nocturno, CERO tienen un lugar de carga a 300 m que declare estar abierto en la ventana. 4 225 (40,2 %) no tienen ningún local cerca; 759 (7,2 %) tienen locales cerca, todos con horario conocido y ninguno abierto; y 5 536 (52,6 %) quedan INDETERMINADAS porque hay locales cerca que no declaran horario. La cobertura nocturna está por tanto entre 0,0 % y 52,6 %, un intervalo de 52,6 puntos. Ninguno de los 1 927 locales abiertos declara abrir de madrugada.",
+  "validaciones": [
+    "El conteo de llegadas de una progresión aritmética se prueba con siete casos verificables contando a mano, incluidos los bordes del intervalo y el caso de cero salidas.",
+    "El fin de la ventana de frecuencia es exclusivo: de 23:00 a 24:00 cada 30 minutos son dos salidas y no tres, comprobado en las pruebas.",
+    "La parada que solo tiene servicio nocturno por llegadas posteriores a la medianoche se prueba con una geometría temporal construida a mano: salida 23:30, desplazamiento 40 minutos, llegada 00:10.",
+    "El atajo se implementa junto al cálculo correcto y se comparan sus resultados, de modo que la magnitud del error quede medida y no argumentada.",
+    "Cada uno de los diez textos de horario del archivo real está fijado como caso de prueba, con la afirmación de que ninguno cubre la madrugada. Si el publicador agrega un local nocturno, la prueba cae y la conclusión del caso debe rehacerse.",
+    "La regla central del intérprete —lo ilegible es desconocido y no cerrado— se prueba sobre nueve entradas distintas, incluido pd.NA de una columna de tipo string.",
+    "Las cuatro clases se prueban cada una con la parada que debe caer en ella, y se prueba la transición: quitado el local sin horario, la parada indeterminada pasa a verificada.",
+    "El ancho del intervalo tiene que ser cero cuando no falta ningún horario, comprobado."
+  ],
+  "interpretacion": "La respuesta a la pregunta no es un número, es un intervalo de 52,6 puntos de ancho, y ese ancho no lo produce la red ni la geografía: lo produce una columna vacía en uno de los cinco archivos. El campo de horario está completo al 100 % en cuatro archivos y al 0 % en el quinto, que es además el que tiene 1 579 de los 1 927 locales. Eso no es ruido de calidad de datos, es una decisión de publicación, y tiene una consecuencia que ahora está medida: 1 546 de esos locales están a menos de 300 m de una parada con servicio nocturno, de modo que completar esos registros vuelve contestable el 52,6 % de la red nocturna. Lo que el caso entrega no es la cobertura —que no se puede establecer— sino el pedido concreto que hay que hacerle al publicador y la cifra que lo justifica. Sobre lo que sí se puede afirmar: ninguno de los 348 locales que declaran horario abre de madrugada, el más tardío cierra a las 23:00, y 4 225 paradas con servicio nocturno no tienen local alguno en trescientos metros, que es una conclusión firme porque no depende de ningún horario.",
+  "limitaciones": [
+    "No se puede responder la pregunta para el 52,6 % de las paradas nocturnas. Es el resultado principal, no una limitación lateral.",
+    "La ventana de 00:00 a 05:00 es una elección del caso. No se encontró ninguna definición oficial de servicio nocturno para la red, de modo que el denominador es discutible y se declara.",
+    "El campo de horario, donde existe, tiene solo diez textos distintos entre 348 locales, y 311 de ellos usan dos. Describe la política de una cadena, no el horario de un local: incluso donde el dato está, su granularidad no es la que el indicador supone.",
+    "El horario se llama «referencial» en el propio archivo. Nada garantiza que corresponda a la operación real.",
+    "Las llegadas son oferta programada. No hay datos de operación real ni de cumplimiento.",
+    "El mapeo entre el día de servicio del feed y el día del calendario no se resuelve: se evita preguntando por el día más favorable, lo que da una cota superior. Con locales que abrieran de madrugada habría que resolverlo con fechas.",
+    "La cobertura no pondera demanda. Una parada con 459 llegadas nocturnas cuenta igual que una con una sola, y la tabla de intensidad existe precisamente para no perder esa diferencia de vista.",
+    "Describe el feed del 14 de noviembre de 2026 y los Excel del 26 de noviembre de 2026."
+  ],
+  "conocimiento_adquirido": [
+    "Un indicador de cobertura que cruza dos dimensiones necesita tres respuestas y no dos. Fundir «no hay» con «no se sabe» produce un «59,8 % sin cobertura verificada» que suena a medición y es una invención.",
+    "La respuesta honesta a una pregunta con datos faltantes es un intervalo, y el ancho del intervalo es un indicador por derecho propio: mide cuánto de la pregunta sigue abierto y a quién hay que pedírselo.",
+    "Un vacío uniforme en un campo es un problema de captura; un vacío concentrado en un archivo es una decisión de publicación. La diferencia cambia a quién se le reporta y qué se le pide.",
+    "El atajo peligroso no es el que da una cifra absurda sino el que da una cifra verosímil. Filtrar la hora como texto daba 12 201 paradas donde hay 10 520: una sobreestimación del 16 %, lo bastante pequeña para que nada parezca roto.",
+    "Las 00:00–05:00 de reloj son DOS intervalos de segundos de servicio en GTFS, [0, 18 000) y [86 400, 104 400), porque un bus que sale a las 23:40 llega a sus paradas finales pasada la medianoche. 1 490 paradas tienen servicio nocturno solo por esa segunda vía.",
+    "Una pregunta de sí o no sobre una progresión aritmética no necesita expandir la progresión. Contar cuántos términos de `primero + k·intervalo` caen en un intervalo son dos techos y una resta, y eso evita materializar cientos de millones de filas.",
+    "Un campo de texto libre con diez valores distintos entre 348 registros no describe cada registro: describe la política de quien los agrupa. Interpretarlo correctamente no arregla ese problema, solo lo deja a la vista.",
+    "Cuantificar el dato que falta convierte una queja en un hallazgo accionable: no «faltan horarios» sino «estos 1 546 registros, el 97,9 % de los que faltan, desbloquean el 52,6 % de la red nocturna»."
+  ],
+  "capacidades_reutilizables": [
+    "lab.schedules interpreta cualquier campo de horario de atención escrito por personas: catastros de locales, directorios de sucursales, registros de atención de público, horarios de servicio. Y trae incorporada la regla que casi siempre se incumple: lo ilegible es desconocido.",
+    "La clasificación en cuatro estados con uno explícitamente indeterminado se aplica a cualquier indicador construido sobre datos incompletos: cumplimiento de requisitos, elegibilidad de beneficiarios, conformidad de proveedores.",
+    "El par piso-techo con el ancho del intervalo es la forma general de publicar un indicador cuyo denominador tiene huecos, y es preferible a un número con una nota al pie que nadie lee.",
+    "Medir qué registros concretos hay que completar, y cuánto desbloquea cada grupo, es el patrón para convertir un informe de calidad de datos en una solicitud priorizada al dueño del dato.",
+    "La intersección de una progresión aritmética con un intervalo sirve para cualquier evento recurrente con período fijo: turnos, ciclos de facturación, mantenimientos programados, ventanas de despliegue.",
+    "El patrón de implementar el atajo equivocado junto al cálculo correcto, y publicar la comparación, es la forma de justificar por qué el código es más complicado de lo que parece necesario."
+  ]
+}

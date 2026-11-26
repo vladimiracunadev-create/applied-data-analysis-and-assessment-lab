@@ -4,16 +4,17 @@
 > proyectado**. Nada de la segunda lista debe citarse como una capacidad existente del
 > laboratorio.
 
-## 1. Estado actual verificado (v0.6.0)
+## 1. Estado actual verificado (v0.7.0)
 
 Todo lo de esta sección se ejecuta y está cubierto por pruebas automáticas.
 Los recuentos se obtienen con los comandos indicados, no de memoria.
 
 | Componente | Estado | Cómo comprobarlo |
 | --- | --- | --- |
-| Núcleo (`lab/`): 21 módulos | implementado | `python -m pytest` |
-| Casos de estudio (7): 4 con datos públicos reales, 3 sintéticos | implementado | `python -m pytest tests/test_catalog.py` |
+| Núcleo (`lab/`): 22 módulos | implementado | `python -m pytest` |
+| Casos de estudio (8): 5 con datos públicos reales, 3 sintéticos | implementado | `python -m pytest tests/test_catalog.py` |
 | Cruce espacial por proximidad sin dependencias geoespaciales | implementado | `python -m pytest tests/test_cobertura_de_carga.py` |
+| Intérprete de horarios en texto libre, con lo ilegible como desconocido | implementado | `python -m pytest tests/test_schedules.py` |
 | Simulaciones de cuatro horas (3) | implementado | `simulations/0{1,2,3}_enunciado.md` |
 | Solución de referencia en Pandas | implementado | `python solutions/reference.py 1` |
 | Segunda implementación en SQL | implementado | `python solutions/sql_reference.py 1` |
@@ -21,7 +22,7 @@ Los recuentos se obtienen con los comandos indicados, no de memoria.
 | Libros de Excel resueltos con fórmulas vivas | implementado | `python scripts/build_excel_solutions.py` |
 | Motor de evaluaciones con banco de ítems y rúbricas | implementado | `python scripts/build_assessment.py --list` |
 | Programa de aprendizaje: 8 clases con 17 secciones | implementado | `python -m lab.learning` |
-| Base de conocimiento (30 registros) con búsqueda léxica | implementado | `python -m lab.knowledge` |
+| Base de conocimiento (35 registros) con búsqueda léxica | implementado | `python -m lab.knowledge` |
 | Contratos de 20 agentes y arnés de verificación | implementado | `python -m lab.agents` |
 | Perfiles profesionales (11) con cobertura medida | implementado | `python -m pytest tests/test_profiles.py` |
 | Inferencia estadística sin dependencias externas | implementado | `python -m pytest tests/test_stats.py` |

@@ -1,0 +1,4 @@
+service_id,dias_de_la_semana,paradas_nocturnas,llegadas,con_carga_abierta,sin_local_cerca,cerrado_verificado,indeterminado,indeterminado_pct
+D,1,9681,108291,0,3803,709,5169,53.4
+L,5,10465,140424,0,4185,759,5521,52.8
+S,1,9960,118536,0,3922,730,5308,53.3

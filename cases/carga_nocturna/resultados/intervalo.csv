@@ -1,0 +1,6 @@
+indicador,valor,unidad,definicion
+paradas_con_servicio_nocturno,10520.0,paradas,El denominador de este indicador
+cobertura_verificada,0.0,paradas,Paradas con un local que declara abrir de madrugada
+cobertura_minima_pct,0.0,%,El piso: lo que el dato permite afirmar
+cobertura_maxima_pct,52.62,%,El techo: suponiendo que todos los locales sin horario abran
+ancho_del_intervalo_pp,52.62,puntos,Cuánto de la pregunta sigue abierto. No lo produce la red ni la geografía: lo produce una columna vacía

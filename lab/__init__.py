@@ -7,6 +7,7 @@ Componentes
     `dates`       fechas, duraciones y bandas horarias.
     `textual`     normalización de texto para agrupar y cruzar.
     `calendars`   calendarios por reglas, con auditoría de exclusiones.
+    `schedules`   horarios de atención en texto libre, con lo ilegible como desconocido.
     `geo`         distancias sobre la esfera y conversión de UTM.
     `stats`       inferencia estadística sin dependencias externas.
     `sources`     adquisición de datos públicos con registro de procedencia.
@@ -27,7 +28,7 @@ Los submódulos se importan de forma explícita (`from lab import metrics`) para
 costo de importar matplotlib o pandas se pague solo cuando se usa.
 """
 
-__version__ = "0.6.0"
+__version__ = "0.7.0"
 
 __all__ = [
     "agents",
@@ -46,6 +47,7 @@ __all__ = [
     "metrics",
     "profiles",
     "report",
+    "schedules",
     "sources",
     "sqlbridge",
     "stats",

@@ -140,7 +140,8 @@ cobertura del indicador cae por dos vías a la vez: los horarios que no se puede
 interpretar **y** los 1 579 registros que no tienen la columna. Hay que informar las
 dos.
 
-**Estado:** disponible.
+**Estado:** **resuelto** como parte de [`cases/carga_nocturna`](../cases/carga_nocturna/README.md), que lo necesitaba para contestar P09. El intérprete está en
+[`lab/schedules.py`](../lab/schedules.py) y los diez formatos del archivo quedan fijados como prueba.
 
 ---
 
@@ -216,16 +217,31 @@ caso lo mide en lugar de afirmarlo y publica una rejilla geográfica como sustit
 **La pregunta.** Donde hay servicio de buses entre las 00:00 y las 05:00, ¿hay dónde
 cargar la tarjeta?
 
-**Datos.** GTFS (hay 1 479 salidas de buses en la hora 23 y varios cientos entre 00:00
-y 04:59, verificado) + horarios de los Excel de bip!.
+**Datos.** GTFS (367 251 llegadas nocturnas en 10 520 paradas, verificado) + los
+horarios de los Excel de bip!, presentes en el 18,06 % de los locales.
 
-**Tecnología.** P05 (interpretar horarios) + P08 (proximidad).
+**Tecnología.** Intérprete de horarios en texto libre (`lab.schedules`, escrito para
+este caso) + proximidad de P08 + expansión de frecuencias de P06. El conteo de llegadas
+se hace por **intersección de progresión aritmética con intervalo**, sin expandir las
+142 366 salidas contra 1,1 millones de filas.
 
-**Qué enseña.** Que un indicador de cobertura depende de dos dimensiones a la vez
-—espacio y tiempo— y que la cobertura del **dato** limita la conclusión: 1 579 de los
-1 927 locales no declaran horario.
+**Qué enseña.** Que un indicador de cobertura que cruza espacio y tiempo necesita
+**tres respuestas y no dos**, y que cuando el denominador tiene huecos la respuesta
+honesta es un **intervalo** cuyo ancho es otro indicador. Y la trampa: filtrar la hora
+como texto da 12 201 paradas donde hay 10 520 —una sobreestimación del 16 %, lo
+bastante pequeña para que nada parezca roto—, porque el 100 % de lo que toma el filtro
+son desplazamientos relativos y no horas.
 
-**Estado:** disponible.
+**El resultado.** **Cero** de las 10 520 paradas con servicio nocturno tiene un local
+que declare abrir en esa ventana; ninguno de los 1 927 locales abiertos lo declara.
+4 225 paradas (40,2 %) no tienen local alguno a 300 m, que es la conclusión más firme
+porque no depende de ningún horario. Y 5 536 (52,6 %) quedan **indeterminadas**: la
+cobertura nocturna está entre 0,0 % y 52,6 %.
+
+**Estado:** **resuelto** —
+[`cases/carga_nocturna`](../cases/carga_nocturna/README.md). Resuelve además P05, que
+pedía interpretar los horarios escritos en texto libre: los diez formatos del archivo
+se interpretan y quedan fijados como prueba.
 
 ### P10. Correspondencia entre buses y Metro
 
@@ -374,7 +390,7 @@ La parte más importante del inventario. Prometer cualquiera de estas sería inv
 | ¿Cuántas validaciones hay por lugar de carga? | **No hay transacciones.** Los Excel dan ubicación y horario, no uso. |
 | ¿Cuál es la cobertura territorial por superficie? | **No hay límites comunales.** La comuna viene como texto, de modo que se puede agrupar por comuna pero no calcular densidad por kilómetro cuadrado sin una capa geográfica que no está en estas fuentes. |
 | ¿Qué comuna tiene peor cobertura de carga? | **Las paradas del GTFS no traen comuna.** El único proxy disponible es la comuna del local más cercano, sesgado por construcción: a la parada sin cobertura le asigna la comuna del local lejano. Medido en [P08](../cases/cobertura_de_carga/README.md): Paine recibe cinco paradas con una mediana de 18,9 km. El sustituto es una rejilla geográfica. |
-| ¿Está abierto el local cuando pasa el pasajero? | **El horario está en el 18,06 % de los locales.** De las 7 409 paradas cubiertas a 300 m en P08, 5 701 lo están por un local cuyo horario se desconoce. Ningún supuesto reemplaza el dato. |
+| ¿Está abierto el local cuando pasa el pasajero? | **El horario está en el 18,06 % de los locales**, y el vacío está concentrado: cuatro archivos lo traen al 100 % y el quinto —con 1 579 de los 1 927 locales— al 0 %. Medido en [P09](../cases/carga_nocturna/README.md): la cobertura nocturna queda entre 0,0 % y 52,6 %, y completar 1 546 registros cerraría ese intervalo. |
 | ¿Cuánto se camina de verdad hasta el local? | **No hay red peatonal.** Las distancias son en línea recta: no se consideran ríos, autopistas, cierres, pasarelas ni pendientes. P08 lo trata con un factor de rodeo declarado y su curva de sensibilidad, que es acotar la incertidumbre, no resolverla. |
 | ¿Cómo evolucionó la satisfacción de usuarios? | **No hay encuestas** entre las fuentes verificadas. |
 | ¿Qué pide la evaluación técnica del cargo? | **No se verificó.** Busqué el documento de la convocatoria en el sitio del DTPM, en el del ministerio, en el portal de datos abiertos y en buscadores, y no lo encontré. El sitio del DTPM no tiene sección de concursos. |
@@ -394,6 +410,9 @@ orden por rendimiento es:
 4. **P04** y **P02** (normalización y claves) — rápidos, y aparecen siempre.
 5. **P08** (proximidad) — **resuelto en parte**: léalo. Es el cruce sin clave, y el
    que mejor muestra cuánto del resultado lo pone el analista.
-6. **P16** (informe) — porque la interpretación se corrige aparte del cálculo.
+6. **P09** (cobertura nocturna) — **resuelto**: léalo al final. Es el más difícil de
+   los resueltos y el único cuya respuesta es un intervalo en lugar de una cifra. Si
+   en una evaluación le toca un indicador con datos faltantes, este es el patrón.
+7. **P16** (informe) — porque la interpretación se corrige aparte del cálculo.
 
 El resto amplía, no prepara.

@@ -1,0 +1,12 @@
+estadistico,llegadas
+paradas con servicio nocturno,10520.0
+P10,3.0
+P25,7.0
+P50,23.0
+P75,48.0
+P90,80.0
+P99,186.8
+máximo,459.0
+una sola llegada en 5 h,242.0
+5 o menos (testimonial),1867.0
+solo por llegadas tras las 24:00,1490.0

@@ -1,0 +1,9 @@
+indicador,valor,unidad,definicion
+filas_que_el_atajo_toma,851773.0,filas,Filas cuyo arrival_time cae entre 00:00:00 y 04:59:59 leído como reloj
+de_ellas_con_horario_relativo,851773.0,filas,"Filas de expediciones de frecuencia, cuyo arrival_time es un desplazamiento desde el inicio del viaje y no una hora"
+proporcion_relativas,100.0,%,"Si es 100, el atajo no está midiendo horas en absoluto"
+paradas_segun_el_atajo,12201.0,paradas,Paradas que el atajo reporta como nocturnas
+paradas_correctas,10520.0,paradas,Paradas con al menos una llegada real en la ventana
+sobreestimacion,15.98,%,Lo bastante pequeña para que el resultado parezca razonable
+paradas_que_el_atajo_inventa,1681.0,paradas,Reportadas como nocturnas sin tener ninguna llegada nocturna
+paradas_que_el_atajo_pierde,0.0,paradas,Nocturnas que el atajo no reporta
