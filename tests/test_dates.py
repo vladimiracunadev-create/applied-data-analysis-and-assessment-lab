@@ -14,6 +14,9 @@ from lab.dates import (
     duration_minutes,
     duration_minutes_excel,
     parse_datetime,
+    parse_hms_seconds,
+    seconds_to_hms,
+    service_day_hour,
     time_band,
 )
 
@@ -61,6 +64,57 @@ def test_duration_minutes_no_corrige_duraciones_negativas():
     inicio = pd.to_datetime(pd.Series(["2026-10-01 09:00:00"]))
     fin = pd.to_datetime(pd.Series(["2026-10-01 08:00:00"]))
     assert duration_minutes(inicio, fin).iloc[0] == pytest.approx(-60.0)
+
+
+def test_parse_hms_seconds_admite_relleno_irregular_y_horas_sobre_24():
+    serie = pd.Series(["0:00:00", "00:00:51", "07:16:40", "23:59:59", "24:00:00",
+                       "25:10:00", "", "malo", None, "1:60:00"])
+    segundos = parse_hms_seconds(serie)
+    assert segundos.iloc[0] == 0
+    assert segundos.iloc[1] == 51
+    assert segundos.iloc[2] == 7 * 3600 + 16 * 60 + 40
+    assert segundos.iloc[3] == 86399
+    assert segundos.iloc[4] == 86400
+    assert segundos.iloc[5] == 25 * 3600 + 10 * 60
+    # Lo no interpretable queda nulo, nunca cero: una hora ausente no es la medianoche.
+    assert segundos.iloc[6:9].isna().all()
+    # Minutos fuera de rango no se aceptan en silencio.
+    assert pd.isna(segundos.iloc[9])
+
+
+def test_el_orden_como_texto_esta_mal_y_convertido_esta_bien():
+    """Regresión del defecto encontrado en datos públicos reales."""
+    crudo = ["0:00:00", "00:00:51", "00:01:22"]
+    assert sorted(crudo) == ["00:00:51", "00:01:22", "0:00:00"], "el texto ordena mal"
+    segundos = parse_hms_seconds(pd.Series(crudo))
+    assert segundos.is_monotonic_increasing, "convertido a segundos, el orden es correcto"
+
+
+def test_seconds_to_hms_es_la_inversa_con_relleno_consistente():
+    textos = pd.Series(["0:00:00", "00:00:51", "25:10:00", "24:00:00"])
+    ida = parse_hms_seconds(textos)
+    vuelta = seconds_to_hms(ida)
+    assert vuelta.tolist() == ["00:00:00", "00:00:51", "25:10:00", "24:00:00"]
+    # La propiedad que importa: con relleno consistente, ordenar el TEXTO da el mismo
+    # orden que ordenar los segundos. Con el texto original no ocurría.
+    por_texto = sorted(vuelta.tolist())
+    por_segundos = seconds_to_hms(ida.sort_values()).tolist()
+    assert por_texto == por_segundos == ["00:00:00", "00:00:51", "24:00:00", "25:10:00"]
+
+
+def test_seconds_to_hms_conserva_los_nulos_y_el_signo():
+    resultado = seconds_to_hms(pd.Series([None, -90.0, 3661.0]))
+    assert pd.isna(resultado.iloc[0])
+    assert resultado.iloc[1] == "-00:01:30"
+    assert resultado.iloc[2] == "01:01:01"
+
+
+def test_service_day_hour_reduce_a_reloj_solo_al_final():
+    segundos = parse_hms_seconds(pd.Series(["06:30:00", "23:59:59", "25:10:00", "48:00:00"]))
+    horas = service_day_hour(segundos)
+    assert horas.tolist() == [6.0, 23.0, 1.0, 0.0]
+    # La reducción es la última operación: el valor original conserva la jornada.
+    assert segundos.iloc[2] > 86400
 
 
 def test_time_band_clasifica_los_limites_correctamente():

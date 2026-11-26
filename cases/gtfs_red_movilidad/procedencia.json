@@ -1,0 +1,17 @@
+{
+  "source": "gtfs-red-movilidad",
+  "requested_url": "https://www.dtpm.cl/index.php/gtfs-vigente",
+  "resolved_url": "https://www.dtpm.cl/descargas/gtfs/GTFS_20261114_v2.zip",
+  "downloaded_at": "2026-11-26T15:49:20+00:00",
+  "sha256": "ff0cda445cc4652013e159a133fcf863278ec55f6146e48c5a2416bf41c0b155",
+  "bytes": 12829198,
+  "media_type": "application/zip",
+  "publisher": "Directorio de Transporte Público Metropolitano (DTPM)",
+  "licence": "NO VERIFICADA",
+  "licence_url": "https://www.dtpm.cl/index.php/gtfs-vigente",
+  "licence_verified": false,
+  "notes": [
+    "enlace resuelto desde la página índice https://www.dtpm.cl/index.php/gtfs-vigente",
+    "licencia no verificada: revise los términos de uso antes de redistribuir"
+  ]
+}

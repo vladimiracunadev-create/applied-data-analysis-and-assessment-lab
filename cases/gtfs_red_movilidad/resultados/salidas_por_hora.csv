@@ -1,0 +1,76 @@
+hora_reloj,modo,fuente,salidas
+0,bus,frequencies,326
+1,bus,frequencies,374
+2,bus,frequencies,251
+3,bus,frequencies,277
+4,bus,frequencies,251
+5,bus,frequencies,1913
+5,metro,stop_times,27
+5,tranvía o ligero,stop_times,1
+6,bus,frequencies,4042
+6,metro,stop_times,72
+6,tranvía o ligero,frequencies,15
+6,tranvía o ligero,stop_times,3
+7,bus,frequencies,4444
+7,metro,stop_times,79
+7,tranvía o ligero,frequencies,15
+7,tranvía o ligero,stop_times,3
+8,bus,frequencies,3888
+8,metro,stop_times,81
+8,tranvía o ligero,frequencies,15
+8,tranvía o ligero,stop_times,1
+9,bus,frequencies,3392
+9,metro,stop_times,77
+9,tranvía o ligero,frequencies,10
+9,tranvía o ligero,stop_times,2
+10,bus,frequencies,3082
+10,metro,stop_times,69
+10,tranvía o ligero,frequencies,10
+10,tranvía o ligero,stop_times,2
+11,bus,frequencies,3061
+11,metro,stop_times,64
+11,tranvía o ligero,frequencies,10
+11,tranvía o ligero,stop_times,2
+12,bus,frequencies,3025
+12,metro,stop_times,64
+12,tranvía o ligero,frequencies,10
+12,tranvía o ligero,stop_times,2
+13,bus,frequencies,2903
+13,metro,stop_times,64
+13,tranvía o ligero,frequencies,10
+13,tranvía o ligero,stop_times,2
+14,bus,frequencies,3414
+14,metro,stop_times,64
+14,tranvía o ligero,frequencies,10
+14,tranvía o ligero,stop_times,2
+15,bus,frequencies,3222
+15,metro,stop_times,64
+15,tranvía o ligero,frequencies,10
+15,tranvía o ligero,stop_times,2
+16,bus,frequencies,3678
+16,metro,stop_times,70
+16,tranvía o ligero,frequencies,10
+16,tranvía o ligero,stop_times,2
+17,bus,frequencies,4014
+17,metro,stop_times,78
+17,tranvía o ligero,frequencies,11
+17,tranvía o ligero,stop_times,2
+18,bus,frequencies,3963
+18,metro,stop_times,78
+18,tranvía o ligero,frequencies,16
+18,tranvía o ligero,stop_times,3
+19,bus,frequencies,3884
+19,metro,stop_times,78
+19,tranvía o ligero,frequencies,14
+19,tranvía o ligero,stop_times,4
+20,bus,frequencies,3290
+20,metro,stop_times,75
+20,tranvía o ligero,frequencies,12
+20,tranvía o ligero,stop_times,1
+21,bus,frequencies,2573
+21,metro,stop_times,63
+21,tranvía o ligero,frequencies,10
+22,bus,frequencies,1804
+22,metro,stop_times,63
+22,tranvía o ligero,frequencies,9
+23,bus,frequencies,1479

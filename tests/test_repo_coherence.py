@@ -25,7 +25,7 @@ from scripts.build_docs import SALIDAS, build
 ROOT = Path(__file__).resolve().parents[1]
 
 #: Archivos que deben declarar la misma versión que el paquete.
-ARCHIVOS_CON_VERSION = ("README.md", "README.en.md", "CHANGELOG.md")
+ARCHIVOS_CON_VERSION = ("README.md", "CHANGELOG.md")
 
 
 # ------------------------------------------------------------------------- versión
@@ -89,7 +89,7 @@ def test_todos_los_enlaces_relativos_de_la_documentacion_existen():
 
 def test_los_archivos_de_gobernanza_existen():
     for nombre in ("LICENSE", "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md",
-                   "README.md", "README.en.md", "PROMPT_MAESTRO.md"):
+                   "README.md", "PROMPT_MAESTRO.md"):
         assert (ROOT / nombre).exists(), f"falta {nombre}"
     assert "MIT License" in (ROOT / "LICENSE").read_text(encoding="utf-8")
 

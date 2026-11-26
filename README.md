@@ -2,19 +2,22 @@
 
 ![Applied Data Analysis and Assessment Lab](assets/banner.svg)
 
-[![Tests](https://github.com/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/actions/workflows/ci.yml)
-![Versión 0.1.0](https://img.shields.io/badge/versi%C3%B3n-0.1.0-11253B)
+[![Pruebas](https://github.com/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/actions/workflows/ci.yml)
+![Versión 0.2.0](https://img.shields.io/badge/versi%C3%B3n-0.2.0-11253B)
 ![Python 3.11–3.14](https://img.shields.io/badge/Python-3.11%E2%80%933.14-3776AB)
 ![Licencia MIT](https://img.shields.io/badge/licencia-MIT-147D70)
 ![Datos sintéticos](https://img.shields.io/badge/datos-sint%C3%A9ticos-5C6B7A)
 
-Laboratorio profesional, genérico y evolutivo para **resolver problemas de datos,
-investigar, experimentar y preparar evaluaciones técnicas** en cualquier sector.
+Laboratorio para **leer datos que uno no generó, resolver un problema con ellos,
+documentar qué tecnología se usó y por qué, y dejar el aprendizaje disponible para la
+próxima vez.**
+
+Cada aplicación de ese recorrido a un dominio concreto es una **instancia**: transporte
+público con datos reales, comercio, educación, y mañana datos bancarios, astronómicos,
+de clientes o de una empresa. El recorrido es el mismo; lo que cambia es el negocio.
 
 Su principio rector: **resolver los problemas de hoy y convertir el conocimiento
 adquirido en capacidades reutilizables para los problemas de mañana.**
-
-🇬🇧 [English version](README.en.md)
 
 ---
 
@@ -24,7 +27,7 @@ adquirido en capacidades reutilizables para los problemas de mañana.**
 | --- | --- |
 | **Empezar** | [Inicio rápido](#inicio-rápido) · [Manual](docs/manual.md) · [Arquitectura](docs/arquitectura.md) |
 | **Aprender** | [Programa de aprendizaje](docs/programa.md) · [Perfiles profesionales](docs/perfiles.md) · [Equivalencias SQL/Pandas/Excel/R](docs/equivalencias.md) |
-| **Resolver** | [Catálogo de casos](docs/catalogo-casos.md) · [Metodología de 18 etapas](docs/metodologia.md) · [Método de investigación](docs/research-method.md) |
+| **Resolver** | [Recorrido e instancias](docs/instancias.md) · [Catálogo de casos](docs/catalogo-casos.md) · [Metodología de 18 etapas](docs/metodologia.md) · [Método de investigación](docs/research-method.md) |
 | **Evaluarse** | [Simulaciones de 4 horas](simulations/) · [Preparación DTPM](cases/transport/README.md) · [Antecedentes verificados](docs/dtpm-antecedentes.md) |
 | **Consultar** | [Base de conocimiento](docs/conocimiento.md) · [Diccionario de datos](docs/diccionario.md) · [Contratos de agentes](docs/agentes.md) |
 | **Gobernanza** | [Hoja de ruta](docs/roadmap.md) · [Cambios](CHANGELOG.md) · [Contribuir](CONTRIBUTING.md) · [Seguridad](SECURITY.md) · [Estándar visual](docs/visual-standard.md) · [Prompt maestro](PROMPT_MAESTRO.md) |
@@ -141,6 +144,44 @@ uv run python scripts/build_assessment.py --blueprint gestor-datos-transporte --
 
 ---
 
+## La instancia con datos reales
+
+El resto del laboratorio usa datos sintéticos, que son reproducibles y sin
+restricciones. La instancia [`gtfs_red_movilidad`](cases/gtfs_red_movilidad/README.md)
+usa **datos públicos reales**: el GTFS vigente de la Red Metropolitana de Movilidad
+publicado por el DTPM —12,8 MB comprimidos, 1 098 717 filas de horarios, 26 137
+expediciones— descargado con su procedencia verificada (SHA-256 registrado).
+
+Sirve para ver qué aparece cuando los datos no los generó nadie pensando en enseñar.
+La pregunta era simple: **¿cuántas expediciones salen por hora en un día laboral?**
+
+| Lo que se encontró | Magnitud |
+| --- | --- |
+| Filas de horario que **no son horas de reloj**, sino desplazamientos desde el inicio del viaje | 851 773 — el **77,5 %** de la tabla |
+| Relleno de ceros irregular: `'0:00:00' > '00:00:51'` como texto | la parada 1 ordenada **después** de la 2 |
+| Error de contar expediciones en lugar de expandir sus frecuencias | **−87,65 %**: 7 905 frente a 64 011 reales |
+| Error de tomar el fin de ventana como inclusivo | **+10,37 %**: 6 641 salidas de más |
+| «El 32 % de las paradas está huérfano» | **falso**: 5 989 de 5 991 no son paradas. Las reales son **dos** |
+| Claves huérfanas en los seis cruces del modelo | **cero**. El feed está bien formado; es *complejo*, no *sucio* |
+
+Las tres primeras trampas, por separado, producen un número plausible y equivocado.
+La cuarta es un defecto que no existe y que reportarlo costaría puntos.
+
+```powershell
+uv run python scripts/fetch_data.py gtfs-red-movilidad
+```
+
+```powershell
+uv run python -m cases.gtfs_red_movilidad.solution
+```
+
+Los datos **no se versionan**: su licencia no está verificada. Se versiona el código,
+el [registro de procedencia](cases/gtfs_red_movilidad/procedencia.json) y los
+resultados agregados. Las pruebas no descargan nada: reproducen los formatos
+problemáticos con datos de prueba mínimos.
+
+---
+
 ## El núcleo
 
 | Módulo | Para qué sirve |
@@ -148,8 +189,9 @@ uv run python scripts/build_assessment.py --blueprint gestor-datos-transporte --
 `lab.method` | Metodología de 18 etapas como objeto auditable: una etapa no se completa sin evidencia
 `lab.contracts` | Contratos de datos: tipos, dominios, claves y severidad de cada hallazgo
 `lab.core` | Lectura, perfil de calidad y cruce auditado con control de cardinalidad
-`lab.dates` | Fechas, duraciones y bandas horarias, informando qué no se pudo interpretar
+`lab.dates` | Fechas, duraciones, bandas horarias y horarios de día de servicio que exceden las 24 h, informando qué no se pudo interpretar
 `lab.metrics` | Razones seguras, percentiles con método declarado, tasa ponderada frente a promedio simple
+`lab.sources` | Adquirir datos públicos con procedencia verificable: URL, fecha, SHA-256, licencia, y el enlace resuelto desde la página índice
 `lab.stats` | Intervalos de confianza, Welch, Pearson y chi-cuadrado **sin SciPy**, validados contra tablas publicadas
 `lab.sqlbridge` | Ejecutar SQL real sobre DataFrames para validar de forma independiente
 `lab.excel` | Libros con fórmulas vivas, unidades y separación entradas / cálculos / resultados
@@ -176,11 +218,12 @@ compare_rates([1, 90], [2, 100])      # ponderada 89.2 %, simple 70.0 %, 19.2 pp
 
 ## Casos y evaluaciones disponibles
 
-| Caso | Industria | Dificultad | Tiempo | Competencias |
+| Instancia | Industria | Datos | Dificultad | Tiempo |
 | --- | --- | --- | --- | --- |
-| [`transport`](cases/transport/README.md) | Transporte | avanzado | 240 min | 12 |
-| [`retail`](cases/retail/README.md) | Comercio | intermedio | 90 min | 6 |
-| [`education`](cases/education/README.md) | Educación | introductorio | 90 min | 6 |
+| [`gtfs_red_movilidad`](cases/gtfs_red_movilidad/README.md) | Transporte | **reales**, 1,1 M de filas | especializado | 180 min |
+| [`transport`](cases/transport/README.md) | Transporte | sintéticos | avanzado | 240 min |
+| [`retail`](cases/retail/README.md) | Comercio | sintéticos | intermedio | 90 min |
+| [`education`](cases/education/README.md) | Educación | sintéticos | introductorio | 90 min |
 
 El [catálogo completo](docs/catalogo-casos.md) se genera desde los metadatos y marca
 los casos incompletos en lugar de ocultarlos. Para crear uno nuevo:

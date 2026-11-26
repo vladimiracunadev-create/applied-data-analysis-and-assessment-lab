@@ -140,7 +140,7 @@ habría pasado por correcto.
 
 Versionado semántico. La primera versión oficial es la **0.1.0**; los prototipos
 anteriores no son releases. Al cambiar la versión hay que actualizarla de forma
-coherente en `pyproject.toml`, `lab/__init__.py`, `README.md`, `README.en.md`,
+coherente en `pyproject.toml`, `lab/__init__.py`, `README.md` y
 `CHANGELOG.md` y las insignias. `tests/test_repo_coherence.py` comprueba que coincidan.
 
 ## Conducta

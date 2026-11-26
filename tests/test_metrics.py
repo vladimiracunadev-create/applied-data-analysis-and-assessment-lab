@@ -30,6 +30,28 @@ def test_safe_ratio_vectorizado_anula_denominadores_cero():
     assert resultado.iloc[1:].isna().all()
 
 
+def test_safe_ratio_difunde_el_escalar_sobre_el_indice_de_la_serie():
+    """Regresión: con serie y escalar hay que difundir, no alinear por índice.
+
+    Envolver el escalar con `pd.Series(escalar)` produce una serie de un elemento con
+    índice 0: la división alinea por índice y todas las filas salvo la primera quedan
+    en NaN sin que nada avise. Se detectó al calcular errores relativos sobre una
+    tabla de comparación.
+    """
+    numerador = pd.Series([10, 20, 30], index=[5, 6, 7])
+    resultado = safe_ratio(numerador, 40, scale=100)
+    assert resultado.notna().all()
+    assert resultado.tolist() == [25.0, 50.0, 75.0]
+    assert list(resultado.index) == [5, 6, 7]
+
+    inverso = safe_ratio(100, pd.Series([2, 4], index=["a", "b"]))
+    assert inverso.tolist() == [50.0, 25.0]
+    assert list(inverso.index) == ["a", "b"]
+
+    # Y el escalar cero sigue anulando toda la serie, no solo la primera fila.
+    assert safe_ratio(pd.Series([1, 2, 3]), 0).isna().all()
+
+
 def test_percentile_coincide_con_numpy_y_declara_el_metodo():
     serie = pd.Series([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
     for metodo in ("linear", "lower", "higher", "nearest", "midpoint"):

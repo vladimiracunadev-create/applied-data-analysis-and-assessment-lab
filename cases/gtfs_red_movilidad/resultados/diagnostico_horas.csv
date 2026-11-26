@@ -1,0 +1,11 @@
+indicador,valor,unidad,definicion
+filas_stop_times,1098717.0,filas,Tamaño de la tabla de horarios
+expediciones_declaradas,26137.0,expediciones,Filas distintas de trips.txt
+expediciones_de_frecuencia,14520.0,expediciones,"Declaradas en frequencies.txt: su horario es un desplazamiento, no un reloj"
+filas_con_horario_relativo,851773.0,filas,Filas de stop_times cuyo tiempo NO es hora de reloj
+pct_horario_relativo,77.52433065111398,%,Proporción de la tabla que no se puede leer como reloj
+hora_sin_relleno,13570.0,filas,"Valores con una sola cifra de hora, como 0:00:00"
+hora_con_relleno,1085147.0,filas,"Valores con dos cifras de hora, como 00:00:51"
+no_interpretables,0.0,filas,Valores presentes que no son H:MM:SS válido
+segundos_maximo,85648.0,s,Mayor tiempo observado; sobre 86400 indica día de servicio extendido
+primeras_paradas_en_cero,14520.0,filas,Expediciones cuya primera parada está en 0:00:00

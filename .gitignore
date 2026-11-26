@@ -16,6 +16,14 @@ submissions/*
 #   python solutions/reference.py <n>
 reference_outputs/
 
+# Datos públicos descargados. No se versionan por dos razones: pesan decenas de
+# megabytes y su licencia no está verificada, de modo que el repositorio no los
+# redistribuye. Se recuperan con:
+#   python scripts/fetch_data.py gtfs-red-movilidad
+# El registro de procedencia (.procedencia.json) tampoco se versiona aquí: la copia
+# citable vive en cases/<caso>/procedencia.json.
+data/original/
+
 # Libros de entrada generados por scripts/export_inputs.py. Los CSV sí se versionan;
 # el libro de Excel se reconstruye con un comando.
 data/case_*/entradas.xlsx

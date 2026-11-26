@@ -1,0 +1,4 @@
+forma_de_contar,resultado,error_vs_correcto,por_que_esta_mal,error_relativo_pct
+expediciones de trips.txt (atajo),7905,-56106,"Cada fila de frequencies.txt representa muchas salidas, no una.",-87.65
+frecuencias con fin inclusivo + horario absoluto,70652,6641,GTFS define end_time exclusivo: suma una salida por ventana.,10.37
+frecuencias expandidas + horario absoluto (correcto),64011,0,—,0.0

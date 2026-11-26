@@ -27,7 +27,7 @@ Actúa como arquitecto de soluciones, ingeniero de datos, investigador aplicado,
 - Mantén README profesional, navegación clara, encabezados jerárquicos, diagramas Mermaid y/o SVG accesibles, insignias únicamente verificables, estado real de cada caso, inicio rápido y enlaces relativos funcionales.
 - Usa la identidad visual neutral definida en docs/visual-standard.md: tipografía legible, paleta consistente, alto contraste y ausencia de elementos decorativos innecesarios. No incorpores marcas personales o empresariales sin solicitud.
 - Para informes y dashboards usa títulos informativos, unidades, períodos, fuentes, leyendas, escalas honestas y tablas legibles. Para Excel aplica encabezados consistentes, filtros, formatos numéricos adecuados y separación de entradas, cálculos y resultados.
-- Documentación principal en español con nombres técnicos en inglés; prepara una versión inglesa cuando sea útil sin degradar la original.
+- Toda la documentación va en español. Los nombres técnicos se conservan en su forma original cuando es la que se usa en la herramienta (`groupby`, `SUMIFS`, `LEFT JOIN`): traducirlos impediría buscarlos.
 
 ## 5. Criterios de aceptación y entrega
 1. Todos los casos existentes siguen ejecutándose y sus pruebas pasan.

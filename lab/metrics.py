@@ -55,9 +55,16 @@ def safe_ratio(
         >>> safe_ratio(30, 40, scale=100)
         75.0
     """
-    if isinstance(numerator, pd.Series) or isinstance(denominator, pd.Series):
-        num = pd.Series(numerator) if not isinstance(numerator, pd.Series) else numerator
-        den = pd.Series(denominator) if not isinstance(denominator, pd.Series) else denominator
+    num_es_serie = isinstance(numerator, pd.Series)
+    den_es_serie = isinstance(denominator, pd.Series)
+    if num_es_serie or den_es_serie:
+        # Al mezclar serie y escalar hay que difundir el escalar sobre el índice de la
+        # serie. Envolverlo con `pd.Series(escalar)` crea una serie de un solo elemento
+        # con índice 0, y la división alinea por índice: todas las filas salvo la
+        # primera quedarían en NaN sin que nada avise.
+        indice = numerator.index if num_es_serie else denominator.index  # type: ignore[union-attr]
+        num = numerator if num_es_serie else pd.Series(numerator, index=indice)
+        den = denominator if den_es_serie else pd.Series(denominator, index=indice)
         den = pd.to_numeric(den, errors="coerce")
         return scale * pd.to_numeric(num, errors="coerce") / den.where(den != 0)
     try:

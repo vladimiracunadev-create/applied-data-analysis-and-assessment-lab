@@ -1,0 +1,88 @@
+{
+  "slug": "gtfs_red_movilidad",
+  "titulo": "Expediciones por hora en la Red Metropolitana de Movilidad (datos públicos reales)",
+  "disciplina": "ingenieria-de-datos",
+  "industria": "transporte",
+  "dificultad": "especializado",
+  "metodologia": "descriptiva sobre datos públicos, con validación aritmética independiente",
+  "competencias": [
+    "lectura-escritura-datos",
+    "calidad-datos",
+    "limpieza-normalizacion",
+    "cruce-consolidacion",
+    "fechas-horarios",
+    "agregacion-indicadores",
+    "ingenieria-datos",
+    "validacion-independiente",
+    "reproducibilidad",
+    "comunicacion-resultados"
+  ],
+  "estado": "implementado",
+  "tiempo_sugerido_min": 180,
+  "contexto": "El Directorio de Transporte Público Metropolitano publica el GTFS estático vigente de la red de Santiago: 12,8 MB comprimidos, 69,7 MB descomprimidos, 1 098 717 filas de horarios, 26 137 expediciones, 18 486 lugares y 425 recorridos de cuatro operadores. Es el mismo dato que usa cualquiera que construya una aplicación de transporte sobre la red.",
+  "problema": "Responder cuántas expediciones salen por hora del día en un día laboral y cómo se reparten entre buses, Metro y trenes, sobre datos que nadie preparó para enseñar.",
+  "objetivos": [
+    "Adquirir el feed registrando su procedencia verificable, sin construir el nombre del archivo a mano.",
+    "Detectar que el 77,5 % de la tabla de horarios no contiene horas de reloj.",
+    "Expandir las ventanas de frecuencia a salidas reales con el borde inclusivo/exclusivo correcto.",
+    "Cuantificar cuánto se equivoca cada atajo frente al cálculo correcto.",
+    "Distinguir un defecto de calidad real de un malentendido del modelo de datos."
+  ],
+  "restricciones": [
+    "Tres horas de trabajo.",
+    "Los datos no se redistribuyen: la licencia no está verificada.",
+    "El entorno mínimo del laboratorio, sin DuckDB ni motores adicionales."
+  ],
+  "fuentes": [
+    "GTFS estático vigente de la Red Metropolitana de Movilidad, publicado por el DTPM en https://www.dtpm.cl/index.php/gtfs-vigente. Archivo GTFS_20261114_v2.zip, sha256 ff0cda445cc4652013e159a133fcf863278ec55f6146e48c5a2416bf41c0b155, descargado el 26 de noviembre de 2026. Licencia NO VERIFICADA: se abrió la página de descarga, no sus términos de uso. Datos públicos, no sintéticos."
+  ],
+  "datasets": [
+    "data/original/gtfs-red-movilidad.zip, no versionado. Se recupera con: python scripts/fetch_data.py gtfs-red-movilidad"
+  ],
+  "diccionario": "Especificación GTFS estática. Las tablas y columnas usadas, con su significado, están documentadas en el README del caso y en las constantes ROUTE_TYPES y LOCATION_TYPES de solution.py.",
+  "supuestos": [
+    "El día laboral corresponde al service_id 'L' del calendario del feed.",
+    "La hora de salida de una expedición con horario absoluto es el arrival_time de su stop_sequence = 1.",
+    "El end_time de una ventana de frecuencia es exclusivo, conforme a la especificación GTFS.",
+    "Las ventanas con intervalo no positivo o con fin anterior al inicio se excluyen y se informan.",
+    "Solo location_type = 0 es una parada donde embarca pasajeros.",
+    "No se imputa ningún valor: lo no interpretable queda nulo y contado."
+  ],
+  "metodologias_alternativas": [
+    "Pandas con expansión vectorizada por Index.repeat, que es lo implementado.",
+    "DuckDB sobre el CSV con generate_series para la expansión, preferible si hubiera que agregar stop_times completo por ventanas de tiempo.",
+    "Lectura por bloques con iter_zip_table, necesaria si la tabla de horarios creciera más de un orden de magnitud."
+  ],
+  "implementaciones": [
+    "cases/gtfs_red_movilidad/solution.py — resolución completa.",
+    "lab/sources.py — adquisición con procedencia y lectura desde el ZIP.",
+    "lab/dates.py — parse_hms_seconds, seconds_to_hms y service_day_hour."
+  ],
+  "soluciones": "cases/gtfs_red_movilidad/solution.py, documentada paso a paso en el README del caso.",
+  "resultados": "cases/gtfs_red_movilidad/resultados/ con el inventario del ZIP, el diagnóstico de horas, la integridad referencial, las paradas por tipo, la comparación de formas de contar y las salidas por hora y modo. Total del día laboral: 64 011 salidas.",
+  "validaciones": [
+    "El total se calcula por dos caminos independientes: expansión vectorizada con agrupación, y suma aritmética por ventana más expediciones de horario absoluto. Ambos dan 64 011.",
+    "Seis comprobaciones de integridad referencial, todas con cero claves huérfanas.",
+    "tests/test_gtfs.py ejerce el parseo de horas, la expansión de frecuencias y el borde inclusivo/exclusivo contra datos de prueba que reproducen los formatos reales, sin descargar el feed."
+  ],
+  "interpretacion": "El perfil horario tiene dos puntas, mañana y tarde, con servicio nocturno reducido y continuo. El dato describe la oferta programada, no la operación real ni la demanda: no permite afirmar nada sobre cuántos vehículos salieron efectivamente ni cuánta gente viajó.",
+  "limitaciones": [
+    "Es la oferta programada, no la operación observada: una expedición programada pudo no realizarse.",
+    "Las frecuencias con exact_times = 0 declaran un intervalo objetivo, no una hora exacta de salida; la expansión reparte las salidas de forma regular, que es una aproximación declarada.",
+    "El feed vigente cambia cada pocas semanas: las magnitudes de este caso corresponden a la versión del 14 de noviembre de 2026.",
+    "La licencia de los datos no está verificada, de modo que el caso no los redistribuye."
+  ],
+  "conocimiento_adquirido": [
+    "Una columna de hora puede no ser una hora: en los horarios por frecuencia es un desplazamiento desde el inicio del viaje, y la señal de alarma es una distribución horaria imposible.",
+    "El relleno de ceros irregular rompe el orden como texto: '0:00:00' es mayor que '00:00:51' porque ':' supera a '0' en la tabla de caracteres.",
+    "Expandir ventanas de frecuencia con el borde inclusivo suma una salida por ventana: 6 641 salidas de más sobre 64 011, un 10,4 %.",
+    "Contar filas de trips.txt subestima el servicio en un 87,65 %: el servicio real es ocho veces el conteo ingenuo.",
+    "Un cruce que deja el 32 % de las filas sin pareja puede estar diciendo que el cruce no correspondía: en stops.txt solo location_type = 0 es una parada."
+  ],
+  "capacidades_reutilizables": [
+    "lab.sources sirve para adquirir cualquier fuente pública con procedencia citable y resolución de enlace desde una página índice.",
+    "lab.dates.parse_hms_seconds resuelve cualquier horario operacional que exceda las 24 horas o venga con relleno irregular: turnos, jornadas de producción, guardias.",
+    "El patrón de expansión por Index.repeat sirve para cualquier dato que declare una ventana y una cadencia en lugar de eventos individuales: turnos, cuotas, cronogramas de mantenimiento.",
+    "La tabla que compara formas de contar frente al cálculo correcto es un entregable reutilizable: no dice solo el resultado, dice cuánto se equivoca cada atajo."
+  ]
+}

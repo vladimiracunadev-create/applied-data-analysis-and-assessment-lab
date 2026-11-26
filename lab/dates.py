@@ -111,6 +111,69 @@ def duration_minutes_excel(start_serial: pd.Series, end_serial: pd.Series) -> pd
     return (e - s) * MINUTES_PER_DAY
 
 
+def parse_hms_seconds(series: pd.Series) -> pd.Series:
+    """Convierte `H:MM:SS` o `HH:MM:SS` a segundos, admitiendo horas de 24 o más.
+
+    Por qué no sirve `pd.to_datetime` aquí
+        Los horarios operacionales se expresan a menudo en «día de servicio», donde
+        `25:10:00` significa la una y diez de la madrugada del día siguiente, dentro de
+        la jornada que empezó el día anterior. `pd.to_datetime` rechaza esa hora, y
+        `pd.to_timedelta` la acepta pero falla ante otras variantes del mismo archivo.
+        Además, el mismo archivo puede mezclar `0:00:00` y `00:00:51`: el relleno de
+        ceros no está garantizado, y comparar u ordenar esos textos da el orden
+        equivocado (`'0:00:00' > '00:00:51'` es verdadero como texto).
+
+    Args:
+        series: valores en formato horas:minutos:segundos, con o sin relleno de ceros.
+
+    Returns:
+        Serie de segundos como punto flotante. Los valores no interpretables quedan
+        como NaN, nunca como cero: una hora ausente no es la medianoche.
+
+    Example:
+        >>> import pandas as pd
+        >>> parse_hms_seconds(pd.Series(["0:00:00", "00:00:51", "25:10:00"])).tolist()
+        [0.0, 51.0, 90600.0]
+    """
+    texto = pd.Series(series).astype("string").str.strip()
+    partes = texto.str.extract(r"^(\d{1,3}):([0-5]\d):([0-5]\d)$")
+    horas = pd.to_numeric(partes[0], errors="coerce")
+    minutos = pd.to_numeric(partes[1], errors="coerce")
+    segundos = pd.to_numeric(partes[2], errors="coerce")
+    return horas * 3600 + minutos * 60 + segundos
+
+
+def seconds_to_hms(series: pd.Series) -> pd.Series:
+    """Operación inversa de `parse_hms_seconds`, con relleno de ceros consistente.
+
+    Devuelve siempre `HH:MM:SS`, de modo que el resultado se pueda ordenar como texto
+    sin sorpresas, y conserva las horas de 24 o más en lugar de reducirlas módulo 24.
+    """
+    valores = pd.to_numeric(pd.Series(series), errors="coerce")
+    enteros = valores.round().astype("Int64")
+
+    def formatear(total: object) -> object:
+        if pd.isna(total):
+            return pd.NA
+        total = int(total)  # type: ignore[arg-type]
+        signo = "-" if total < 0 else ""
+        total = abs(total)
+        return f"{signo}{total // 3600:02d}:{total % 3600 // 60:02d}:{total % 60:02d}"
+
+    return enteros.map(formatear).astype("string")
+
+
+def service_day_hour(series: pd.Series) -> pd.Series:
+    """Hora del reloj (0 a 23) a partir de segundos del día de servicio.
+
+    Una hora de servicio de 25 corresponde a la hora 1 del reloj. Se calcula módulo 24
+    **después** de haber conservado el valor original, nunca antes: reducir al leer
+    pierde la información de a qué jornada pertenece el viaje.
+    """
+    segundos = pd.to_numeric(pd.Series(series), errors="coerce")
+    return (segundos // 3600 % 24).astype("Float64")
+
+
 def time_band(
     series: pd.Series, bands: tuple[tuple[str, int, int], ...] = DEFAULT_BANDS
 ) -> pd.Series:

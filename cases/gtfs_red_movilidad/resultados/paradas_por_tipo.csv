@@ -1,0 +1,6 @@
+location_type,tipo,filas,en_horarios,sin_coordenadas,fuera_de_horarios,es_defecto_real
+0,parada o andén,12497,12495,0,2,True
+3,nodo generico de pasillo,5031,0,5031,5031,False
+4,área de abordaje,534,0,534,534,False
+2,acceso o salida,298,0,0,298,False
+1,estación,126,0,0,126,False

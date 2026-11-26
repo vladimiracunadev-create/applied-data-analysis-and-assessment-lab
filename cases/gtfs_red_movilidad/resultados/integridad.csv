@@ -1,0 +1,7 @@
+cruce,valores,distintos,huerfanos,veredicto
+stop_times.stop_id → stops.stop_id,1098717,12495,0,íntegro
+stop_times.trip_id → trips.trip_id,1098717,26137,0,íntegro
+trips.route_id → routes.route_id,26137,425,0,íntegro
+trips.service_id → calendar.service_id,26137,6,0,íntegro
+routes.agency_id → agency.agency_id,425,4,0,íntegro
+frequencies.trip_id → trips.trip_id,14520,14520,0,íntegro

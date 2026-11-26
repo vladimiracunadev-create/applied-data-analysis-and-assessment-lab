@@ -50,8 +50,12 @@ deja de estar declarada aquí.
   *Caso previsto:* una investigación aplicada completa con hipótesis, prueba y
   limitaciones, bajo `research/`.
 
-- **`modelamiento`, `automatizacion`, `ingenieria-datos`, `apoyo-decision`.**
-  Aparecen en los perfiles y están proyectadas; no hay caso que las cubra.
+- **`modelamiento`, `automatizacion`, `apoyo-decision`.** Aparecen en los perfiles y
+  están proyectadas; no hay caso que las cubra.
+
+- **`ingenieria-datos`** quedó cubierta en la versión 0.2.0 por la instancia
+  `gtfs_red_movilidad`: adquisición con procedencia, lectura selectiva de un archivo de
+  1,1 millones de filas desde un ZIP y expansión vectorizada de ventanas.
 
 ### 2.2 Bloque del programa sin clases publicadas
 

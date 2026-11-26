@@ -6,6 +6,7 @@ Componentes
     `metrics`     indicadores, estadística descriptiva y razones seguras.
     `dates`       fechas, duraciones y bandas horarias.
     `stats`       inferencia estadística sin dependencias externas.
+    `sources`     adquisición de datos públicos con registro de procedencia.
     `sqlbridge`   ejecución de SQL sobre DataFrames para validación independiente.
     `excel`       libros de Excel profesionales con fórmulas vivas.
     `viz`         gráficos con el estándar visual del laboratorio.
@@ -23,7 +24,7 @@ Los submódulos se importan de forma explícita (`from lab import metrics`) para
 costo de importar matplotlib o pandas se pague solo cuando se usa.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "agents",
@@ -40,6 +41,7 @@ __all__ = [
     "metrics",
     "profiles",
     "report",
+    "sources",
     "sqlbridge",
     "stats",
     "viz",
