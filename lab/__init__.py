@@ -5,6 +5,8 @@ Componentes
     `contracts`   contratos de datos y validación con informe de hallazgos.
     `metrics`     indicadores, estadística descriptiva y razones seguras.
     `dates`       fechas, duraciones y bandas horarias.
+    `textual`     normalización de texto para agrupar y cruzar.
+    `geo`         distancias sobre la esfera y conversión de UTM.
     `stats`       inferencia estadística sin dependencias externas.
     `sources`     adquisición de datos públicos con registro de procedencia.
     `sqlbridge`   ejecución de SQL sobre DataFrames para validación independiente.
@@ -24,7 +26,7 @@ Los submódulos se importan de forma explícita (`from lab import metrics`) para
 costo de importar matplotlib o pandas se pague solo cuando se usa.
 """
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 __all__ = [
     "agents",
@@ -35,6 +37,7 @@ __all__ = [
     "core",
     "dates",
     "excel",
+    "geo",
     "knowledge",
     "learning",
     "method",
@@ -44,5 +47,6 @@ __all__ = [
     "sources",
     "sqlbridge",
     "stats",
+    "textual",
     "viz",
 ]

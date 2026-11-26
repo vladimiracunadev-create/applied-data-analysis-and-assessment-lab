@@ -1,0 +1,7 @@
+fuente,hoja,tipo_local,abierto,encabezado_en_fila,filas_de_titulo_descartadas,filas,columnas,filas_vacias_descartadas,columnas_vacias_descartadas
+bip-centros-alto-estandar,Abiertos,Centro bip! alto estándar,sí,13,13,7,9,0,0
+bip-centros-estandar,Abierto,Centro bip! estándar,sí,10,10,29,9,0,0
+bip-metro,Abiertos,Estación de Metro,sí,7,7,143,10,0,0
+bip-puntos,PCMA,Punto bip!,sí,9,9,1579,9,0,1
+bip-retail,Abiertos,Retail,sí,9,9,169,10,0,0
+bip-retail,Cerrados,Retail,no,9,9,1,10,0,0

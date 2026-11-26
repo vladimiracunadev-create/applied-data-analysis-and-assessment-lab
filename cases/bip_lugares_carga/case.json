@@ -1,0 +1,93 @@
+{
+  "slug": "bip_lugares_carga",
+  "titulo": "Consolidar cinco Excel públicos heterogéneos: lugares de carga de la tarjeta bip!",
+  "disciplina": "gestion-de-datos",
+  "industria": "transporte",
+  "dificultad": "intermedio",
+  "metodologia": "consolidación de fuentes heterogéneas con validación cruzada interna",
+  "competencias": [
+    "lectura-escritura-datos",
+    "calidad-datos",
+    "limpieza-normalizacion",
+    "cruce-consolidacion",
+    "agregacion-indicadores",
+    "hojas-de-calculo",
+    "validacion-independiente",
+    "gobernanza-datos",
+    "reproducibilidad",
+    "comunicacion-resultados"
+  ],
+  "estado": "implementado",
+  "tiempo_sugerido_min": 120,
+  "contexto": "La Subsecretaría de Transporte publica en el portal de datos abiertos del Estado los lugares donde se puede cargar la tarjeta bip!, repartidos en cinco archivos Excel: estaciones de Metro, Puntos bip!, centros de alto estándar, centros estándar y retail. Son 1 928 filas en seis hojas, con licencia Creative Commons Atribución-NoComercial 2.0 verificada. Están maquetados para que una persona los lea, no para que un programa los procese.",
+  "problema": "Responder cuántos lugares de carga hay, de qué tipo, en qué comuna y de qué entidad, consolidando cinco archivos cuyo encabezado está en una fila distinta en cada uno y cuyos esquemas no coinciden.",
+  "objetivos": [
+    "Detectar la fila del encabezado en cada archivo en lugar de fijarla a mano.",
+    "Armonizar esquemas de 9 y 10 columnas con una correspondencia declarada.",
+    "Distinguir la hoja de locales cerrados de las de locales abiertos.",
+    "Comprobar si el código es una clave, en lugar de suponerlo.",
+    "Validar las dos representaciones de la coordenada una contra la otra.",
+    "Agrupar por comuna y por entidad sobre claves normalizadas."
+  ],
+  "restricciones": [
+    "Dos horas de trabajo.",
+    "El entorno mínimo del laboratorio, sin pyproj ni GeoPandas.",
+    "Los datos no se redistribuyen: licencia NoComercial."
+  ],
+  "fuentes": [
+    "Cinco archivos públicos de la Subsecretaría de Transporte, Ministerio de Transportes y Telecomunicaciones, en el portal de datos abiertos del Estado (datos.gob.cl). Licencia Creative Commons Atribución-NoComercial 2.0, VERIFICADA en los metadatos del portal. Descargados el 26 de noviembre de 2026 con su SHA-256 registrado en procedencia.json. Datos públicos reales, no sintéticos."
+  ],
+  "datasets": [
+    "data/original/bip-metro.xlsx, bip-puntos.xlsx, bip-centros-alto-estandar.xlsx, bip-centros-estandar.xlsx y bip-retail.xlsx, no versionados. Se recuperan con: python scripts/fetch_data.py <nombre>"
+  ],
+  "diccionario": "Esquema común de diez campos (codigo, entidad, nombre, direccion, comuna, horario, este, norte, latitud, longitud) con la correspondencia a los nombres de cada archivo en la constante ALIAS de solution.py y en la tabla 'esquemas' de los resultados.",
+  "supuestos": [
+    "El encabezado es la primera fila con al menos cuatro celdas no vacías y enteramente textuales.",
+    "El tipo de local se deriva del archivo de origen, porque no está dentro de los datos.",
+    "Una hoja cuyo nombre normalizado es CERRADOS, CERRADAS o CERRADO contiene locales fuera de servicio y se excluye de los indicadores de cobertura.",
+    "Las coordenadas UTM están en la zona 19 del hemisferio sur.",
+    "Un desvío mayor que 200 metros entre las dos representaciones de la coordenada indica un error de registro, no una diferencia de datum.",
+    "Las claves de agrupación se normalizan quitando tildes, pasando a mayúsculas y colapsando espacios; la etiqueta legible se conserva aparte.",
+    "No se imputa ningún valor: lo no interpretable queda nulo y contado."
+  ],
+  "metodologias_alternativas": [
+    "Pandas con detección de encabezado, que es lo implementado.",
+    "Power Query en Excel, preferible si el entregable tiene que ser un libro que alguien va a seguir editando.",
+    "pyproj o GeoPandas para la conversión de coordenadas, preferible para trabajo geoespacial serio; aquí la conversión es una validación y no el producto."
+  ],
+  "implementaciones": [
+    "cases/bip_lugares_carga/solution.py — resolución completa.",
+    "lab/excel.py — detect_header_row, read_messy_sheet, read_all_sheets, sheet_names.",
+    "lab/textual.py — normalize_key, normalize_label, similarity, duplicate_candidates.",
+    "lab/geo.py — utm_to_latlon, haversine_km, nearest_point."
+  ],
+  "soluciones": "cases/bip_lugares_carga/solution.py, documentada paso a paso en el README del caso.",
+  "resultados": "cases/bip_lugares_carga/resultados/ con nueve tablas: informe de lectura, correspondencia de esquemas, cobertura de campos, validación de clave, validación de coordenadas, filas sospechosas, resumen, agregado por comuna y agregado por entidad. Total: 1 928 lugares, 1 927 abiertos, 46 comunas, 3 entidades, 18,06 % con horario publicado.",
+  "validaciones": [
+    "Validación cruzada interna: las dos representaciones de cada coordenada se comparan entre sí, sin fuente externa. Encontró tres errores de registro de 4,6 a 10,3 kilómetros.",
+    "La distribución de los desvíos se analiza por tramos y resulta bimodal, lo que permite distinguir el desplazamiento sistemático de los errores reales.",
+    "tests/test_bip.py reproduce la maqueta exacta de los cinco archivos con libros mínimos y comprueba la detección de encabezado, la armonización, la clave, la cobertura y la validación de coordenadas, sin descargar nada.",
+    "La cobertura de cada campo del esquema común se informa, junto con qué fuentes no lo traen."
+  ],
+  "interpretacion": "El resultado describe la oferta de lugares de carga, no su uso ni su suficiencia. La distribución bimodal de los desvíos de coordenada indica que las dos columnas no se produjeron con un único proceso consistente: es un hallazgo de gobernanza de datos que corresponde consultar al publicador, no corregir por cuenta propia.",
+  "limitaciones": [
+    "No permite calcular cobertura por habitante ni por superficie: la comuna llega como texto, sin población ni límites geográficos.",
+    "No dice nada sobre uso: los archivos tienen ubicación y horario, no transacciones.",
+    "El horario es referencial, según lo declara el propio archivo, y solo está publicado para el 18,06 % de los locales.",
+    "Los archivos del portal se actualizan: las cifras corresponden a la versión del 26 de noviembre de 2026."
+  ],
+  "conocimiento_adquirido": [
+    "El encabezado de una planilla pública puede estar en cualquier fila: en cinco archivos del mismo organismo estaba en las filas 7, 9, 13, 10 y 9. Detectarlo es más robusto que fijarlo, y si la detección falla hay que fallar en lugar de adivinar.",
+    "Una columna llamada código no es una clave hasta que se mide: en el archivo de Metro el código es la línea, de modo que 143 estaciones comparten 7 códigos, y ni la clave compuesta fuente + código identifica una fila.",
+    "FULLCARGA y Fullcarga son dos grupos para groupby y uno para una persona. Hay que normalizar para agrupar y conservar la etiqueta legible para informar.",
+    "Dos representaciones de la misma coordenada en un archivo permiten validarlo contra sí mismo. Aquí encontraron tres errores de hasta 10,3 kilómetros sin consultar ninguna fuente externa.",
+    "Una distribución bimodal de desvíos separa el problema sistemático del error puntual: 1 779 filas desplazadas 61 metros son una diferencia de datum, 3 filas desplazadas kilómetros son errores. Confundirlos produce o un falso positivo masivo o una omisión.",
+    "Un campo que un archivo no publica no es un campo con nulos: es un campo que esa población no tiene. El horario cubre el 18,06 % porque 1 579 locales provienen de un archivo que no lo trae."
+  ],
+  "capacidades_reutilizables": [
+    "lab.excel.detect_header_row y read_all_sheets sirven para cualquier planilla que alguien maquetó para imprimir: informes de gestión, extractos bancarios, nóminas.",
+    "lab.textual sirve para deduplicar y cruzar nombres de clientes, proveedores, empresas o localidades en cualquier dominio.",
+    "lab.geo habilita el análisis de proximidad en cualquier caso con coordenadas, y la validación cruzada entre dos sistemas de coordenadas en el mismo archivo.",
+    "El patrón de validación interna —dos representaciones del mismo hecho en una sola fuente— se aplica a cualquier dato redundante: un total y sus partes, un monto en dos monedas, una fecha y su número de semana."
+  ]
+}

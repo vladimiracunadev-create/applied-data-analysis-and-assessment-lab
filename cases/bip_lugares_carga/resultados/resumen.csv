@@ -1,0 +1,10 @@
+indicador,valor,unidad,definicion
+lugares_totales,1928.0,locales,"Filas consolidadas de los cinco archivos, todas las hojas"
+lugares_abiertos,1927.0,locales,Excluye las hojas de locales cerrados
+lugares_cerrados,1.0,locales,Filas provenientes de una hoja de cerrados
+tipos_de_local,5.0,tipos,Declarados por el archivo de origen
+comunas_distintas,46.0,comunas,"Sobre la comuna normalizada, solo abiertos"
+entidades_distintas,3.0,entidades,"Sobre la entidad normalizada, solo abiertos"
+con_horario_declarado,348.0,locales,El archivo de Puntos bip! no publica horario
+cobertura_horario_pct,18.059159314997405,%,Proporción de locales abiertos con horario publicado
+coordenadas_sospechosas,3.0,locales,Desvío entre UTM y lat/lon mayor que 200 m

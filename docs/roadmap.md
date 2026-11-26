@@ -33,9 +33,16 @@ deja de estar declarada aquí.
 
 ### 2.1 Competencias sin caso que las cubra
 
-- **`gobernanza-datos`.** Es una competencia **núcleo** del perfil
-  `gestor-de-datos` y del perfil `especialista-calidad-datos`, y **ningún caso
-  implementado la cubre todavía**. El laboratorio tiene las piezas técnicas
+- **`gobernanza-datos`** quedó cubierta en la versión 0.4.0 por la instancia
+  `bip_lugares_carga`, cuyo hallazgo central es de gobernanza y no de limpieza: la
+  distribución bimodal de los desvíos de coordenada muestra que las dos columnas de
+  ubicación del archivo no se produjeron con un único proceso consistente, y eso se
+  reporta al publicador en lugar de corregirse. El caso previsto `cases/governance`
+  sigue en pie para cubrir catálogo, propiedad del dato y políticas de retención, que
+  esta instancia no toca.
+
+- **El caso de gobernanza explícita, todavía pendiente.** Era una competencia
+  **núcleo** del perfil `gestor-de-datos` y del perfil `especialista-calidad-datos`. El laboratorio tiene las piezas técnicas
   (contratos de datos, diccionarios, trazabilidad de decisiones) pero no un caso cuyo
   objeto sea la gobernanza: catálogo de datos, propiedad y responsabilidad
   (*stewardship*), ciclo de vida, políticas de retención y clasificación de

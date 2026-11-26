@@ -3,7 +3,7 @@
 ![Applied Data Analysis and Assessment Lab](assets/banner.svg)
 
 [![Pruebas](https://github.com/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/actions/workflows/ci.yml)
-![Versión 0.3.0](https://img.shields.io/badge/versi%C3%B3n-0.3.0-11253B)
+![Versión 0.4.0](https://img.shields.io/badge/versi%C3%B3n-0.4.0-11253B)
 ![Python 3.11–3.14](https://img.shields.io/badge/Python-3.11%E2%80%933.14-3776AB)
 ![Licencia MIT](https://img.shields.io/badge/licencia-MIT-147D70)
 ![Datos sintéticos](https://img.shields.io/badge/datos-sint%C3%A9ticos-5C6B7A)
@@ -190,11 +190,13 @@ problemáticos con datos de prueba mínimos.
 `lab.contracts` | Contratos de datos: tipos, dominios, claves y severidad de cada hallazgo
 `lab.core` | Lectura, perfil de calidad y cruce auditado con control de cardinalidad
 `lab.dates` | Fechas, duraciones, bandas horarias y horarios de día de servicio que exceden las 24 h, informando qué no se pudo interpretar
+`lab.textual` | Normalización de texto: clave para agrupar y etiqueta para mostrar, parecido y candidatos a duplicado
+`lab.geo` | Distancias sobre la esfera, conversión de UTM a latitud/longitud y búsqueda del punto más cercano, sin dependencias
 `lab.metrics` | Razones seguras, percentiles con método declarado, tasa ponderada frente a promedio simple
 `lab.sources` | Adquirir datos públicos con procedencia verificable: URL, fecha, SHA-256, licencia, y el enlace resuelto desde la página índice
 `lab.stats` | Intervalos de confianza, Welch, Pearson y chi-cuadrado **sin SciPy**, validados contra tablas publicadas
 `lab.sqlbridge` | Ejecutar SQL real sobre DataFrames para validar de forma independiente
-`lab.excel` | Libros con fórmulas vivas, unidades y separación entradas / cálculos / resultados
+`lab.excel` | Escribe libros con fórmulas vivas, y **lee** planillas cuyo encabezado no está en la primera fila
 `lab.viz` | Gráficos con título, unidad, período, fuente y escala honesta obligatorios
 `lab.report` | Informes que se niegan a exportarse sin sus secciones obligatorias
 `lab.catalog` | Estado real de cada caso: 26 campos de metadatos exigidos
@@ -220,6 +222,7 @@ compare_rates([1, 90], [2, 100])      # ponderada 89.2 %, simple 70.0 %, 19.2 pp
 
 | Instancia | Industria | Datos | Dificultad | Tiempo |
 | --- | --- | --- | --- | --- |
+| [`bip_lugares_carga`](cases/bip_lugares_carga/README.md) | Transporte | **reales**, licencia verificada | intermedio | 120 min |
 | [`gtfs_red_movilidad`](cases/gtfs_red_movilidad/README.md) | Transporte | **reales**, 1,1 M de filas | especializado | 180 min |
 | [`transport`](cases/transport/README.md) | Transporte | sintéticos | avanzado | 240 min |
 | [`retail`](cases/retail/README.md) | Comercio | sintéticos | intermedio | 90 min |

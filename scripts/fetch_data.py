@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import sys
 from pathlib import Path
+from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -29,6 +30,28 @@ from lab.console import enable_utf8  # noqa: E402
 from lab.sources import CATALOG, fetch, get, manifest, zip_members  # noqa: E402
 
 DESTINO = ROOT / "data" / "original"
+
+#: Extensión por tipo de contenido declarado. Guardar un `.xlsx` con nombre `.zip`
+#: funciona —un xlsx es un zip— pero hace que nadie lo reconozca al abrir la carpeta.
+_EXTENSIONES = {
+    "application/zip": ".zip",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ".xlsx",
+    "application/vnd.ms-excel": ".xls",
+    "text/csv": ".csv",
+    "application/json": ".json",
+}
+
+
+def _extension(fuente) -> str:
+    """Extensión del archivo a guardar.
+
+    Prefiere el tipo de contenido declarado en la fuente; si no hay, usa la extensión
+    de la URL de descarga; si tampoco, `.dat`, que al menos no miente sobre el formato.
+    """
+    if fuente.media_type in _EXTENSIONES:
+        return _EXTENSIONES[fuente.media_type]
+    sufijo = Path(urlparse(fuente.url).path).suffix.lower()
+    return sufijo if sufijo and len(sufijo) <= 6 else ".dat"
 
 
 def main() -> None:
@@ -62,7 +85,7 @@ def main() -> None:
         return
 
     fuente = get(args.fuente)
-    destino = DESTINO / f"{fuente.name}.zip"
+    destino = DESTINO / f"{fuente.name}{_extension(fuente)}"
     print(f"Fuente:   {fuente.name}")
     print(f"Publica:  {fuente.publisher}")
     print(f"Licencia: {fuente.licence}")

@@ -1,0 +1,72 @@
+{
+  "bip-metro": {
+    "source": "bip-metro",
+    "requested_url": "https://datos.gob.cl/dataset/ac76c913-3ad2-4831-ab2a-3b0d4165abdd/resource/3d54e961-d81b-4507-aeee-7a433e00a9bf/download/metro_20240917oficio-4770_2013.xlsx",
+    "resolved_url": "https://datos.gob.cl/dataset/ac76c913-3ad2-4831-ab2a-3b0d4165abdd/resource/3d54e961-d81b-4507-aeee-7a433e00a9bf/download/metro_20240917oficio-4770_2013.xlsx",
+    "downloaded_at": "2026-11-26T16:31:50+00:00",
+    "sha256": "6b4c52d71fbae67e0ab5b946c3167130b240468c998c468a33a523d2be26e185",
+    "bytes": 22411,
+    "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "publisher": "Subsecretaría de Transporte, Ministerio de Transportes y Telecomunicaciones",
+    "licence": "Creative Commons Atribución-NoComercial 2.0 (CC BY-NC 2.0)",
+    "licence_url": "http://creativecommons.org/licenses/by-nc/2.0/",
+    "licence_verified": true,
+    "notes": []
+  },
+  "bip-puntos": {
+    "source": "bip-puntos",
+    "requested_url": "https://datos.gob.cl/dataset/c2969d8a-df82-4a6c-a1f8-e5eba36af6cf/resource/cbd329c6-9fe6-4dc1-91e3-a99689fd0254/download/pcma_20240917-oficio-4770_2013.xlsx",
+    "resolved_url": "https://datos.gob.cl/dataset/c2969d8a-df82-4a6c-a1f8-e5eba36af6cf/resource/cbd329c6-9fe6-4dc1-91e3-a99689fd0254/download/pcma_20240917-oficio-4770_2013.xlsx",
+    "downloaded_at": "2026-11-26T16:31:53+00:00",
+    "sha256": "3c2ebdc01694ce573842aeb6e5e44e5052e642e880b6164eeb2503badc891f92",
+    "bytes": 164941,
+    "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "publisher": "Subsecretaría de Transporte, Ministerio de Transportes y Telecomunicaciones",
+    "licence": "Creative Commons Atribución-NoComercial 2.0 (CC BY-NC 2.0)",
+    "licence_url": "http://creativecommons.org/licenses/by-nc/2.0/",
+    "licence_verified": true,
+    "notes": []
+  },
+  "bip-centros-alto-estandar": {
+    "source": "bip-centros-alto-estandar",
+    "requested_url": "https://datos.gob.cl/dataset/5993b4cb-869c-4733-a124-7fcdd57bbb05/resource/fef2a0f6-84f8-4a1a-9a64-e2424efdd376/download/pcmav-alto-estandar_20240917_oficio-4770_2013.xlsx",
+    "resolved_url": "https://datos.gob.cl/dataset/5993b4cb-869c-4733-a124-7fcdd57bbb05/resource/fef2a0f6-84f8-4a1a-9a64-e2424efdd376/download/pcmav-alto-estandar_20240917_oficio-4770_2013.xlsx",
+    "downloaded_at": "2026-11-26T16:31:55+00:00",
+    "sha256": "f9cc9436e7f9bfed56885abc4b959bc7ac10f4af1c4bef63d5b16106fddbbb54",
+    "bytes": 12029,
+    "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "publisher": "Subsecretaría de Transporte, Ministerio de Transportes y Telecomunicaciones",
+    "licence": "Creative Commons Atribución-NoComercial 2.0 (CC BY-NC 2.0)",
+    "licence_url": "http://creativecommons.org/licenses/by-nc/2.0/",
+    "licence_verified": true,
+    "notes": []
+  },
+  "bip-centros-estandar": {
+    "source": "bip-centros-estandar",
+    "requested_url": "https://datos.gob.cl/dataset/29a758f3-4fe8-4582-afc7-8237b83aaddc/resource/8e827306-e9ef-4e84-a251-38d29a8f66d0/download/pcmav-estandar-normal_20240917_oficio-4770_2013.xlsx",
+    "resolved_url": "https://datos.gob.cl/dataset/29a758f3-4fe8-4582-afc7-8237b83aaddc/resource/8e827306-e9ef-4e84-a251-38d29a8f66d0/download/pcmav-estandar-normal_20240917_oficio-4770_2013.xlsx",
+    "downloaded_at": "2026-11-26T16:31:58+00:00",
+    "sha256": "6024de09e005d688991c06a634e31419e3e141448157a3f722d8d1eb6b0f496f",
+    "bytes": 14087,
+    "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "publisher": "Subsecretaría de Transporte, Ministerio de Transportes y Telecomunicaciones",
+    "licence": "Creative Commons Atribución-NoComercial 2.0 (CC BY-NC 2.0)",
+    "licence_url": "http://creativecommons.org/licenses/by-nc/2.0/",
+    "licence_verified": true,
+    "notes": []
+  },
+  "bip-retail": {
+    "source": "bip-retail",
+    "requested_url": "https://datos.gob.cl/dataset/f0fad229-d59a-4992-8c7a-489d1e9ff58c/resource/2d177f41-08f9-471a-af5c-bc949267f053/download/retail_20240917_oficio-4770_2013.xlsx",
+    "resolved_url": "https://datos.gob.cl/dataset/f0fad229-d59a-4992-8c7a-489d1e9ff58c/resource/2d177f41-08f9-471a-af5c-bc949267f053/download/retail_20240917_oficio-4770_2013.xlsx",
+    "downloaded_at": "2026-11-26T16:32:00+00:00",
+    "sha256": "7377a90366a06682b8ebf23f8734f7ee6aa6bb1ddec54a47efca6efedda1b3ad",
+    "bytes": 29317,
+    "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "publisher": "Subsecretaría de Transporte, Ministerio de Transportes y Telecomunicaciones",
+    "licence": "Creative Commons Atribución-NoComercial 2.0 (CC BY-NC 2.0)",
+    "licence_url": "http://creativecommons.org/licenses/by-nc/2.0/",
+    "licence_verified": true,
+    "notes": []
+  }
+}

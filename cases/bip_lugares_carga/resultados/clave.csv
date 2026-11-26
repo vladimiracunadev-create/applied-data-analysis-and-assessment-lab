@@ -1,0 +1,8 @@
+ambito,filas,codigos_distintos,codigos_repetidos,es_clave
+consolidado,1928,1792,136,no
+solo bip-centros-alto-estandar,7,7,0,sí
+solo bip-centros-estandar,29,29,0,sí
+solo bip-metro,143,7,136,no
+solo bip-puntos,1579,1579,0,sí
+solo bip-retail,170,170,0,sí
+clave compuesta (fuente + codigo),1928,1792,136,no

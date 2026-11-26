@@ -209,6 +209,167 @@ def _write_index(book, styles, sheets: Sequence[Sheet], title: str, source: str)
         ws.write(row, 0, text, styles["note"])
 
 
+@dataclass(frozen=True)
+class SheetReport:
+    """Qué hubo que hacer para poder leer una hoja.
+
+    Es parte del entregable, no un detalle interno: si el encabezado estaba en la fila
+    13 y se descartaron 12 filas de título, el informe de calidad tiene que decirlo.
+    """
+
+    source: str
+    sheet: str
+    header_row: int
+    rows_before_header: int
+    rows_read: int
+    columns_read: int
+    empty_rows_dropped: int
+    empty_columns_dropped: int
+    original_columns: tuple[str, ...]
+
+    def as_row(self) -> dict[str, object]:
+        return {
+            "archivo": self.source,
+            "hoja": self.sheet,
+            "encabezado_en_fila": self.header_row,
+            "filas_de_titulo_descartadas": self.rows_before_header,
+            "filas": self.rows_read,
+            "columnas": self.columns_read,
+            "filas_vacias_descartadas": self.empty_rows_dropped,
+            "columnas_vacias_descartadas": self.empty_columns_dropped,
+        }
+
+
+def sheet_names(path: str | Path) -> list[str]:
+    """Nombres de las hojas de un libro, sin cargar los datos.
+
+    Mirarlos antes de leer evita el error de consolidar una hoja que no corresponde:
+    en archivos públicos reales conviven hojas `Abiertos`, `Abierto` y `Cerrados`, y la
+    última no debe entrar en un indicador de cobertura.
+    """
+    import openpyxl
+
+    libro = openpyxl.load_workbook(Path(path), read_only=True, data_only=True)
+    try:
+        return list(libro.sheetnames)
+    finally:
+        libro.close()
+
+
+def detect_header_row(frame: pd.DataFrame, min_filled: int = 4, max_scan: int = 40) -> int:
+    """Encuentra la fila que contiene el encabezado en una hoja desordenada.
+
+    Criterio: la primera fila con al menos `min_filled` celdas no vacías cuyos valores
+    sean todos texto. Las filas de título («METRO», «PUNTOS BIP!») tienen una sola celda
+    llena; las filas de datos suelen traer números. El encabezado es la primera fila
+    ancha y enteramente textual.
+
+    Args:
+        frame: hoja leída con `header=None`, de modo que nada se interprete como
+            encabezado todavía.
+        min_filled: celdas no vacías mínimas para considerar la fila.
+        max_scan: cuántas filas revisar antes de rendirse.
+
+    Returns:
+        Índice de fila base cero del encabezado.
+
+    Raises:
+        ValueError: si no encuentra ninguna fila candidata. Es preferible fallar a
+            devolver una fila arbitraria: un encabezado mal detectado produce una tabla
+            con nombres de columna que son datos, y eso contamina todo lo que sigue.
+
+    Por qué detectar y no fijar el número
+        En cinco archivos publicados por el mismo organismo el encabezado estaba en las
+        filas 7, 9, 13, 10 y 9. Fijar el número a mano funciona hasta la próxima
+        publicación, y falla sin aviso.
+    """
+    if min_filled < 1:
+        raise ValueError("min_filled debe ser al menos 1.")
+    limite = min(max_scan, len(frame))
+    for posicion in range(limite):
+        fila = frame.iloc[posicion]
+        llenas = fila.dropna()
+        if len(llenas) < min_filled:
+            continue
+        if all(isinstance(v, str) and v.strip() for v in llenas):
+            return posicion
+    raise ValueError(
+        f"No se encontró una fila de encabezado en las primeras {limite} filas con al "
+        f"menos {min_filled} celdas de texto. Revise la hoja a mano antes de leerla: "
+        "una detección errónea convierte datos en nombres de columna."
+    )
+
+
+def read_messy_sheet(
+    path: str | Path,
+    sheet: str | int = 0,
+    min_filled: int = 4,
+    header_row: int | None = None,
+    dtype: object = str,
+) -> tuple[pd.DataFrame, SheetReport]:
+    """Lee una hoja cuyo encabezado no está en la primera fila.
+
+    Args:
+        path: archivo `.xlsx`.
+        sheet: nombre o índice de la hoja.
+        min_filled: celdas mínimas para reconocer el encabezado.
+        header_row: fila del encabezado, si ya se conoce. Si se indica, no se detecta.
+        dtype: `str` por defecto, para ver los valores como vienen y decidir después
+            qué es un número.
+
+    Returns:
+        La tabla con sus nombres de columna reales, y el informe de lo que hubo que
+        hacer para leerla.
+
+    Las filas y columnas completamente vacías se descartan, y se informa cuántas: una
+    hoja con 151 filas que entrega 143 registros no tiene 8 registros perdidos, tiene
+    8 filas de maquetación.
+    """
+    archivo = Path(path)
+    crudo = pd.read_excel(archivo, sheet_name=sheet, header=None, dtype=dtype)
+    fila = header_row if header_row is not None else detect_header_row(crudo, min_filled)
+
+    tabla = pd.read_excel(archivo, sheet_name=sheet, header=fila, dtype=dtype)
+    columnas_originales = tuple(str(c) for c in tabla.columns)
+    antes_filas, antes_columnas = tabla.shape
+    tabla = tabla.dropna(how="all").dropna(axis=1, how="all")
+    # Los nombres de columna también llegan con espacios al final en archivos reales.
+    tabla.columns = [str(c).strip() for c in tabla.columns]
+
+    informe = SheetReport(
+        source=archivo.name,
+        sheet=str(sheet if isinstance(sheet, str) else crudo.columns.name or sheet),
+        header_row=fila,
+        rows_before_header=fila,
+        rows_read=len(tabla),
+        columns_read=len(tabla.columns),
+        empty_rows_dropped=antes_filas - len(tabla),
+        empty_columns_dropped=antes_columnas - len(tabla.columns),
+        original_columns=columnas_originales,
+    )
+    return tabla.reset_index(drop=True), informe
+
+
+def read_all_sheets(
+    path: str | Path, min_filled: int = 4, skip: tuple[str, ...] = ()
+) -> dict[str, tuple[pd.DataFrame, SheetReport]]:
+    """Lee todas las hojas de un libro, cada una con su encabezado detectado.
+
+    Args:
+        path: archivo `.xlsx`.
+        min_filled: celdas mínimas para reconocer el encabezado.
+        skip: nombres de hoja a omitir. Omitir una hoja es una **decisión declarada**,
+            no un descuido: pásela aquí y quedará visible en la llamada.
+    """
+    resultado: dict[str, tuple[pd.DataFrame, SheetReport]] = {}
+    for nombre in sheet_names(path):
+        if nombre in skip:
+            continue
+        tabla, informe = read_messy_sheet(path, sheet=nombre, min_filled=min_filled)
+        resultado[nombre] = (tabla, informe)
+    return resultado
+
+
 def data_start_row(has_notes: bool = True) -> int:
     """Primera fila de datos (1-based, como la numera Excel) que escribe `write_workbook`.
 

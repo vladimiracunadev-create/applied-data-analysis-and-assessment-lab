@@ -6,6 +6,82 @@ Este proyecto usa [versionado semántico](https://semver.org/lang/es/).
 La **primera versión oficial es la 0.1.0**. Los prototipos anteriores no se consideran
 releases y no se publican como tales.
 
+## [0.4.0] — 2026-11-26
+
+Resuelve el problema **P01** del mapa: consolidar cinco Excel públicos heterogéneos.
+Es el primer caso del laboratorio con datos reales **de licencia verificada**, y el que
+más se parece a lo que pide una evaluación técnica de cuatro horas con Excel y Pandas.
+
+### Agregado
+
+- **Instancia `cases/bip_lugares_carga`.** Consolida los cinco archivos de lugares de
+  carga de la tarjeta bip! publicados por la Subsecretaría de Transporte: 1 928 filas
+  en seis hojas, licencia Creative Commons Atribución-NoComercial 2.0 verificada.
+  Responde cuántos lugares hay, de qué tipo, en qué comuna y de qué entidad: 1 927
+  abiertos, 5 tipos, 46 comunas, 3 entidades, y solo el **18,06 %** con horario
+  publicado.
+- **`lab.excel`: lectura de planillas desordenadas.** `detect_header_row`,
+  `read_messy_sheet`, `read_all_sheets`, `sheet_names` y el informe `SheetReport`. En
+  los cinco archivos el encabezado estaba en las filas **7, 9, 13, 10 y 9**: detectarlo
+  es más robusto que fijarlo, y si la detección falla el módulo falla en lugar de
+  adivinar.
+- **`lab.textual`: normalización de texto.** `normalize_key` para agrupar y
+  `normalize_label` para mostrar, porque guardar solo la clave convierte `Ñuñoa` en
+  `NUNOA` en el informe final. Más `similarity`, `duplicate_candidates` —que propone
+  pares para revisión humana, nunca fusiona— y `normalization_report`, que cuantifica
+  los grupos espurios que la normalización evita.
+- **`lab.geo`: geografía mínima sin dependencias.** `haversine_km`, `utm_to_latlon`
+  (transversa de Mercator inversa sobre WGS84), `grados_por_km` y `nearest_point` con
+  búsqueda por bloques. Habilita el problema P08 del mapa.
+- Cuatro registros de conocimiento: `encabezado-no-esta-en-la-primera-fila`,
+  `clave-que-no-es-clave`, `normalizar-antes-de-agrupar` y `dos-coordenadas-un-lugar`.
+
+### Lo que la validación cruzada encontró
+
+El archivo trae la ubicación **dos veces** —UTM y geográficas—, lo que permite validarlo
+contra sí mismo sin ninguna fuente externa. La distribución de los 1 928 desvíos es
+**bimodal**:
+
+| Desvío | Filas | Qué es |
+| --- | --- | --- |
+| menos de 5 m | 109 | las dos columnas coinciden |
+| 50 a 80 m | 1 779 | desplazamiento sistemático (diferencia de datum) |
+| más de 200 m | **3** | **errores de registro: 4 623 m, 10 087 m y 10 272 m** |
+
+Y entre 80 y 200 m, **nada**. Que los dos grupos estén separados por un orden de
+magnitud es lo que permite distinguir el problema sistemático del error puntual:
+reportar los 1 779 como errores sería un falso positivo masivo, callar los tres una
+omisión.
+
+Que 109 filas **no** tengan el desplazamiento es el hallazgo de fondo: si fuera solo
+una diferencia de datum, sería uniforme. Las dos columnas no se produjeron con un único
+proceso consistente. Es gobernanza de datos, no limpieza: se reporta al publicador.
+
+### Otros hallazgos del caso
+
+- **`CODIGO` no es una clave**, y ni la clave compuesta `archivo + código` lo es: en el
+  archivo de Metro el código es la **línea**, de modo que 143 estaciones comparten 7
+  códigos.
+- **El `horario` cubre el 18,06 %** porque 1 579 locales vienen de un archivo que no
+  publica esa columna. No es un campo con nulos: es un campo que esa población no tiene.
+- **`FULLCARGA` y `Fullcarga`** convivían en el mismo archivo, creando grupos espurios
+  en cualquier `groupby` sobre el texto crudo.
+
+### Corregido
+
+- **`lab.geo.haversine_km` no aceptaba arreglos de NumPy difundidos entre sí**, que es
+  justo lo que necesita una búsqueda del punto más cercano por bloques. Lo encontró la
+  prueba de `nearest_point`.
+- **`scripts/fetch_data.py` guardaba todo con extensión `.zip`.** Un `.xlsx` guardado
+  como `.zip` funciona —un xlsx es un zip— pero nadie lo reconoce al abrir la carpeta.
+  Ahora la extensión se deriva del tipo de contenido declarado.
+
+### Cambiado
+
+- `docs/roadmap.md` da por cubierta la competencia `gobernanza-datos`, cuyo hallazgo
+  central aporta esta instancia, y mantiene pendiente el caso de gobernanza explícita
+  (catálogo, propiedad del dato, retención), que este caso no toca.
+
 ## [0.3.0] — 2026-11-26
 
 Inventario de lo que **sí se puede resolver** con datos públicos verificados, y las

@@ -1,0 +1,6 @@
+fuente,filas,con_ambas_coordenadas,desvio_mediano_m,desvio_desv_tipica_m,sospechosas,veredicto
+bip-centros-alto-estandar,7,7,60.99,0.28,0,"desvío sistemático, sin errores de registro"
+bip-centros-estandar,29,29,60.74,27.81,0,"desvío sistemático, sin errores de registro"
+bip-metro,143,143,60.93,9.97,0,"desvío sistemático, sin errores de registro"
+bip-puntos,1579,1579,60.86,15.52,3,revisar las filas marcadas
+bip-retail,170,170,60.84,11.01,0,"desvío sistemático, sin errores de registro"
