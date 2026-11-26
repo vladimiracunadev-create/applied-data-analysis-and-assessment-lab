@@ -3,7 +3,7 @@
 ![Applied Data Analysis and Assessment Lab](assets/banner.svg)
 
 [![Pruebas](https://github.com/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/actions/workflows/ci.yml)
-![Versión 0.2.0](https://img.shields.io/badge/versi%C3%B3n-0.2.0-11253B)
+![Versión 0.3.0](https://img.shields.io/badge/versi%C3%B3n-0.3.0-11253B)
 ![Python 3.11–3.14](https://img.shields.io/badge/Python-3.11%E2%80%933.14-3776AB)
 ![Licencia MIT](https://img.shields.io/badge/licencia-MIT-147D70)
 ![Datos sintéticos](https://img.shields.io/badge/datos-sint%C3%A9ticos-5C6B7A)
@@ -27,9 +27,9 @@ adquirido en capacidades reutilizables para los problemas de mañana.**
 | --- | --- |
 | **Empezar** | [Inicio rápido](#inicio-rápido) · [Manual](docs/manual.md) · [Arquitectura](docs/arquitectura.md) |
 | **Aprender** | [Programa de aprendizaje](docs/programa.md) · [Perfiles profesionales](docs/perfiles.md) · [Equivalencias SQL/Pandas/Excel/R](docs/equivalencias.md) |
-| **Resolver** | [Recorrido e instancias](docs/instancias.md) · [Catálogo de casos](docs/catalogo-casos.md) · [Metodología de 18 etapas](docs/metodologia.md) · [Método de investigación](docs/research-method.md) |
+| **Resolver** | [Qué problemas se pueden resolver](docs/problemas-de-la-instancia.md) · [Recorrido e instancias](docs/instancias.md) · [Catálogo de casos](docs/catalogo-casos.md) · [Metodología de 18 etapas](docs/metodologia.md) · [Método de investigación](docs/research-method.md) |
 | **Evaluarse** | [Simulaciones de 4 horas](simulations/) · [Preparación DTPM](cases/transport/README.md) · [Antecedentes verificados](docs/dtpm-antecedentes.md) |
-| **Consultar** | [Base de conocimiento](docs/conocimiento.md) · [Diccionario de datos](docs/diccionario.md) · [Contratos de agentes](docs/agentes.md) |
+| **Consultar** | [Indicadores oficiales](docs/indicadores-oficiales-transporte.md) · [Base de conocimiento](docs/conocimiento.md) · [Diccionario de datos](docs/diccionario.md) · [Contratos de agentes](docs/agentes.md) |
 | **Gobernanza** | [Hoja de ruta](docs/roadmap.md) · [Cambios](CHANGELOG.md) · [Contribuir](CONTRIBUTING.md) · [Seguridad](SECURITY.md) · [Estándar visual](docs/visual-standard.md) · [Prompt maestro](PROMPT_MAESTRO.md) |
 
 ---

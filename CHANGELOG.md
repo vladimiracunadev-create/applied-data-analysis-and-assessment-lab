@@ -6,6 +6,53 @@ Este proyecto usa [versionado semántico](https://semver.org/lang/es/).
 La **primera versión oficial es la 0.1.0**. Los prototipos anteriores no se consideran
 releases y no se publican como tales.
 
+## [0.3.0] — 2026-11-26
+
+Inventario de lo que **sí se puede resolver** con datos públicos verificados, y las
+definiciones oficiales de los indicadores del sector.
+
+### Agregado
+
+- **`docs/problemas-de-la-instancia.md`**: dieciséis problemas con su pregunta exacta,
+  los datos que usa cada uno, la tecnología que exige, la trampa que enseña y su
+  estado —resuelto, disponible o no se puede—. Incluye una sección de **siete
+  preguntas que estos datos no permiten contestar**, con el motivo: no hay demanda, no
+  hay GPS, no hay transacciones, no hay límites comunales.
+- **`docs/indicadores-oficiales-transporte.md`**: las definiciones oficiales del índice
+  de cumplimiento de regularidad (ICR), del de frecuencia (ICF) y del índice de
+  variación de tiempos de viaje, con fórmula, grano, fuente y reglas de exclusión,
+  citadas textualmente de un documento público de DIPRES (Partida 19, Ministerio de
+  Transporte y Telecomunicaciones). Lo relevante: el grano del ICR y del ICF es
+  **servicio × sentido × mes**, el denominador son **mediciones** —más de veinte
+  millones al año—, el plan de referencia cambia dos veces al año de modo que la serie
+  no es comparable sin advertirlo, y el índice de tiempos de viaje declara **siete
+  reglas de exclusión** encadenadas, entre ellas descartar enero, febrero y diciembre
+  completos y los días 28 y 29 de cada mes.
+- **Cinco fuentes nuevas en `lab.sources.CATALOG`**: los lugares de carga de la tarjeta
+  bip! publicados por la Subsecretaría de Transporte en el portal de datos abiertos,
+  con licencia **Creative Commons Atribución-NoComercial 2.0 verificada**. El catálogo
+  ahora distingue fuentes con licencia comprobada de fuentes sin comprobar, y una
+  prueba exige que esa distinción exista.
+
+### Por qué esos Excel son mejor material que un dataset sintético
+
+Verificado archivo por archivo: el encabezado está en una fila distinta en cada uno
+(7, 9, 13, 10 y 9), los esquemas tienen 9 o 10 columnas, los nombres de columna varían
+(`NOMBRE FANTASIA` / `NOMBRE DE FANTASIA ` con espacio final / ausente;
+`DIRECCION` / `DIRECCIÓN`), los nombres de hoja varían (`Abiertos`, `Abierto`, `PCMA`),
+uno trae una hoja `Cerrados` que no debe entrar en un indicador de cobertura, hay dos
+sistemas de coordenadas a la vez, la entidad viene con mayúsculas inconsistentes, los
+horarios son texto libre en tres formatos distintos, y el contenido incluye un carácter
+que rompe una consola de Windows en cp1252.
+
+### Verificado y no encontrado
+
+Se buscó el documento de la convocatoria del cargo en el sitio del DTPM, en el del
+Ministerio de Transportes, en el portal de datos abiertos del Estado y en buscadores.
+**No se encontró**, y el sitio del DTPM no tiene sección de concursos. Queda declarado
+en `docs/problemas-de-la-instancia.md` para que nadie suponga que el material está
+modelado sobre la prueba real.
+
 ## [0.2.0] — 2026-11-26
 
 Primera instancia con **datos públicos reales** y el módulo de adquisición que la hace

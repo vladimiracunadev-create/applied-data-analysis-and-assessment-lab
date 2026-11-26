@@ -266,6 +266,27 @@ def test_el_catalogo_del_repositorio_declara_fuentes_consistentes():
         assert fuente.licence.strip()
 
 
+def test_las_fuentes_bip_declaran_licencia_verificada():
+    """Contraste deliberado: estas sí tienen licencia comprobada en el portal."""
+    from lab.sources import BIP_SOURCES
+
+    assert len(BIP_SOURCES) == 5
+    for nombre in BIP_SOURCES:
+        fuente = get(nombre)
+        assert fuente.licence_verified, f"{nombre} debería declarar su licencia"
+        assert "Creative Commons" in fuente.licence
+        assert fuente.licence_url.startswith("http")
+        assert "datos.gob.cl" in fuente.url
+
+
+def test_el_catalogo_distingue_las_licencias_verificadas_de_las_que_no():
+    verificadas = [n for n, f in CATALOG.items() if f.licence_verified]
+    sin_verificar = [n for n, f in CATALOG.items() if not f.licence_verified]
+    # El valor del catálogo está en la distinción: si todo fuera igual, no informaría.
+    assert verificadas and sin_verificar
+    assert "gtfs-red-movilidad" in sin_verificar
+
+
 def test_la_fuente_del_gtfs_resuelve_su_enlace_y_no_finge_licencia():
     fuente = get("gtfs-red-movilidad")
     assert "dtpm.cl" in fuente.url

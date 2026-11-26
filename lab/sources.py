@@ -405,7 +405,94 @@ CATALOG: dict[str, DataSource] = {
         link_pattern=r'href="([^"]*descargas/gtfs/GTFS_[^"]*\.zip)"',
         media_type="application/zip",
     ),
+    # --- Lugares de carga de la tarjeta bip! -------------------------------------
+    # Cinco archivos publicados por la Subsecretaría de Transporte en el portal de
+    # datos abiertos del Estado. A diferencia del GTFS, aquí la licencia **sí** está
+    # declarada y verificada en los metadatos del portal: Creative Commons
+    # Atribución-NoComercial 2.0. Eso permite citarlos y trabajarlos; «NoComercial»
+    # acota el uso, no la lectura ni el análisis.
+    #
+    # Son Excel reales con el desorden habitual del sector público: el encabezado
+    # está en una fila distinta en cada archivo (7, 9, 13, 10 y 9), los esquemas no
+    # coinciden, los nombres de hoja varían y uno trae una hoja de locales cerrados.
+    # Por eso son un material de práctica mejor que cualquier dataset sintético.
+    "bip-metro": DataSource(
+        name="bip-metro",
+        url=("https://datos.gob.cl/dataset/ac76c913-3ad2-4831-ab2a-3b0d4165abdd/"
+             "resource/3d54e961-d81b-4507-aeee-7a433e00a9bf/download/"
+             "metro_20240917oficio-4770_2013.xlsx"),
+        publisher="Subsecretaría de Transporte, Ministerio de Transportes y Telecomunicaciones",
+        description=(
+            "Lugares de carga de la tarjeta bip! en estaciones de Metro: código, "
+            "entidad, nombre de fantasía, dirección, comuna, horario referencial y "
+            "coordenadas en UTM y en latitud/longitud."
+        ),
+        licence="Creative Commons Atribución-NoComercial 2.0 (CC BY-NC 2.0)",
+        licence_url="http://creativecommons.org/licenses/by-nc/2.0/",
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ),
+    "bip-puntos": DataSource(
+        name="bip-puntos",
+        url=("https://datos.gob.cl/dataset/c2969d8a-df82-4a6c-a1f8-e5eba36af6cf/"
+             "resource/cbd329c6-9fe6-4dc1-91e3-a99689fd0254/download/"
+             "pcma_20240917-oficio-4770_2013.xlsx"),
+        publisher="Subsecretaría de Transporte, Ministerio de Transportes y Telecomunicaciones",
+        description=(
+            "Puntos bip! (PCMA): el archivo más grande de la serie, con alrededor de "
+            "1 579 lugares de carga. No trae columna de horario, a diferencia de los "
+            "demás."
+        ),
+        licence="Creative Commons Atribución-NoComercial 2.0 (CC BY-NC 2.0)",
+        licence_url="http://creativecommons.org/licenses/by-nc/2.0/",
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ),
+    "bip-centros-alto-estandar": DataSource(
+        name="bip-centros-alto-estandar",
+        url=("https://datos.gob.cl/dataset/5993b4cb-869c-4733-a124-7fcdd57bbb05/"
+             "resource/fef2a0f6-84f8-4a1a-9a64-e2424efdd376/download/"
+             "pcmav-alto-estandar_20240917_oficio-4770_2013.xlsx"),
+        publisher="Subsecretaría de Transporte, Ministerio de Transportes y Telecomunicaciones",
+        description=(
+            "Centros bip! de alto estándar: pocos locales con horario extendido y "
+            "servicios adicionales como reemplazo de tarjetas."
+        ),
+        licence="Creative Commons Atribución-NoComercial 2.0 (CC BY-NC 2.0)",
+        licence_url="http://creativecommons.org/licenses/by-nc/2.0/",
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ),
+    "bip-centros-estandar": DataSource(
+        name="bip-centros-estandar",
+        url=("https://datos.gob.cl/dataset/29a758f3-4fe8-4582-afc7-8237b83aaddc/"
+             "resource/8e827306-e9ef-4e84-a251-38d29a8f66d0/download/"
+             "pcmav-estandar-normal_20240917_oficio-4770_2013.xlsx"),
+        publisher="Subsecretaría de Transporte, Ministerio de Transportes y Telecomunicaciones",
+        description="Centros bip! de estándar normal, con su horario de atención.",
+        licence="Creative Commons Atribución-NoComercial 2.0 (CC BY-NC 2.0)",
+        licence_url="http://creativecommons.org/licenses/by-nc/2.0/",
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ),
+    "bip-retail": DataSource(
+        name="bip-retail",
+        url=("https://datos.gob.cl/dataset/f0fad229-d59a-4992-8c7a-489d1e9ff58c/"
+             "resource/2d177f41-08f9-471a-af5c-bc949267f053/download/"
+             "retail_20240917_oficio-4770_2013.xlsx"),
+        publisher="Subsecretaría de Transporte, Ministerio de Transportes y Telecomunicaciones",
+        description=(
+            "Lugares de carga en cadenas de retail. Es el único archivo con **dos "
+            "hojas**: 'Abiertos' y 'Cerrados'. Consolidar ambas sin mirar infla "
+            "cualquier indicador de cobertura."
+        ),
+        licence="Creative Commons Atribución-NoComercial 2.0 (CC BY-NC 2.0)",
+        licence_url="http://creativecommons.org/licenses/by-nc/2.0/",
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ),
 }
+
+#: Las cinco fuentes de lugares de carga, que se consolidan en una sola tabla.
+BIP_SOURCES: tuple[str, ...] = (
+    "bip-metro", "bip-puntos", "bip-centros-alto-estandar",
+    "bip-centros-estandar", "bip-retail",
+)
 
 
 def get(name: str) -> DataSource:
