@@ -1,0 +1,9 @@
+indicador,valor,unidad,definicion
+paradas_medidas,12497.0,paradas,Paradas de embarque con coordenada
+error_mediano_m,17.2,m,"Distancia euclídea menos haversine, mediana sobre las paradas"
+error_mediano_pct,9.41,%,"El mismo error, relativo a la distancia correcta"
+errores_negativos,0.0,paradas,"Paradas donde la euclídea subestima. Cero confirma que el sesgo es sistemático y de un solo signo, no ruido"
+cobertura_haversine_pct,59.29,%,"Paradas a 300 m o menos, con la fórmula correcta"
+cobertura_euclidea_pct,54.69,%,"Paradas a 300 m o menos, con el atajo"
+cambian_de_clase,574.0,paradas,"Paradas que pasan de cubiertas a no cubiertas, o al revés"
+cambian_de_lugar,814.0,paradas,Paradas a las que el atajo asigna otro local como el más cercano

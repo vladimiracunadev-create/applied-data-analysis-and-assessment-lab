@@ -1,0 +1,8 @@
+indicador,valor,unidad,definicion
+cobertura_publicada_pct,59.29,%,Paradas a 300 m usando la latitud y longitud publicadas
+cobertura_desde_utm_pct,59.17,%,La misma cifra usando la coordenada derivada del este y norte UTM
+cambian_de_clase,707.0,paradas,"Paradas que cambian de cubiertas a no cubiertas al cambiar de representación. El agregado se mueve poco; estas paradas, sí"
+cambian_de_lugar,1673.0,paradas,Paradas a las que la otra representación asigna otro local
+diferencia_mediana_m,35.7,m,"Diferencia absoluta entre las dos distancias, mediana"
+diferencia_maxima_m,825.9,m,"El peor caso, que son los locales de coordenada contradictoria"
+locales_sospechosos,3.0,locales,Locales cuyas dos coordenadas difieren más de 200 m (hallazgo de P01)

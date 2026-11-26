@@ -5,8 +5,9 @@ tecnología hace falta, qué trampa enseña cada uno, y —la parte que suele fa
 no se puede contestar**.
 
 Cada problema indica su estado: **resuelto** (hay código y resultado en el
-repositorio), **disponible** (los datos alcanzan, falta escribirlo) o **no se puede**
-(los datos no lo permiten, y se explica por qué).
+repositorio), **resuelto en parte** (una mitad de la pregunta se contestó y la otra no
+se puede, con la medición que lo demuestra), **disponible** (los datos alcanzan, falta
+escribirlo) o **no se puede** (los datos no lo permiten, y se explica por qué).
 
 ---
 
@@ -185,21 +186,30 @@ incremental: una suma sí, una mediana exacta no.
 **La pregunta.** ¿Qué proporción de las paradas tiene un lugar de carga de bip! a
 menos de 300 metros? ¿Qué comunas quedan peor?
 
-**Datos.** GTFS (12 495 paradas con coordenadas) + los cinco Excel de bip! (1 927
-locales).
+**Datos.** GTFS (12 497 paradas de embarque con coordenadas) + los cinco Excel de bip!
+(1 927 locales abiertos).
 
-**Tecnología.** Cruce por proximidad. Con 12 495 × 1 927 ≈ 24 millones de pares, la
-fuerza bruta es viable pero lenta: conviene un índice espacial (`scipy.spatial.cKDTree`
-o `GeoPandas.sjoin_nearest`), o una rejilla hecha a mano si se quiere sin dependencias.
-Distancias con la fórmula de haversine, no euclídea sobre grados.
+**Tecnología.** Cruce por proximidad. Con 12 497 × 1 927 ≈ 24 millones de pares, la
+fuerza bruta por bloques con NumPy resuelve en 1,4 s y no necesita índice espacial
+(`scipy.spatial.cKDTree`, `GeoPandas.sjoin_nearest`); la decisión queda declarada para
+revisarla si los conjuntos crecen. Distancias con haversine, no euclídea sobre grados.
 
-**Qué enseña.** El cruce que **no** tiene clave: hay que definir el criterio de
-emparejamiento y declararlo. Y que un grado de longitud no mide lo mismo que un grado
-de latitud, de modo que la distancia euclídea sobre coordenadas da un resultado
-sistemáticamente sesgado.
+**Qué enseña.** El cruce que **no tiene clave**: hay que inventar el criterio de
+emparejamiento y declararlo. Y que la euclídea sobre grados no es una aproximación
+sino un sesgo **con eje**: a la latitud de Santiago sobreestima la componente
+este-oeste un 20 %, con cero subestimaciones en 12 497 paradas.
 
-**Estado:** disponible. Es el problema con mejor relación entre lo que enseña y lo que
-cuesta.
+**El resultado.** 59,29 % de las paradas tiene un local a 300 m o menos **en línea
+recta**; con un factor de rodeo de 1,3, el 46,02 %. La mediana es 249,6 m. Las cuatro
+decisiones del criterio —fórmula, coordenada, rodeo y denominador— mueven la respuesta
+plausible entre 39 % y 81 % sin que ningún dato cambie.
+
+**Estado:** **resuelto en parte** —
+[`cases/cobertura_de_carga`](../cases/cobertura_de_carga/README.md). La primera mitad
+de la pregunta está contestada. La segunda, **no se puede**: las paradas del GTFS no
+traen comuna, y atribuirle a cada parada la comuna de su local más cercano produce un
+proxy sesgado por construcción, que falla exactamente donde la cobertura es peor. El
+caso lo mide en lugar de afirmarlo y publica una rejilla geográfica como sustituto.
 
 ### P09. Cobertura de carga en el servicio nocturno
 
@@ -363,6 +373,9 @@ La parte más importante del inventario. Prometer cualquiera de estas sería inv
 | ¿Cuánto demoró un viaje? | **No hay tiempos observados.** El GTFS da el horario programado, no el real. |
 | ¿Cuántas validaciones hay por lugar de carga? | **No hay transacciones.** Los Excel dan ubicación y horario, no uso. |
 | ¿Cuál es la cobertura territorial por superficie? | **No hay límites comunales.** La comuna viene como texto, de modo que se puede agrupar por comuna pero no calcular densidad por kilómetro cuadrado sin una capa geográfica que no está en estas fuentes. |
+| ¿Qué comuna tiene peor cobertura de carga? | **Las paradas del GTFS no traen comuna.** El único proxy disponible es la comuna del local más cercano, sesgado por construcción: a la parada sin cobertura le asigna la comuna del local lejano. Medido en [P08](../cases/cobertura_de_carga/README.md): Paine recibe cinco paradas con una mediana de 18,9 km. El sustituto es una rejilla geográfica. |
+| ¿Está abierto el local cuando pasa el pasajero? | **El horario está en el 18,06 % de los locales.** De las 7 409 paradas cubiertas a 300 m en P08, 5 701 lo están por un local cuyo horario se desconoce. Ningún supuesto reemplaza el dato. |
+| ¿Cuánto se camina de verdad hasta el local? | **No hay red peatonal.** Las distancias son en línea recta: no se consideran ríos, autopistas, cierres, pasarelas ni pendientes. P08 lo trata con un factor de rodeo declarado y su curva de sensibilidad, que es acotar la incertidumbre, no resolverla. |
 | ¿Cómo evolucionó la satisfacción de usuarios? | **No hay encuestas** entre las fuentes verificadas. |
 | ¿Qué pide la evaluación técnica del cargo? | **No se verificó.** Busqué el documento de la convocatoria en el sitio del DTPM, en el del ministerio, en el portal de datos abiertos y en buscadores, y no lo encontré. El sitio del DTPM no tiene sección de concursos. |
 
@@ -379,7 +392,8 @@ orden por rendimiento es:
    que más se parece al trabajo real del cargo.
 3. **P06** (ya resuelto: leerlo y rehacerlo) — volumen, fechas y el error del atajo.
 4. **P04** y **P02** (normalización y claves) — rápidos, y aparecen siempre.
-5. **P08** (proximidad) — el cruce sin clave.
+5. **P08** (proximidad) — **resuelto en parte**: léalo. Es el cruce sin clave, y el
+   que mejor muestra cuánto del resultado lo pone el analista.
 6. **P16** (informe) — porque la interpretación se corrige aparte del cálculo.
 
 El resto amplía, no prepara.

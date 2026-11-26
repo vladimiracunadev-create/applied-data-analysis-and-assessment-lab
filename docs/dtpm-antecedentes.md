@@ -53,6 +53,33 @@ rompe cualquier conversión ingenua de hora), y claves foráneas hacia cuatro ta
 Es decir: exactamente el tipo de archivo donde los defectos tratados en este
 laboratorio aparecen de verdad.
 
+### 1.4 Manual de diseño de puntos de parada
+
+- **Página:** <https://www.dtpm.cl/descargas/manuales/Manual%20de%20paradas%20DTPM%20(06-03-26)%20alta.pdf>
+- **Documento:** «Puntos de Parada · Manual de Diseño», febrero de 2026.
+- **Abierto y leído el 26-11-2026.** 12 083 891 bytes,
+  sha256 `d6b611483313babd66104523bea3f980e12387bfbf895261a7eebc3fb5cfdc51`.
+- **Licencia:** no verificada. El sitio no publica condiciones de uso.
+- **Lo que aporta al laboratorio**, citado textualmente de la página 36:
+
+  > «La ubicación de un punto de parada responde a múltiples parámetros donde el
+  > distanciamiento entre puntos de parada promedio es de 300 m, que considera un
+  > tiempo de caminata de 3 a 5 minutos aproximadamente.»
+
+  Es la única cifra oficial encontrada que asocia una distancia a un tiempo de
+  caminata, y por eso ancla el umbral de
+  [`cases/cobertura_de_carga`](../cases/cobertura_de_carga/README.md).
+
+- **Lo que NO aporta, y conviene no confundir.** El manual habla del **espaciamiento
+  entre paradas**. No fija ningún criterio de distancia a un lugar de carga de la
+  tarjeta, y no menciona la carga de la tarjeta en ninguna de sus páginas. Trasladar
+  los 300 m de un contexto al otro es una analogía del laboratorio, no una norma del
+  organismo, y el caso lo declara así.
+- **Otras cifras del documento**, por si sirven: el distanciamiento reducido entre
+  paradas divididas es de 100 a 150 m; la línea de detención debe quedar al menos a
+  20 m de un cruce; la densidad de usuarios de referencia para dimensionar un refugio
+  es de 2 pasajeros por metro cuadrado.
+
 ## 2. Qué hace el DTPM, según fuentes públicas consultadas
 
 - El **Directorio de Transporte Público Metropolitano** regula, supervisa y opera la

@@ -116,17 +116,43 @@ def test_el_nucleo_no_conoce_los_casos_ni_las_soluciones():
     )
 
 
-def test_ningun_caso_importa_de_otro_caso():
+def test_un_caso_solo_depende_de_otro_si_lo_declara():
+    """Un caso puede apoyarse en otro, pero la dependencia tiene que estar escrita.
+
+    La regla original prohibía toda dependencia entre casos, para que cada uno se
+    pudiera leer y ejecutar por separado. `cobertura_de_carga` la rompió por una razón
+    que vale: reutiliza la consolidación de los cinco Excel de `bip_lugares_carga` en
+    lugar de repetir doscientas líneas de armonización de esquemas y de validación de
+    coordenadas. Duplicarlas enseñaría que el trabajo de calidad no se amortiza, que es
+    lo contrario de lo que sostiene el laboratorio.
+
+    De modo que la invariante pasó a ser más exigente que «no se puede»: la dependencia
+    vale **solo si el `case.json` la declara en `implementaciones`**. Así queda a la
+    vista de quien lee el caso y de quien lo ejecuta, y una dependencia que aparezca
+    por descuido sigue fallando.
+    """
     slugs = tuple(p.name for p in sorted((ROOT / "cases").iterdir()) if p.is_dir())
     infracciones: list[str] = []
     for slug in slugs:
         otros = tuple(f"cases.{s}" for s in slugs if s != slug)
         if not otros:
             continue
+        metadatos = ROOT / "cases" / slug / "case.json"
+        declaradas = ""
+        if metadatos.exists():
+            datos = json.loads(metadatos.read_text(encoding="utf-8"))
+            declaradas = " ".join(datos.get("implementaciones", []))
         for modulo in sorted((ROOT / "cases" / slug).glob("*.py")):
             for paquete in _importa_de(modulo, otros):
-                infracciones.append(f"cases/{slug}/{modulo.name} importa de {paquete}")
-    assert not infracciones, "los casos deben ser independientes:\n" + "\n".join(infracciones)
+                dependencia = paquete.removeprefix("cases.")
+                if f"cases/{dependencia}/" not in declaradas:
+                    infracciones.append(
+                        f"cases/{slug}/{modulo.name} importa de {paquete} "
+                        "sin declararlo en las implementaciones de su case.json"
+                    )
+    assert not infracciones, (
+        "toda dependencia entre casos debe estar declarada:\n" + "\n".join(infracciones)
+    )
 
 
 def test_el_nucleo_no_tiene_rutas_absolutas_del_equipo_de_desarrollo():

@@ -6,6 +6,83 @@ Este proyecto usa [versionado semántico](https://semver.org/lang/es/).
 La **primera versión oficial es la 0.1.0**. Los prototipos anteriores no se consideran
 releases y no se publican como tales.
 
+## [0.6.0] — 2026-11-26
+
+### Agregado
+
+- **P08 resuelto en parte: `cases/cobertura_de_carga`.** Distancia de cada una de las
+  12 497 paradas de embarque del GTFS al más cercano de los 1 927 lugares de carga
+  bip! abiertos. Es el primer caso del laboratorio con un **cruce sin clave
+  compartida**: las dos fuentes no comparten ningún campo, de modo que el criterio de
+  emparejamiento hay que construirlo, y construirlo trae cuatro decisiones que mueven
+  la respuesta plausible entre el 39 % y el 81 % sin que ningún dato cambie.
+
+  Resultado central: **59,29 %** de las paradas tiene un local a 300 m o menos en
+  línea recta; con un factor de rodeo de 1,3, el **46,02 %**. Mediana 249,6 m, P90
+  671,0 m. Catorce tablas de resultado versionadas.
+
+- **Sesgo de la euclídea sobre grados, medido.** A la latitud de Santiago el atajo de
+  multiplicar la distancia euclídea en grados por 111,32 km/grado sobreestima la
+  componente este-oeste un 20 %. Sobre las 12 497 paradas: error mediano del +9,41 %,
+  **cero subestimaciones**, 574 paradas que cambian de clase y 814 que reciben otro
+  local como el más cercano. Que el error tenga eje, y no magnitud aleatoria, es lo
+  que lo convierte en un sesgo que no se cancela al promediar.
+
+- **Umbral con cita y con su advertencia.** Los 300 m salen del manual de diseño de
+  paradas del DTPM (febrero de 2026, p. 36), que asocia esa distancia a una caminata
+  de 3 a 5 minutos. El manual lo dice del **espaciamiento entre paradas** y no
+  menciona la carga de la tarjeta: el traslado es una analogía y queda declarado como
+  tal, con la cobertura informada a seis umbrales. El documento se agregó a
+  `docs/dtpm-antecedentes.md` con su SHA-256 y su licencia no verificada.
+
+- **Cinco registros nuevos en la base de conocimiento**, que pasa de 25 a 30:
+  `cruce-sin-clave`, `sesgo-con-eje`, `clave-falla-al-volver`, `unidad-de-la-decision`
+  y `cambiar-la-pregunta`.
+
+- **25 pruebas nuevas** (`tests/test_cobertura_de_carga.py`), sobre una geometría
+  sintética con distancias exactas derivadas de `lab.geo.grados_por_km`. La suite pasa
+  de 519 a **544** y sigue corriendo sin descargar ningún dato.
+
+### Corregido
+
+- **`lab.geo.nearest_point` devolvía un identificador que no identificaba.** Pedirle
+  `codigo` como identificador del destino producía dos fallas: una ruidosa
+  (`InvalidIndexError` al unir el resultado, porque 143 estaciones de Metro comparten
+  siete códigos) y una **silenciosa**, que es la grave. Al comparar dos métodos de
+  cálculo contando por código, 814 paradas que cambiaban de local se contaban como
+  807, y 1 673 como 1 657: dos estaciones distintas de la misma línea colapsaban en
+  una. El caso devuelve la posición de fila, y hay una prueba con dos locales de igual
+  código para que no vuelva a pasar. Registrado en `clave-falla-al-volver`.
+
+### Cambiado
+
+- **La invariante «ningún caso importa de otro» pasó a «ningún caso importa de otro
+  sin declararlo».** `cobertura_de_carga` reutiliza la consolidación de los cinco
+  Excel de `bip_lugares_carga` en lugar de repetir doscientas líneas de armonización
+  de esquemas y validación de coordenadas; duplicarlas enseñaría que el trabajo de
+  calidad no se amortiza. La prueba de coherencia ahora exige que la dependencia
+  figure en `implementaciones` del `case.json`, que es más estricto que prohibirla:
+  una dependencia por descuido sigue fallando.
+
+### Declarado como no resuelto
+
+- **La segunda mitad de P08 no se puede contestar con estos datos.** Las paradas del
+  GTFS no traen comuna, y atribuirle a cada parada la comuna de su local más cercano
+  produce un proxy sesgado por construcción, que falla precisamente donde la cobertura
+  es peor: Paine recibe cinco paradas con una mediana de 18,9 km. El caso publica esa
+  medición y ofrece como sustituto una rejilla geográfica, que no necesita límites
+  administrativos. `docs/problemas-de-la-instancia.md` pasa de 7 a 10 preguntas
+  declaradas como incontestables.
+
+- **No se puede saber si el local está abierto cuando pasa el pasajero.** El horario
+  referencial está en el 18,06 % de los locales: de las 7 409 paradas cubiertas a
+  300 m, **5 701** lo están por un local de horario desconocido. Toda cifra de
+  cobertura del caso supone disponibilidad permanente, y lo dice.
+
+- **No existe un factor de rodeo peatonal canónico que citar.** Se buscó; los valores
+  publicados varían por ciudad y por método de medición. En lugar de adoptar uno sin
+  respaldo, el caso informa la curva completa de 1,0 a 1,5.
+
 ## [0.5.1] — 2026-11-26
 
 ### Corregido

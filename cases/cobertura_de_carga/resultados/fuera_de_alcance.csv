@@ -1,0 +1,62 @@
+stop_id,stop_name,metros,nombre_lugar,comuna_lugar
+PT0228,Estación Rancagua,40305.3,ACUENTA PAINE,Paine
+PT0227,Estación Graneros,28670.5,ACUENTA PAINE,Paine
+PT0226,Estación San Francisco,18924.7,ACUENTA PAINE,Paine
+PT0225,Estación Hospital,6716.4,ACUENTA PAINE,Paine
+PJ839,PJ839-Parada / Colegio Arturo Merino Benítez,5208.0,LOS LIBERTADORES,Quilicura
+PJ800,PJ800-Parada / Colegio Arturo Merino Benítez,5136.4,LOS LIBERTADORES,Quilicura
+PJ1567,PJ1567-Camino Renca Lampa / esq. El Estero,4998.6,NOVIMARKET,Pudahuel
+PJ1598,PJ1598-Camino Renca Lampa / esq. Camino El Estero,4927.7,NOVIMARKET,Pudahuel
+PJ1616,PJ1616-Camino Renca Lampa / esq. Alejandro Dip,4738.3,LOS LIBERTADORES,Quilicura
+PJ2051,PJ2051-Av. Praderas de Lo Aguirre / esq. La Verbena,4700.2,LIDER EXPRESS CIUDAD DE LOS VALLES,Pudahuel
+PJ1568,PJ1568-Camino Renca Lampa / esq. Alejandro Dip,4694.9,LOS LIBERTADORES,Quilicura
+PJ2052,PJ2052-Av. Praderas de Lo Aguirre / esq. La Hualtata,4686.9,LIDER EXPRESS CIUDAD DE LOS VALLES,Pudahuel
+PJ2054,PJ2054-Av. Praderas de Lo Aguirre / esq. Pampa Lo Aguirre,4676.6,LIDER EXPRESS CIUDAD DE LOS VALLES,Pudahuel
+PJ2053,PJ2053-Av. Praderas de Lo Aguirre / esq. La Verbena,4664.6,LIDER EXPRESS CIUDAD DE LOS VALLES,Pudahuel
+PJ841,PJ841-Camino Renca Lampa / esq. Campo Alegre,4565.3,LOS LIBERTADORES,Quilicura
+PJ799,PJ799-Camino Renca Lampa / esq. Campo Alegre,4478.2,LOS LIBERTADORES,Quilicura
+PJ1646,PJ1646-Camino Renca Lampa / esq. Los Sauces,4474.5,ALMACEN ALONSO,Quilicura
+PJ1647,PJ1647-Camino Renca Lampa / esq. Los Sauces,4467.5,ALMACEN ALONSO,Quilicura
+PJ1597,PJ1597-Parada / Cerámicos Laimco,4375.7,NOVIMARKET,Pudahuel
+PB2241,PB2241-Los Libertadores / esq. J. Miguel Carrera,4370.5,DONDE LA TITA,Lampa
+PJ840,PJ840-Parada / Cerámicos Laimco,4364.9,NOVIMARKET,Pudahuel
+PJ1644,PJ1644-Camino Renca Lampa / esq. Los Portones,4344.5,ALMACEN ALONSO,Quilicura
+PJ1645,PJ1645-Camino Renca Lampa / esq. Los Portones,4338.4,ALMACEN ALONSO,Quilicura
+PB2236,PB2236-Los Libertadores / esq. Simón Bolívar,4137.2,DONDE LA TITA,Lampa
+PJ1808,PJ1808-Camino Renca Lampa / esq. Kilómetro 6,4021.0,ALMACEN ALONSO,Quilicura
+PJ1809,PJ1809-Camino Renca Lampa / esq. Kilómetro 6,3975.4,ALMACEN ALONSO,Quilicura
+PB2237,PB2237-Los Libertadores / esq. Av. La Montaña,3913.7,DONDE LA TITA,Lampa
+PJ1643,PJ1643-Camino Renca Lampa / esq. Parcela 17 Km. 10,3870.3,NOVIMARKET,Pudahuel
+PJ1642,PJ1642-Camino Renca Lampa / esq. Parcela 17 Km. 10,3863.9,NOVIMARKET,Pudahuel
+PB2238,PB2238-Los Libertadores / esq. Manuel Rodríguez,3863.2,DONDE LA TITA,Lampa
+PJ1596,PJ1596-Parada / Ecopellets,3670.9,NOVIMARKET,Pudahuel
+PB2235,PB2235-Hnos. Carrera Pinto / esq. Camino Coquimbo,3588.9,DONDE LA TITA,Lampa
+PB2240,PB2240-Camino Coquimbo / esq. Av. La Montaña,3488.0,DONDE LA TITA,Lampa
+PB2239,PB2239-Camino Coquimbo / esq. Bayona,3471.6,DONDE LA TITA,Lampa
+PJ838,PJ838-Parada / Ecopellets,3469.4,NOVIMARKET,Pudahuel
+PC1097,PC1097-Paseo Los Bravos / esq. Paseo Entrevalles,3355.2,TIENDA UPA!-SHELL (F.986),Lo Barnechea
+PC1098,PC1098-Paseo Los Bravos / esq. Cam. Juan Pablo II,3334.6,TIENDA UPA!-SHELL (F.986),Lo Barnechea
+PI942,PI942-Camino a Rinconada / esq. Camino El Trebal,3305.8,ANTONELLA,Maipu
+PJ1648,PJ1648-Parada / Cam. Renca Lampa Km. 4.5,3279.4,ALMACEN ALONSO,Quilicura
+PI967,PI967-Camino a Rinconada / esq. Camino Vecinal,3279.3,ANTONELLA,Maipu
+PJ1651,PJ1651-Parada / Cam. Renca Lampa Km. 4.5,3276.4,ALMACEN ALONSO,Quilicura
+PB1593,PB1593-Caupolicán / esq. Cañaveral,3271.6,ALMACEN EL TITO,Quilicura
+PJ812,PJ812-Camino a Noviciado / esq. Cam. Cemento Melón,3265.6,LIDER EXPRESS CIUDAD DE LOS VALLES,Pudahuel
+PB1009,PB1009-Cañaveral / esq. Caupolicán,3252.2,ALMACEN EL TITO,Quilicura
+PJ837,PJ837-Camino Renca Lampa / esq. Simón Bolívar,3235.2,NOVIMARKET,Pudahuel
+PJ825,PJ825-Camino a Noviciado / esq. Cam. Cemento Melón,3228.4,LIDER EXPRESS CIUDAD DE LOS VALLES,Pudahuel
+PBA3,PBA3 - 3er nivel Terminal 1,3204.9,COMERCIAL M Y F,Cerro Navia
+PB1592,PB1592-Cañaveral / esq. Acceso Oxiquim,3139.7,ALMACEN EL TITO,Quilicura
+PJ1605,PJ1605-Simón Bolívar / esq. Cam. Renca Lampa,3118.9,NOVIMARKET,Pudahuel
+PB1008,PB1008-Cañaveral / esq. Acceso Oxiquim,3106.2,ALMACEN EL TITO,Quilicura
+PJ1606,PJ1606-Simón Bolívar / esq. Cam. Luis Cruz M.,3104.2,NOVIMARKET,Pudahuel
+PB1733,PB1733-Caupolicán / esq. Cañaveral,3100.1,ALMACEN EL TITO,Quilicura
+PB2071,PB2071-Caupolicán / esq. El Juncal,3067.0,ALMACEN EL TITO,Quilicura
+PBA4,PBA4 - 3er nivel Terminal Terminal 2,3053.8,COMERCIAL M Y F,Cerro Navia
+PB1010,PB1010-Caupolicán / esq. El Juncal,3050.9,ALMACEN EL TITO,Quilicura
+PB1011,PB1011-Caupolicán / esq. El Totoral,3042.6,ALMACEN EL TITO,Quilicura
+PT0223,Estación Linderos,3040.6,LIDER EXPRESS BUIN-SAN MARTIN,Buin
+PB1852,PB1852-Caupolicán / esq. San Ignacio,3028.8,HACIA EL FUTURO,Huechuraba
+PB1006,PB1006-San Ignacio / esq. Caupolicán,3021.7,ALMACEN EL TITO,Quilicura
+PJ2055,PJ2055-Parada / Lo Aguirre - Ruta 68,3016.6,LIDER EXPRESS CIUDAD DE LOS VALLES,Pudahuel
+PB1851,PB1851-Caupolicán / esq. Altura del 9550,3006.5,HACIA EL FUTURO,Huechuraba

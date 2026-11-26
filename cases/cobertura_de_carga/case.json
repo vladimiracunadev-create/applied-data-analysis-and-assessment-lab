@@ -1,0 +1,110 @@
+{
+  "slug": "cobertura_de_carga",
+  "titulo": "Cruzar dos fuentes que no comparten ninguna clave: distancia de cada parada al lugar de carga más cercano",
+  "disciplina": "analisis-de-datos",
+  "industria": "transporte",
+  "dificultad": "intermedio",
+  "metodologia": "cruce espacial por proximidad, con análisis de sensibilidad de cada decisión del criterio de emparejamiento",
+  "competencias": [
+    "cruce-consolidacion",
+    "estadistica-descriptiva",
+    "agregacion-indicadores",
+    "calidad-datos",
+    "validacion-independiente",
+    "comunicacion-resultados",
+    "reproducibilidad",
+    "apoyo-decision"
+  ],
+  "estado": "implementado",
+  "tiempo_sugerido_min": 120,
+  "contexto": "Para pagar un viaje en la Red Metropolitana de Movilidad hay que llevar saldo en la tarjeta bip!, y el saldo se carga en locales físicos. El organismo publica por separado dónde están las paradas (en el feed GTFS) y dónde están los locales de carga (en cinco planillas Excel). No existe ningún campo que relacione una cosa con la otra: ni un identificador compartido, ni una dirección normalizada, ni una comuna en las paradas. Toda relación entre las dos fuentes hay que construirla.",
+  "problema": "Determinar a qué distancia está el lugar de carga bip! más cercano de cada parada de embarque, qué proporción de las paradas queda bajo un umbral razonable de caminata, y qué zonas quedan peor cubiertas.",
+  "objetivos": [
+    "Construir el criterio de emparejamiento, que no viene dado, y declararlo con sus supuestos.",
+    "Medir el sesgo de la distancia euclídea sobre grados frente a la fórmula de haversine, en paradas que cambian de clase y no solo en metros.",
+    "Medir qué cambia al elegir una u otra de las dos representaciones de la coordenada que traen los Excel.",
+    "Separar la distancia en línea recta del recorrido caminando mediante un factor de rodeo explícito, con su curva de sensibilidad.",
+    "Decidir y documentar qué paradas entran en el denominador, listando una por una las que quedan fuera.",
+    "Responder «qué zonas quedan peor» sin incorporar una capa cartográfica, usando una rejilla derivada de las propias coordenadas.",
+    "Demostrar con una medición por qué la desagregación por comuna no es posible con estos datos, en lugar de afirmarlo."
+  ],
+  "restricciones": [
+    "Dos horas de trabajo.",
+    "El entorno mínimo del laboratorio: sin SciPy, sin GeoPandas, sin capa de límites administrativos.",
+    "Las paradas del GTFS no traen comuna, y no se incorpora una fuente nueva para obtenerla.",
+    "Ninguna de las dos fuentes se versiona: el feed tiene licencia no verificada y los Excel son CC BY-NC 2.0."
+  ],
+  "fuentes": [
+    "Paradas: feed GTFS estático de la Red Metropolitana de Movilidad, DTPM. Archivo GTFS_20261114_v2.zip descargado el 26 de noviembre de 2026 de https://www.dtpm.cl/index.php/gtfs-vigente, sha256 ff0cda445cc4…, 12 829 198 bytes. LICENCIA NO VERIFICADA: el sitio no publica condiciones de uso.",
+    "Lugares de carga: cinco datasets de bip! del Ministerio de Transportes, de acceso público en el portal de datos abiertos datos.gob.cl, con licencia Creative Commons Atribución-NoComercial 2.0, verificada. Consolidados por el caso bip_lugares_carga (P01).",
+    "Umbral de 300 m: DTPM, «Puntos de Parada: Manual de Diseño», febrero de 2026, p. 36. Descargado el 26 de noviembre de 2026 de https://www.dtpm.cl/descargas/manuales/Manual%20de%20paradas%20DTPM%20(06-03-26)%20alta.pdf, sha256 d6b611483313…, 12 083 891 bytes. Licencia no verificada. El manual asocia 300 m a una caminata de 3 a 5 minutos, pero lo hace para el espaciamiento ENTRE PARADAS: no fija ningún criterio de distancia a un lugar de carga y no menciona la carga de la tarjeta.",
+    "Factor de rodeo: no se cita ninguna fuente porque no se encontró un valor peatonal canónico. Los valores publicados varían por ciudad y por método de medición, de modo que el caso informa una curva de sensibilidad en lugar de adoptar una cifra."
+  ],
+  "datasets": [
+    "No versiona datos de terceros. Versiona catorce tablas agregadas en cases/cobertura_de_carga/resultados/, que permiten revisar los hallazgos sin descargar nada.",
+    "Los insumos se obtienen con: python scripts/fetch_data.py gtfs-red-movilidad bip-metro bip-puntos bip-centros-alto-estandar bip-centros-estandar bip-retail"
+  ],
+  "diccionario": "La tabla de medición tiene: stop_id y stop_name del GTFS; lat y lon de la parada en grados decimales WGS84; metros, la distancia en línea recta al lugar de carga abierto más cercano; lugar, la POSICIÓN DE FILA de ese lugar en la tabla consolidada (no su código, que no es único); y tipo_lugar, nombre_lugar, comuna_lugar y horario_lugar, copiados del lugar más cercano. En por_rejilla, celda_lat y celda_lon son la esquina inferior de una celda de 0,01° de lado.",
+  "supuestos": [
+    "Un lugar de carga da cobertura a una parada si está a 300 m o menos. El umbral viene por analogía del espaciamiento entre paradas del manual del DTPM; se informa la cobertura a seis umbrales porque el umbral es una decisión y no un dato.",
+    "El factor de rodeo entre la línea recta y la caminata real no se fija: se informa la cobertura para 1,0, 1,2, 1,3, 1,4 y 1,5. El 1,0 es un piso, no una estimación.",
+    "La coordenada que se usa es la latitud y longitud publicadas, y no la derivada del este y norte UTM. La elección se documenta y su efecto se mide; no hay forma de saber cuál de las dos es la correcta.",
+    "Los locales de la hoja de cerrados no dan cobertura y se excluyen, tras haberlos contado.",
+    "Un local está disponible cuando el pasajero pasa. ES UN SUPUESTO QUE LOS DATOS NO RESPALDAN: solo el 18,06 % de los locales declara horario.",
+    "Las paradas a más de 3 km del local más cercano están fuera del área que describen los Excel, no mal cubiertas. Se informan las dos cifras.",
+    "Solo las filas con location_type 0 o vacío son paradas de embarque, según la especificación GTFS."
+  ],
+  "metodologias_alternativas": [
+    "Fuerza bruta por bloques con NumPy, que es lo implementado: 24 081 719 pares en 1,4 s, sin dependencias nuevas y con el cálculo a la vista.",
+    "Índice espacial con scipy.spatial.cKDTree sobre coordenadas proyectadas: el camino correcto si cualquiera de los dos conjuntos creciera un orden de magnitud. Descartado porque añadir SciPy al entorno para ahorrar un segundo no se justifica, y porque un KD-tree sobre grados mide mal: habría que proyectar primero.",
+    "GeoPandas.sjoin_nearest, que es lo que usaría un equipo con capa geoespacial ya montada. Descartado por la misma razón y porque oculta la fórmula de distancia, que aquí es parte de lo que el caso enseña.",
+    "Una rejilla de celdas como índice casero, para descartar pares lejanos antes de calcular. Es el camino sin dependencias si el problema creciera; con estos tamaños agrega código sin ganar nada.",
+    "Cruce por dirección normalizada en lugar de por proximidad: descartado porque las paradas del GTFS no traen dirección, solo un nombre con la esquina, y porque el parecido de cadenas produce aciertos por casualidad que son peores que un criterio geométrico declarado."
+  ],
+  "implementaciones": [
+    "cases/cobertura_de_carga/solution.py — resolución completa.",
+    "lab/geo.py — haversine sobre escalares, series y arreglos difundidos; búsqueda del punto más cercano por bloques; conversión de UTM; grados por kilómetro.",
+    "cases/bip_lugares_carga/solution.py — la consolidación de los cinco Excel, reutilizada tal cual.",
+    "lab/sources.py — lectura de tablas desde el ZIP sin descomprimir, y los registros de procedencia."
+  ],
+  "soluciones": "cases/cobertura_de_carga/solution.py, documentada paso a paso en el README del caso. Se ejecuta con: python -m cases.cobertura_de_carga.solution",
+  "resultados": "cases/cobertura_de_carga/resultados/ con catorce tablas. Resultado central: 59,29 % de las 12 497 paradas de embarque tiene un lugar de carga a 300 m o menos EN LÍNEA RECTA; con un factor de rodeo de 1,3, el 46,02 %. La mediana de la distancia es 249,6 m y el P90, 671,0 m. La distancia euclídea sobre grados sobreestima en todos los casos (mediana +9,41 %) y mueve la cobertura a 54,69 %, cambiando de clase 574 paradas. Elegir la otra representación de la coordenada deja la cobertura casi igual (59,17 %) pero cambia el local más cercano de 1 673 paradas.",
+  "validaciones": [
+    "La distancia del caso se contrasta en las pruebas con una llamada directa a haversine calculada aparte, sobre una geometría construida con lab.geo.grados_por_km.",
+    "El sesgo de la euclídea se ancla al eje: una parada a un kilómetro al este sale 1 200 m y una a un kilómetro al norte sale 1 001 m. Que el error tenga eje, y no magnitud aleatoria, es lo que prueba que es un sesgo.",
+    "El indicador se calcula con las dos representaciones de la coordenada y se reportan las diferencias, que es una validación cruzada interna a la propia fuente.",
+    "Cero subestimaciones de la euclídea sobre las 12 497 paradas: si el error fuera ruido habría errores de los dos signos.",
+    "La identidad distancia·factor ≤ umbral ⇔ distancia ≤ umbral/factor se comprueba en las pruebas, de modo que el factor de rodeo no pueda aplicarse dos veces.",
+    "La cobertura tiene que ser monótona creciente en el umbral y monótona decreciente en el factor de rodeo; ambas se comprueban.",
+    "El identificador del lugar más cercano se prueba con dos locales distintos que comparten código, para que el resultado no pueda volver a depender de una clave que no es única.",
+    "Las pruebas no usan los datos reales: construyen una geometría sintética con distancias exactas, de modo que la suite corre sin descargar nada."
+  ],
+  "interpretacion": "El titular depende más de las decisiones del analista que de los datos. «Seis de cada diez paradas tienen dónde cargar a tres minutos caminando» y «menos de la mitad lo tiene» son la misma medición con dos supuestos distintos, ambos defendibles, y ninguno de los dos aparece en el número si no se declara. El resultado útil no es el 59,29 % sino la curva: entre 200 y 500 metros la cobertura va de 39,60 % a 81,84 %. Hay además una asimetría que conviene no perder: el indicador agregado es robusto a la elección de la coordenada, pero la respuesta por parada no lo es. Eso decide para qué sirve el resultado. Publicar la cobertura de la red, sí. Decirle a una persona a qué local caminar, no: para eso hay que resolver primero cuál de las dos coordenadas del archivo es la buena.",
+  "limitaciones": [
+    "LA SEGUNDA MITAD DE LA PREGUNTA NO SE PUEDE CONTESTAR. Las paradas del GTFS no traen comuna, y atribuir a cada parada la comuna de su local más cercano produce un proxy sesgado por construcción: a la parada sin cobertura le asigna la comuna del local lejano. El caso lo mide en lugar de afirmarlo, y publica una rejilla geográfica como sustituto.",
+    "No se puede saber si el local está abierto cuando pasa el pasajero: el horario referencial está en el 18,06 % de los locales. De las 7 409 paradas cubiertas, 5 701 lo están por un local cuyo horario se desconoce.",
+    "La distancia es en línea recta. No hay red peatonal: no se consideran ríos, cierres, autopistas, pasarelas ni pendientes, que en Santiago cambian recorridos reales de forma sustancial.",
+    "La cobertura no pondera demanda. Una parada por la que pasan diez mil personas al día cuenta igual que una por la que pasan veinte. Cruzar con los volúmenes exigiría datos de validaciones, que no son públicos a nivel de parada.",
+    "El resultado describe una foto del feed del 14 de noviembre de 2026 y de los Excel descargados el 26 de noviembre de 2026. Ambas fuentes cambian.",
+    "La licencia del feed GTFS no está verificada, de modo que las cifras derivadas se publican con esa advertencia.",
+    "La rejilla no es una unidad de gestión: localiza zonas, no asigna responsabilidades. Y su celda no es cuadrada, de modo que no sirve para medir superficies ni densidades."
+  ],
+  "conocimiento_adquirido": [
+    "Un cruce sin clave compartida obliga a inventar el criterio de emparejamiento, y ese criterio es la mitad del resultado. La proximidad trae consigo cuatro decisiones —fórmula, coordenada, rodeo y denominador— que mueven la respuesta entre 39 % y 81 %.",
+    "La distancia euclídea sobre grados no es una aproximación: es un sesgo de un solo signo, anclado al eje este-oeste, que a la latitud de Santiago sobreestima la componente longitudinal en un 20 %. Un error con eje no se cancela al promediar.",
+    "El error de un método no se mide en la unidad del cálculo sino en la unidad de la decisión. Diecisiete metros de error mediano suenan a nada; 574 paradas que cambian de clase, no.",
+    "Un indicador agregado puede ser robusto mientras la asignación individual que lo compone no lo es. Son dos propiedades distintas y hay que medirlas por separado antes de decidir para qué sirve el resultado.",
+    "Una clave que no es única no falla al cruzar: falla al volver. Devolver el lugar más cercano por código subestimó en silencio cuántas paradas cambiaban de local al cambiar de método, porque dos estaciones de la misma línea comparten el código y se contaban como la misma.",
+    "El número de filas de un archivo no es el número de entidades que describe. stops.txt trae 18 486 filas y 12 497 paradas de embarque; las otras 5 989 son estaciones, accesos, nodos de pasillo y áreas de abordaje, y 5 565 de ellas no traen coordenadas porque la especificación no se las exige.",
+    "Cuando un dato no está, a veces lo honesto es cambiar la pregunta y no el dato. La desagregación por comuna no se puede hacer; una rejilla derivada de las coordenadas responde «qué zonas quedan peor» sin incorporar una fuente nueva y sin fingir una precisión administrativa que no se tiene.",
+    "Un umbral con cita sigue siendo una decisión. El manual del DTPM asocia 300 m a 3–5 minutos de caminata, pero lo hace para el espaciamiento entre paradas: trasladarlo a la distancia a un local de carga es una analogía, y la analogía se declara."
+  ],
+  "capacidades_reutilizables": [
+    "lab.geo.nearest_point resuelve cualquier cruce por proximidad entre dos conjuntos de puntos: sucursales y clientes, antenas y reclamos, bodegas y pedidos, estaciones de medición y parcelas.",
+    "El patrón de medir una decisión metodológica por cuántos registros cambian de clase, y no por el error medio en la unidad del cálculo, se aplica a cualquier umbral, redondeo, imputación o criterio de corte.",
+    "La validación cruzada entre dos representaciones del mismo dato dentro de un solo archivo —aquí UTM contra latitud y longitud— es aplicable siempre que una fuente traiga información redundante: importe bruto y neto, total y desglose, fecha y día de la semana.",
+    "El análisis de sensibilidad sobre un supuesto que no se puede resolver, en lugar de elegir un valor y callarlo, es el mismo patrón que el caso del calendario de medición aplica a las vacaciones de invierno.",
+    "La rejilla como sustituto de una unidad administrativa sirve para cualquier agregación geográfica cuando no hay capa de polígonos disponible o su licencia no se puede verificar.",
+    "Reutilizar la consolidación de otro caso en lugar de volver a leer las fuentes muestra cómo se amortiza el trabajo de calidad: la armonización de esquemas y la validación de coordenadas se hicieron una vez."
+  ]
+}

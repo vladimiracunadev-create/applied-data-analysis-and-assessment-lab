@@ -42,7 +42,12 @@ from lab.learning import (  # noqa: E402
     program_markdown,
 )
 from lab.method import STAGES, stages_markdown  # noqa: E402
-from lab.profiles import COMPETENCIES, PROFILES, competency_coverage, profiles_markdown  # noqa: E402
+from lab.profiles import (  # noqa: E402
+    COMPETENCIES,
+    PROFILES,
+    competency_coverage,
+    profiles_markdown,
+)
 
 AVISO = (
     "<!-- Archivo generado por scripts/build_docs.py. No lo edite a mano: "

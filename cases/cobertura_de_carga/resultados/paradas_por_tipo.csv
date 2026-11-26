@@ -1,0 +1,6 @@
+location_type,significado,filas,con_coordenada,entra_al_denominador
+0,parada o andén,12497,12497,sí
+1,estación,126,126,no
+2,acceso o salida,298,298,no
+3,nodo generico de pasillo,5031,0,no
+4,área de abordaje,534,0,no

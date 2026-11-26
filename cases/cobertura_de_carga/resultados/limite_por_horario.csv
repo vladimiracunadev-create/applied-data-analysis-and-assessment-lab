@@ -1,0 +1,6 @@
+indicador,valor,unidad,definicion
+paradas_medidas,12497.0,paradas,Paradas de embarque
+con_horario_conocido,2787.0,paradas,Paradas cuyo local más cercano declara horario referencial
+con_horario_conocido_pct,22.3,%,La misma cifra como proporción del total
+cubiertas_con_horario,1708.0,paradas,Cubiertas a 300 m y se sabe cuándo abre el local
+cubiertas_sin_horario,5701.0,paradas,"Cubiertas a 300 m pero no se sabe si está abierto. La cobertura de estas paradas es un supuesto, no un dato"

@@ -1,0 +1,297 @@
+celda_lat,celda_lon,paradas,cubiertas,mediana_m,parada_mas_lejana,cobertura_pct
+-33.62,-70.57,20,0,745.6,PF978-Av. Circunvalación / esq. Nonato Coo,0.0
+-33.62,-70.7,29,0,663.8,PG987-Los Suspiros / esq. Avenida Central,0.0
+-33.51,-70.67,24,0,643.8,PH269-Av. J. J. Prieto Vial / esq. Vecinal,0.0
+-33.59,-70.62,21,0,413.5,PG858-Avenida Juanita / esq. Miguel Angel,0.0
+-33.4,-70.66,41,1,582.4,PB1400-Emiliano Zapata / esq. Bernardo O'Higgins,2.4
+-33.38,-70.66,20,1,492.1,PB736-Avenida Las Torres / esq. Cam. Punta Mocha,5.0
+-33.62,-70.59,26,2,721.7,PF720-Sargento Menadier / esq. Uruguay,7.7
+-33.5,-70.71,23,2,741.1,PI1967-Av. Los Cerrillos / esq. C. Teresa Herrera,8.7
+-33.59,-70.71,22,2,540.0,PG1202-Avenida Central / esq. Cancha Rayada,9.1
+-33.45,-70.78,21,3,542.5,PJ1560-Puerto Vespucio / esq. Puerto Santiago,14.3
+-33.51,-70.64,28,4,453.8,PH1525-Parada 3 / Paradero 10 Santa Rosa,14.3
+-33.54,-70.68,26,4,564.3,PG1149-Avenida Ossa / esq. Alhué,15.4
+-33.54,-70.66,29,5,425.5,PG2183-Alfredo Mackenney / esq. Dos Oriente,17.2
+-33.62,-70.58,28,5,570.6,PF791-Av.Pdte. Salvador Allende / esq. Pdte. Gonzáles,17.9
+-33.56,-70.67,27,5,476.6,PG1171-Julio Covarrubias / esq. Avenida Sur,18.5
+-33.52,-70.62,25,5,475.0,PE1541-Parada / Museo Interactivo Mirador,20.0
+-33.39,-70.56,20,4,409.8,PC227-Avenida Vitacura / esq. Av. Las Tranqueras,20.0
+-33.6,-70.59,24,5,524.9,PF684-Av. Jorge Ross Ossa / esq. Parque Italia,20.8
+-33.63,-70.61,28,6,419.9,PF940-Weber / esq. Bartok,21.4
+-33.41,-70.63,23,5,527.2,PB1259-Bolivia / esq. Duque de Kent,21.7
+-33.62,-70.6,39,9,414.8,PF882-Rafael Alberti / esq. Ejército Libertador,23.1
+-33.63,-70.62,38,9,625.2,PF673-Belén / esq. Río Maihue,23.7
+-33.61,-70.59,21,5,425.9,PF821-Domingo Tocornal / esq. Coquimbo,23.8
+-33.56,-70.66,35,9,366.0,PG1299-Ismael Tocornal / esq. Sgto. Candelaria,25.7
+-33.5,-70.68,23,6,352.3,PH345-Club Hípico / esq. Vecinal,26.1
+-33.53,-70.61,24,7,513.6,PE1476-Punta Arenas / esq. Lía Aguirre,29.2
+-33.53,-70.68,27,8,382.1,PG1760-El Parrón / esq. Chile España,29.6
+-33.49,-70.62,20,6,656.8,PD956-Los Plátanos / esq. Urizar,30.0
+-33.54,-70.62,20,6,385.8,PE666-Tomé / esq. 7 Oriente,30.0
+-33.53,-70.65,29,9,335.0,PG483-El Parrón / esq. 1 Poniente,31.0
+-33.58,-70.56,26,9,367.2,PF1067-El Peral / esq. Las Campanillas,34.6
+-33.5,-70.62,26,9,333.7,PD1184-Av. Escuela Agrícola / esq. Aníbal Pinto,34.6
+-33.52,-70.71,20,7,387.5,PI1430-Av.Fernández Albano / esq. Calle 1,35.0
+-33.48,-70.66,28,10,381.2,PH102-Av. Alc. Carlos Valdovinos / esq. Av. J. J. Prieto Vial,35.7
+-33.52,-70.63,28,10,355.0,PH47-Avenida Haydn / esq. Psje. Lago Rupanco,35.7
+-33.45,-70.58,24,9,447.6,PD179-Parada 4 / (M) Príncipe de Gales,37.5
+-33.5,-70.67,21,8,385.5,PH275-Parada 4 / Departamental - Panamericana,38.1
+-33.43,-70.54,21,8,362.2,PD1008-Parada / Portal La Reina,38.1
+-33.49,-70.77,21,8,357.4,PI1553-Avenida El Rosal / esq. Río Ibáñez,38.1
+-33.48,-70.75,34,13,320.2,PI249-Longitudinal / esq. Erick Van Dyck,38.2
+-33.43,-70.78,23,9,363.5,PJ1723-Salar de Atacama / esq. Río Refugio,39.1
+-33.63,-70.6,25,10,351.2,PF626-Av. Ejército Libertador / esq. Real Audiencia,40.0
+-33.54,-70.59,25,10,336.8,PE1340-Perpetua Freire / esq. Perú,40.0
+-33.61,-70.69,25,10,332.1,PG1991-Los Suspiros / esq. Baquedano,40.0
+-33.39,-70.58,24,10,332.2,PC1346-Sn. J. Escrivá de Balaguer / esq. Gral. Lavalleja,41.7
+-33.45,-70.68,31,13,340.2,PI1490-Avenida Matucana / esq. Pasaje 70,41.9
+-33.55,-70.59,33,14,371.1,PE777-Colombia / esq. Santa Amalia,42.4
+-33.48,-70.67,30,13,372.7,PA537-Av. General Rondizzoni / esq. Avenida El Mirador,43.3
+-33.41,-70.55,23,10,311.9,PC724-Chesterton / esq. Bocaccio,43.5
+-33.48,-70.61,25,11,368.8,PD945-Castillo Urízar / esq. Los Olmos,44.0
+-33.46,-70.56,31,14,365.8,PD1099-Limarí / esq. Talinay,45.2
+-33.38,-70.68,31,14,308.5,PB508-Av. Américo Vespucio / esq. Pedro Fontova,45.2
+-33.51,-70.72,22,10,308.0,PI23-Parada 1 / El Mirador,45.5
+-33.46,-70.55,24,11,306.0,PD301-Avenida Larrain / esq. Pedro de Oña,45.8
+-33.5,-70.6,28,13,325.0,PD1301-Arturo Gonzálvez / esq. Augusto Winter,46.4
+-33.48,-70.64,21,10,314.3,PA498-Arauco / esq. Santiago Concha,47.6
+-33.49,-70.65,23,11,327.8,PH184-Parada 1 / Paradero 3 Santa Rosa,47.8
+-33.45,-70.6,23,11,305.4,PD1297-Avenida Simón Bolívar / esq. Jorge Washington,47.8
+-33.38,-70.67,31,15,330.0,PB510-Parada / Pasarela General Gambino,48.4
+-33.54,-70.58,30,15,303.8,PE695-Enrique Olivares / esq. Panamá,50.0
+-33.53,-70.63,30,15,299.1,PE75-Parada / CESFAM Malaquías Concha,50.0
+-33.59,-70.6,30,15,296.2,PF852-Avenida Gabriela / esq. Ejército Libertador,50.0
+-33.5,-70.59,20,10,278.0,PD277-Av. Américo Vespucio / esq. Llaima,50.0
+-33.47,-70.72,22,11,247.7,PI832-Manuel Rivas Vicuña / esq. Av. Los Pajaritos,50.0
+-33.52,-70.67,25,13,284.0,PG451-Colón / esq. Zurich Sur,52.0
+-33.6,-70.62,23,12,278.2,PG2024-Dr. Amador Neghme / esq. Calle 6,52.2
+-33.49,-70.73,23,12,215.4,PI1140-Costanera Norte / esq. Francia,52.2
+-33.6,-70.58,21,11,291.9,PF867-Parada 4 / Municipalidad de Puente Alto,52.4
+-33.53,-70.66,21,11,263.2,PG455-Av. Fernández Albano / esq. Eulogio Altamirano,52.4
+-33.54,-70.65,34,18,283.1,PG1114-Juan Luis Sanfuentes / esq. Argentina,52.9
+-33.54,-70.64,28,15,298.9,PG1332-Parada 6 / Paradero 23 Santa Rosa,53.6
+-33.6,-70.7,28,15,253.8,PG1073-Carlos Condell / esq. Laguna San Rafael,53.6
+-33.5,-70.64,26,14,251.7,PH189-Parada 1 / Paradero 9 1/2 Santa Rosa,53.8
+-33.52,-70.57,24,13,282.6,PE500-Diagonal Santa Irene / esq. Orompello,54.2
+-33.61,-70.58,44,24,278.2,PF811-Domingo Tocornal / esq. Nemesio Vicuña,54.5
+-33.5,-70.76,22,12,268.6,PI1361-Isabel Riquelme / esq. Cascanueces,54.5
+-33.59,-70.68,31,17,255.1,PG967-Santa Teresa / esq. San Juan de Dios,54.8
+-33.44,-70.75,20,11,254.4,PJ86-Av. Teniente Cruz / esq. Puerto Rico,55.0
+-33.46,-70.74,25,14,266.3,PJ865-Avenida Las Torres / esq. Av. Gral. O. Bonilla,56.0
+-33.47,-70.74,32,18,288.9,PI527-Avenida Las Torres / esq. Avenida Laguna-Sur,56.2
+-33.42,-70.71,23,13,237.7,PJ1812-Avenida Carrascal / esq. Jardín,56.5
+-33.48,-70.68,23,13,193.6,PA684-Av. General Rondizzoni / esq. Francisco Pizarro,56.5
+-33.43,-70.67,21,12,264.4,PB1525-Av. Edo. Frei Montalva / esq. Carlos Medina,57.1
+-33.58,-70.67,24,14,290.3,PG150-Av. San Francisco / esq. General Carvajal,58.3
+-33.54,-70.6,41,24,218.0,PE586-Perú / esq. Perpetua Freire,58.5
+-33.37,-70.69,29,17,281.0,PB1624-Parada / Terminal Los Libertadores,58.6
+-33.53,-70.64,34,20,264.3,PG481-El Parrón / esq. Carlos Dávila,58.8
+-33.6,-70.61,22,13,275.6,PG1766-Acceso Sur Calet.-Poniente / esq. Dr. A. Neghme,59.1
+-33.54,-70.61,27,16,262.5,PE99-Avenida Santa Raquel / esq. Rojas Magallanes,59.3
+-33.52,-70.61,27,16,215.7,PE818-Mirador Azul / esq. Huara,59.3
+-33.58,-70.71,20,12,274.2,PG2063-Yerbas Buenas / esq. Pasaje Quillagua,60.0
+-33.49,-70.59,30,18,263.8,PD635-El Líbano / esq. Avenida Quilín,60.0
+-33.55,-70.62,30,18,263.5,PE751-Punta Arenas / esq. Calle 1,60.0
+-33.51,-70.59,20,12,254.4,PD685-Av. San Luis de Macul / esq. Central,60.0
+-33.52,-70.7,28,17,260.6,PH83-Card. Raúl Silva H. / esq. Pasaje 7 Sur,60.7
+-33.48,-70.69,23,14,270.1,PI1207-Obispo Manuel Umaña / esq. Logroño,60.9
+-33.52,-70.59,26,16,272.6,PE518-Tte. Rolando Froden / esq. Real Alicante,61.5
+-33.45,-70.74,34,21,289.4,PJ554-Corona Sueca / esq. Avenida Las Torres,61.8
+-33.38,-70.65,21,13,254.1,PB783-Avenida Las Torres / esq. El Rosal,61.9
+-33.47,-70.64,24,15,282.1,PA202-Maule / esq. Avenida Portugal,62.5
+-33.52,-70.56,24,15,271.7,PD615-Av. Departamental / esq. Los Cerezos,62.5
+-33.47,-70.63,24,15,258.8,PD1598-San Eugenio / esq. Julio Cordero B.,62.5
+-33.4,-70.7,24,15,255.7,PB707-Puerto Montt / esq. Camino Lo Ruiz,62.5
+-33.56,-70.64,43,27,268.1,PG1351-Riquelme / esq. P. Aguirre Cerda,62.8
+-33.55,-70.69,27,17,239.6,PG1412-General Körner / esq. Lautaro,63.0
+-33.51,-70.68,38,24,199.4,PH1666-Vecinal / esq. Aquilina Rojas,63.2
+-33.44,-70.74,30,19,263.8,PJ1696-Estados Unidos / esq. Puerto Rico,63.3
+-33.52,-70.6,30,19,246.1,PE858-Froilán Lagos S. / esq. El Peumo,63.3
+-33.48,-70.63,22,14,115.9,PH797-Santa Elena / esq. Carlos Fernández,63.6
+-33.53,-70.8,25,16,259.5,PI1450-Av. El Conquistador / esq. Nueva San Martín,64.0
+-33.61,-70.71,25,16,246.5,PG977-Gerardo Besoain / esq. Eucaliptus,64.0
+-33.48,-70.72,25,16,236.5,PI896-Luis Infante Cerda / esq. Av. Aeropuerto,64.0
+-33.44,-70.63,28,18,234.6,PC464-Diagonal Rancagua / esq. Av. José M. Infante,64.3
+-33.51,-70.66,28,18,207.4,PH36-Av. Departamental / esq. Gauss,64.3
+-33.5,-70.74,34,22,223.9,PI1526-Alaska / esq. Checoslovaquia,64.7
+-33.55,-70.67,23,15,273.2,PG1307-Goycolea / esq. Concha,65.2
+-33.46,-70.77,23,15,239.0,PJ1765-Serrano / esq. Jardín de La Viña,65.2
+-33.45,-70.72,23,15,225.4,PJ1066-Territorio Antártico / esq. Froilán Bijou,65.2
+-33.45,-70.76,26,17,183.4,PJ121-Parada 3 / San Pablo - La Estrella,65.4
+-33.58,-70.68,26,17,158.6,PG881-Las Canteras / esq. La Pampa,65.4
+-33.4,-70.67,38,25,184.6,PB2222-General Gambino / esq. Cond.La Ciudadela,65.8
+-33.47,-70.54,24,16,250.2,PD502-Parada / CESFAM Cardenal R.Silva Henríquez,66.7
+-33.47,-70.56,30,20,245.3,PD260-Av. José Arrieta / esq. Julio Montebruno,66.7
+-33.57,-70.57,21,14,241.2,PE339-Diego Portales / esq. La Alauda,66.7
+-33.52,-70.64,30,20,222.1,PH739-La Castrina / esq. Juan Planas,66.7
+-33.56,-70.59,33,22,219.2,PE345-San Jorge / esq. Bacteriológico,66.7
+-33.42,-70.72,30,20,211.3,PJ1002-Carmen Lidia / esq. La Frontera,66.7
+-33.52,-70.78,27,18,200.2,PI478-Avenida Portales / esq. Avenida 3 Poniente,66.7
+-33.44,-70.78,37,25,211.7,PJ1835-Los Maitenes / esq. Salar de Atacama,67.6
+-33.4,-70.63,31,21,251.6,PB1463-Av. Los Zapadores / esq. Los Turistas,67.7
+-33.53,-70.57,25,17,284.6,PE385-Walker Martínez / esq. Alicahue,68.0
+-33.54,-70.78,25,17,278.0,PI878-Parada 2 / CECOSF Futramapu,68.0
+-33.56,-70.58,25,17,220.1,PE1280-San Jorge / esq. Calle 11,68.0
+-33.46,-70.67,22,15,257.6,PA290-Parada 1 / Avenida España - Blanco,68.2
+-33.51,-70.57,22,15,246.0,PD139-Av. San Luis de Macul / esq. Nueva 1,68.2
+-33.6,-70.56,22,15,185.7,PF1016-Cardenal C. Oviedo / esq. Barceloneta 1 Pte.,68.2
+-33.51,-70.74,45,31,192.5,PI818-Lumen / esq. Zeus,68.9
+-33.48,-70.7,29,20,195.6,PI1590-Avenida del Ferrocarril / esq. Pasaje 45,69.0
+-33.52,-70.76,29,20,193.4,PI383-Alberto Llona / esq. Fernardo Riesco,69.0
+-33.51,-70.62,26,18,227.5,PD1122-Av. Estadio Colo Colo / esq. José Caroca,69.2
+-33.62,-70.63,23,16,209.6,PF231-Avenida Eyzaguirre / esq. San Julián,69.6
+-33.54,-70.79,20,14,227.1,PI1844-Pdte. González Videla / esq. Psje. Chipana,70.0
+-33.48,-70.73,30,21,224.1,PI1799-Av. Las Parcelas / esq. Santa Corina,70.0
+-33.46,-70.59,30,21,222.8,PD1222-Juan Moya / esq. Av. Castillo Velasco,70.0
+-33.62,-70.71,20,14,144.5,PG1894-Mateo de Toro y Z. / esq. Augusto Carozzi P.,70.0
+-33.56,-70.63,27,19,229.8,PE834-Av. Santo Tomás / esq. Sofía Eastman,70.4
+-33.53,-70.67,27,19,176.7,PG657-El Parrón / esq. Paz,70.4
+-33.48,-70.65,48,34,179.1,PH499-Parada 3 / Paradero 3 Gran Avenida,70.8
+-33.42,-70.77,21,15,244.0,PJ257-La Capilla / esq. Fraternidad,71.4
+-33.53,-70.71,21,15,218.9,PH1658-Don Miguel Ángel / esq. Psje. Marcela Paz,71.4
+-33.49,-70.68,21,15,158.3,PH491-José Backause / esq. J. Ortiz de Zarate,71.4
+-33.41,-70.67,32,23,234.2,PB1966-Parada 2 / Einstein - Independencia,71.9
+-33.43,-70.77,32,23,204.1,PJ1983-Río Viejo Sur / esq. San Juan Valdés,71.9
+-33.63,-70.63,36,26,214.5,PF1248-Sargento Menadier / esq. Avenida Chiloé,72.2
+-33.51,-70.6,29,21,240.3,PD1417-Avenida Macul / esq. Juan XXIII,72.4
+-33.41,-70.64,29,21,194.7,PB1307-Avenida México / esq. Río Maule,72.4
+-33.5,-70.61,22,16,235.9,PD24-Exequiel Fernández / esq. Av. La Aguada,72.7
+-33.38,-70.64,22,16,223.1,PB133-Premio Nobel / esq. Cam. Bosque de Stgo.,72.7
+-33.43,-70.71,26,19,115.4,PJ1813-Avenida Carrascal / esq. Jujuy,73.1
+-33.44,-70.69,30,22,225.5,PJ136-Parada 1 / Basílica de Lourdes,73.3
+-33.57,-70.64,23,17,176.8,PG119-Parada 1 / Facultad de Agronomía,73.9
+-33.58,-70.59,27,20,249.6,PF104-Parada 2 / Paradero 31 Av.Vicuña Mackenna,74.1
+-33.41,-70.68,27,20,219.2,PB879-Luis Galdames / esq. Cnel. Alvarado,74.1
+-33.5,-70.63,35,26,206.9,PH775-El Pinar / esq. Av. Las Industrias,74.3
+-33.44,-70.72,20,15,264.7,PJ656-Parada / Plaza Lo Besa,75.0
+-33.46,-70.72,28,21,246.4,PI754-Av. Gral. Oscar Bonilla / esq. Ministro Gana,75.0
+-33.54,-70.63,24,18,209.1,PE268-La Serena / esq. Combarbalá,75.0
+-33.46,-70.69,28,21,196.5,PI1181-San Borja / esq. Arica,75.0
+-33.45,-70.63,24,18,179.9,PC571-José Manuel Infante / esq. Av. Francisco Bilbao,75.0
+-33.6,-70.57,28,21,173.5,PF156-Nonato Coo / esq. El Octante,75.0
+-33.45,-70.73,28,21,142.7,PJ556-Territorio Antártico / esq. Gral. J. Buendía,75.0
+-33.46,-70.6,24,18,138.8,PD765-Av. Castillo Velasco / esq. Doctor Johow,75.0
+-33.46,-70.63,44,33,126.8,PD563-Parada 4 / Conjunto Empart Ñuñoa,75.0
+-33.43,-70.65,24,18,71.7,PB154-Avenida Perú / esq. La Virgen,75.0
+-33.57,-70.59,33,25,202.1,PE601-Elisa Correa / esq. Verde,75.8
+-33.42,-70.74,29,22,197.4,PJ267-Salvador Gutiérrez / esq. Sinal,75.9
+-33.44,-70.61,26,20,197.7,PC704-Avenida Eliodoro Yáñez / esq. Suecia,76.9
+-33.42,-70.75,26,20,170.3,PJ1665-Costanera Sur / esq. Rolando Petersen,76.9
+-33.48,-70.71,22,17,203.4,PI1596-Pasaje 1 / esq. Av. Del Ferrocarril,77.3
+-33.52,-70.75,22,17,200.7,PI292-Parada / Pizarreño,77.3
+-33.53,-70.78,27,21,189.3,PI96-Avenida El Olimpo / esq. Nueva San Martín,77.8
+-33.39,-70.67,45,35,170.3,PB1155-Sandino / esq. Diego Silva H.,77.8
+-33.44,-70.64,36,28,170.0,PC147-Parada 1 / Museo de Los Tajamares,77.8
+-33.57,-70.58,23,18,217.1,PE643-Diego Portales / esq. C. Zañartu,78.3
+-33.58,-70.57,23,18,169.8,PF303-Avenida El Peñón / esq. Avenida México,78.3
+-33.46,-70.7,37,29,150.4,PI1801-Concón / esq. Avenida Ecuador,78.4
+-33.48,-70.56,24,19,214.3,PD1402-M. Sánchez Fontecilla / esq. Avenida Grecia,79.2
+-33.36,-70.73,29,23,202.1,PB556-Antumalal / esq. Pirepillán,79.3
+-33.6,-70.71,25,20,234.7,PG973-Parada / Policlínico Rosita Benavente,80.0
+-33.47,-70.71,20,16,221.3,PI1192-Río Quetro / esq. Av. Las Rejas-Sur,80.0
+-33.45,-70.77,25,20,217.1,PJ200-Serrano / esq. Río Baker,80.0
+-33.5,-70.73,25,20,199.9,PI687-Av.Pdte. Salvador Allende / esq. Divino Maestro,80.0
+-33.46,-70.64,30,24,190.0,PA666-Avenida Matta / esq. Sierra Bella,80.0
+-33.47,-70.7,30,24,188.6,PI1841-General Amengual / esq. Callejón Ugarte,80.0
+-33.5,-70.75,20,16,160.5,PI1537-Segunda Transversal / esq. Alaska,80.0
+-33.43,-70.72,26,21,221.9,PJ566-Neptuno / esq. Avenida Mapocho,80.8
+-33.43,-70.74,26,21,147.3,PJ490-Avenida Mapocho / esq. Torres de Pisa,80.8
+-33.58,-70.66,21,17,250.5,PG149-Lo Martínez / esq. Av. San Francisco,81.0
+-33.36,-70.51,21,17,218.7,PC592-Los Quincheros / esq. Medina,81.0
+-33.36,-70.52,21,17,217.6,PC437-Padre Alfredo Arteaga / esq. Cmte. Malbec,81.0
+-33.43,-70.66,21,17,181.9,PB757-Santos Dumont / esq. Avenida La Paz,81.0
+-33.56,-70.62,42,34,136.9,PE767-Punta Arenas / esq. José Miguel Carrera,81.0
+-33.46,-70.65,32,26,164.7,PA94-Parada 3 / Diez de Julio - San Francisco,81.2
+-33.44,-70.71,27,22,233.8,PJ659-Andes / esq. Eduardo Charme,81.5
+-33.45,-70.71,38,31,120.2,PJ15-Avenida Las Rejas / esq. Avenida Portales,81.6
+-33.37,-70.51,22,18,200.9,PC721-Mons. Escrivá de Balaguer / esq. Cafarnaún,81.8
+-33.47,-70.61,22,18,180.1,PD12-Parada / Liceo C.Silva Donoso,81.8
+-33.37,-70.73,34,28,140.2,PB640-Ramón Rosales / esq. Arturo Prat,82.4
+-33.46,-70.61,34,28,106.9,PD768-Av. Castillo Velasco / esq. Av. Pedro de Valdivia,82.4
+-33.55,-70.63,23,19,216.0,PE361-Manuel Rodríguez / esq. El Almendral,82.6
+-33.47,-70.59,29,24,198.2,PD1221-Juan Moya / esq. Juan Moya,82.8
+-33.36,-70.74,30,25,158.5,PB525-Santa Luisa / esq. Cerro Curacaví,83.3
+-33.53,-70.6,37,31,102.3,PE779-Gerónimo de Alderete / esq. Cristian,83.8
+-33.55,-70.66,31,26,175.6,PG1342-Ismael Tocornal / esq. Domingo Espiñeira,83.9
+-33.59,-70.69,25,21,215.9,PG1945-Parada / Estadio Lo Blanco,84.0
+-33.55,-70.65,25,21,201.1,PG328-Avenida La Bandera / esq. Alpatacal,84.0
+-33.56,-70.61,38,32,210.5,PE88-Avenida Santa Raquel / esq. Gral. Arriagada,84.2
+-33.41,-70.71,20,17,162.1,PJ1752-Costanera Sur / esq. Meza Bell,85.0
+-33.4,-70.68,20,17,106.3,PB1606-Av. Fermín Vivaceta / esq. Cañete,85.0
+-33.39,-70.66,34,29,170.5,PB1374-Avenida Principal / esq. Pasaje Caletones,85.3
+-33.51,-70.73,21,18,224.9,PI361-Av. Américo Vespucio / esq. Cam. a Melipilla,85.7
+-33.48,-70.59,28,24,179.9,PD936-Los Olmos / esq. Lo Plaza,85.7
+-33.44,-70.73,28,24,164.4,PJ784-Los Copihues / esq. Las Hortensias,85.7
+-33.49,-70.63,22,19,205.6,PH482-Isabel Riquelme / esq. Enrique Soro,86.4
+-33.49,-70.7,22,19,198.2,PI52-Avenida Suiza / esq. Lucerna,86.4
+-33.57,-70.6,22,19,186.5,PE733-María Elena / esq. Volcán Osorno,86.4
+-33.41,-70.74,22,19,155.9,PB2046-Camino Lo Boza / esq. Brasil,86.4
+-33.44,-70.77,22,19,120.3,PJ1703-Federico Errázuriz / esq. Avenida Mapocho,86.4
+-33.59,-70.61,30,26,169.2,PF357-Luis Matte Larraín / esq. La Fragua,86.7
+-33.46,-70.71,31,27,116.2,PI47-Avenida Las Rejas / esq. Embajador Quintana,87.1
+-33.39,-70.65,24,21,158.2,PB722-Av. Los Zapadores / esq. Freirina,87.5
+-33.48,-70.58,24,21,146.2,PD932-El Valle / esq. Santa María,87.5
+-33.54,-70.67,33,29,135.3,PG1135-Ciencias / esq. P. Aguirre Cerda,87.9
+-33.44,-70.66,50,44,125.6,PA49-Parada / Hospital Traumatológico,88.0
+-33.41,-70.65,27,24,50.7,PB1180-Av. Card. José Mª Caro / esq. Muñoz Gamero,88.9
+-33.51,-70.63,37,33,221.4,PH1535-Avenida Haydn / esq. Llico,89.2
+-33.4,-70.65,37,33,121.3,PB1416-Emiliano Zapata / esq. Av. Card. José Mª Caro,89.2
+-33.6,-70.69,29,26,226.9,PG1025-Carlos Condell / esq. Aron,89.7
+-33.59,-70.67,29,26,206.9,PG1966-Lautaro / esq. Caupolicán,89.7
+-33.39,-70.68,29,26,130.5,PB1189-Tupungato / esq. Nahuelbuta,89.7
+-33.57,-70.66,20,18,198.8,PG310-Av. San Francisco / esq. Los Sauces,90.0
+-33.41,-70.7,20,18,184.6,PB1073-Los Acacios / esq. Los Pimientos,90.0
+-33.47,-70.66,20,18,158.0,PA235-Avenida Viel / esq. Pedro Lagos,90.0
+-33.52,-70.8,31,28,152.2,PI192-Parada 2 / Liceo Nacional Maipú,90.3
+-33.52,-70.68,21,19,206.9,PH1493-Av. J. J. Prieto Vial / esq. Caldera,90.5
+-33.48,-70.55,21,19,122.7,PD984-Consistorial / esq. Antupirén,90.5
+-33.43,-70.76,32,29,144.9,PJ526-Av. José J. Pérez / esq. El Hualo,90.6
+-33.37,-70.7,22,20,240.8,PB503-Parada / Barrio Industrial El Cortijo,90.9
+-33.52,-70.66,22,20,215.7,PH247-Avenida Lo Ovalle / esq. María,90.9
+-33.59,-70.57,22,20,169.0,PF433-Avenida México / esq. Avenida El Peñón,90.9
+-33.46,-70.66,33,30,163.1,PA33-San Ignacio / esq. Coquimbo,90.9
+-33.43,-70.61,22,20,160.4,PC24-Avenida Los Leones / esq. Av. Eliodoro Yáñez,90.9
+-33.48,-70.54,34,31,123.3,PD1455-Avenida Grecia / esq. Amanecer,91.2
+-33.53,-70.7,36,33,182.2,PH662-Maipú / esq. 9 de Enero,91.7
+-33.56,-70.65,24,22,158.6,PG330-Avenida La Bandera / esq. Sgto. Candelaria,91.7
+-33.47,-70.58,24,22,143.4,PD788-Cruz Almeyda / esq. Avenida Oriental,91.7
+-33.42,-70.59,24,22,95.7,PC72-Av. Américo Vespucio / esq. Av. Pdte. Riesco,91.7
+-33.44,-70.67,37,34,144.5,PA228-Manuel Rodríguez / esq. Rosas,91.9
+-33.48,-70.6,25,23,145.4,PD894-I. Carrera Pinto / esq. Santa Julia,92.0
+-33.48,-70.57,26,24,160.7,PD516-Parada 4 / Los Molineros - Av. Grecia,92.3
+-33.42,-70.61,26,24,100.1,PC338-Av. Los Conquistadores / esq. Los Hidalgos,92.3
+-33.46,-70.68,29,27,131.3,PI171-Exposición / esq. Av. Blanco Encalada,93.1
+-33.43,-70.62,32,30,69.2,PC350-Nueva de Lyon / esq. Av. Andrés Bello,93.8
+-33.55,-70.64,35,33,104.0,PG1352-Pedro Aguirre Cerda / esq. Alpatacal,94.3
+-33.45,-70.67,38,36,104.4,PA271-Parada / Plaza Brasil,94.7
+-33.57,-70.61,20,19,164.2,PE209-Bahía Catalina / esq. Pleamar,95.0
+-33.47,-70.75,20,19,107.7,PI445-Ing. Pedro Gallo / esq. Avenida Los Mares,95.0
+-33.53,-70.77,21,20,159.8,PI1674-Av. Nueva San Martín / esq. Los Diamantes,95.2
+-33.46,-70.58,21,20,83.4,PD433-Dublé Almeyda / esq. Los Aliaga,95.2
+-33.59,-70.66,22,21,215.3,PG1691-Avenida Lo Blanco / esq. Julio Chávez,95.5
+-33.45,-70.62,22,21,153.9,PD1271-Sucre / esq. Av. J. Miguel Claro,95.5
+-33.52,-70.69,46,44,186.9,PH574-Santa Anita / esq. El Caribe,95.7
+-33.42,-70.68,23,22,162.1,PB434-Parada / Pasarela Aldunate,95.7
+-33.59,-70.64,24,23,159.4,PG247-Avenida Lo Blanco / esq. Av. Santa Rosa,95.8
+-33.51,-70.69,29,28,146.5,PH588-Maipú / esq. Fraternal,96.6
+-33.42,-70.76,29,28,121.2,PJ316-Costanera Sur / esq. Diagonal Reny,96.6
+-33.47,-70.76,30,29,118.4,PI263-Avenida El Descanso / esq. M. de Santillana,96.7
+-33.38,-70.69,32,31,141.7,PB967-Av. Card. José Mª Caro / esq. Tokio,96.9
+-33.46,-70.54,25,25,208.6,PD444-Avenida Larrain / esq. Andacollo,100.0
+-33.44,-70.68,20,20,176.1,PA621-Martínez de Rozas / esq. Cueto,100.0
+-33.41,-70.73,31,31,165.0,PB2167-José Miguel Infante / esq. Calle 6,100.0
+-33.36,-70.75,27,27,155.2,PB649-Santa Laura / esq. P. del Tamarugal,100.0
+-33.45,-70.65,32,32,145.5,PA371-Parada 5 / (M) Santa Lucía,100.0
+-33.51,-70.8,22,22,143.5,PI196-Avenida 4 Poniente / esq. Pasaje Vicaría,100.0
+-33.37,-70.74,25,25,140.4,PB1925-Av. Manuel A. Matta / esq. Los Limones,100.0
+-33.55,-70.77,28,28,134.0,PI318-Judea / esq. Marco Antonio,100.0
+-33.51,-70.58,24,24,133.1,PD1462-Nevado Incahuasi / esq. Pasaje Peatones 5,100.0
+-33.45,-70.64,28,28,132.7,PA362-Parada 4 / Hospital Univers. Católica,100.0
+-33.37,-70.75,29,29,130.5,PB642-San Luis / esq. Toconce,100.0
+-33.43,-70.7,28,28,109.7,PJ1564-Hoevel / esq. Santiago de Uriona,100.0
+-33.44,-70.7,38,38,107.9,PJ140-Martínez de Rozas / esq. Av. Coronel Robles,100.0
+-33.44,-70.65,36,36,103.7,PA46-Miraflores / esq. Av. Card. José Mª Caro,100.0
+-33.42,-70.54,21,21,101.5,PC676-Av. Padre Hurtado / esq. Puquios,100.0
+-33.44,-70.76,26,26,101.1,PJ679-Av. San Francisco / esq. Av. Santa Victoria,100.0
+-33.43,-70.75,27,27,82.2,PJ486-Mapocho Sur / esq. Islas Azores,100.0
+-33.45,-70.66,37,37,75.5,PA241-Manuel Rodríguez / esq. Padre M. de Olivares,100.0

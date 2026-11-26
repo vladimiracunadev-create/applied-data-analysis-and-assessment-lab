@@ -3,10 +3,10 @@
 ![Applied Data Analysis and Assessment Lab](assets/banner.svg)
 
 [![Pruebas](https://github.com/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/actions/workflows/ci.yml)
-![Versión 0.5.1](https://img.shields.io/badge/versi%C3%B3n-0.5.1-11253B)
+![Versión 0.6.0](https://img.shields.io/badge/versi%C3%B3n-0.6.0-11253B)
 ![Python 3.11–3.14](https://img.shields.io/badge/Python-3.11%E2%80%933.14-3776AB)
 ![Licencia MIT](https://img.shields.io/badge/licencia-MIT-147D70)
-![519 pruebas](https://img.shields.io/badge/pruebas-519-147D70)
+![544 pruebas](https://img.shields.io/badge/pruebas-544-147D70)
 
 ---
 
@@ -21,14 +21,14 @@ reglas de exclusión escondidas en una nota al pie.
 
 **Este repositorio es el método para hacer ese trabajo bien, probado contra datos
 públicos reales.** No es un curso ni una colección de ejercicios: es un recorrido de
-nueve etapas, un núcleo de código reutilizable y seis casos resueltos que documentan
+nueve etapas, un núcleo de código reutilizable y siete casos resueltos que documentan
 qué tecnología se usó, por qué, y qué trampa tenía cada dato.
 
 ### Por dónde entrar
 
 | Si necesitas… | Empieza por |
 | --- | --- |
-| **Prepararte para una evaluación técnica** de datos con Excel y Pandas | [Mapa de problemas](docs/problemas-de-la-instancia.md) — 16 problemas, dos resueltos paso a paso |
+| **Prepararte para una evaluación técnica** de datos con Excel y Pandas | [Mapa de problemas](docs/problemas-de-la-instancia.md) — 16 problemas, tres resueltos paso a paso |
 | **Resolver un problema de datos** de tu trabajo | [El recorrido de nueve etapas](docs/instancias.md) |
 | **Aprender** con material que explica el por qué | [Programa de aprendizaje](docs/programa.md) — 8 clases con 17 secciones cada una |
 | **Reproducir un indicador oficial** | [Indicadores oficiales del transporte](docs/indicadores-oficiales-transporte.md) |
@@ -38,7 +38,7 @@ qué tecnología se usó, por qué, y qué trampa tenía cada dato.
 
 ## Lo que ya está resuelto, y qué encontró cada caso
 
-Seis casos: tres con **datos públicos reales** y tres con datos sintéticos de semilla
+Siete casos: cuatro con **datos públicos reales** y tres con datos sintéticos de semilla
 fija. Lo que importa no es el tema de cada uno, es la clase de problema que enseña a
 detectar.
 
@@ -47,13 +47,14 @@ detectar.
 | [`bip_lugares_carga`](cases/bip_lugares_carga/README.md) | **reales**, licencia verificada | ¿Cuántos lugares de carga hay y dónde? | El encabezado en **5 filas distintas**; el código **no es clave**; y la validación cruzada de las dos coordenadas del archivo destapó **3 errores de hasta 10,3 km** |
 | [`calendario_medicion`](cases/calendario_medicion/README.md) | **reales**, metodología oficial | ¿Qué días entran en la medición de un indicador oficial? | De 261 días laborales quedan **78 medibles**, y **4 de las 8 reglas oficiales no cambian el denominador** |
 | [`gtfs_red_movilidad`](cases/gtfs_red_movilidad/README.md) | **reales**, 1,1 M de filas | ¿Cuántas expediciones salen por hora? | El **77,5 %** de la tabla de horarios **no contiene horas**, y el conteo ingenuo se equivoca en **−87,65 %** |
+| [`cobertura_de_carga`](cases/cobertura_de_carga/README.md) | **reales**, dos fuentes sin clave común | ¿A qué distancia está el lugar de carga más cercano de cada parada? | **59,29 %** de las paradas lo tiene a 300 m en línea recta y **46,02 %** con un rodeo de 1,3: las decisiones del método mueven la respuesta **entre 39 % y 81 %** |
 | [`transport`](cases/transport/README.md) | sintéticos | Indicadores operacionales con exclusiones declaradas | La validación Pandas ↔ SQL destapó que `julianday` **invierte la puntualidad en los empates** |
 | [`retail`](cases/retail/README.md) | sintéticos | Ventas netas y margen descontando devoluciones | El signo de la devolución tiene que ser una **columna explícita**, no una resta escondida |
 | [`education`](cases/education/README.md) | sintéticos | Asistencia por establecimiento | La tasa ponderada y el promedio de porcentajes **no son lo mismo** |
 
-Los seis hallazgos salieron de ejecutar el código, no de la intuición. Cada uno está
+Los siete hallazgos salieron de ejecutar el código, no de la intuición. Cada uno está
 documentado con su magnitud, su causa y su corrección en la
-[base de conocimiento](docs/conocimiento.md), que tiene 25 registros.
+[base de conocimiento](docs/conocimiento.md), que tiene 30 registros.
 
 ---
 
@@ -71,7 +72,7 @@ uv run python scripts/generate_data.py
 uv run python -m pytest
 ```
 
-Tres comandos y 519 pruebas en verde. Después, el caso que mejor muestra de qué va
+Tres comandos y 544 pruebas en verde. Después, el caso que mejor muestra de qué va
 esto:
 
 ```powershell
@@ -181,7 +182,7 @@ fórmula que se puede abrir, sí.
 
 ## Qué comprueban las pruebas, y qué no
 
-519 pruebas en 28 archivos. Además de los cálculos:
+544 pruebas en 29 archivos. Además de los cálculos:
 
 - **Validación cruzada entre tecnologías**: Pandas contra SQL, indicador por indicador,
   con tolerancia 10⁻⁹.
