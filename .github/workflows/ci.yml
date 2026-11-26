@@ -1,0 +1,96 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Pruebas (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Preparar el entorno
+        run: uv sync --python ${{ matrix.python-version }}
+
+      - name: Generar los datos sintéticos
+        run: uv run python scripts/generate_data.py
+
+      - name: Ejecutar la suite de pruebas
+        run: uv run python -m pytest
+
+  coherence:
+    name: Coherencia del repositorio
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Preparar el entorno
+        run: uv sync
+
+      - name: Generar los datos sintéticos
+        run: uv run python scripts/generate_data.py
+
+      # Cada comando que el README promete debe funcionar. Un README con un comando
+      # roto es una afirmación falsa sobre el repositorio.
+      - name: Verificar el arnés de contratos de agentes
+        run: uv run python -m lab.agents
+
+      - name: Verificar el estándar de las clases
+        run: uv run python -m lab.learning
+
+      - name: Verificar la base de conocimiento
+        run: uv run python -m lab.knowledge
+
+      - name: Construir los libros de Excel resueltos
+        run: uv run python scripts/build_excel_solutions.py
+
+      - name: Construir una simulación reproducible
+        run: uv run python scripts/build_assessment.py --blueprint gestor-datos-transporte --seed 1
+
+      - name: Comprobar que la documentación derivada está al día
+        run: uv run python scripts/build_docs.py --check
+
+      - name: Comprobar la solución de referencia en Pandas
+        run: uv run python solutions/reference.py 1
+
+      - name: Comprobar la segunda implementación en SQL
+        run: uv run python solutions/sql_reference.py 1
+
+  lint:
+    name: Estilo (ruff)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Ejecutar ruff
+        run: uvx ruff check .

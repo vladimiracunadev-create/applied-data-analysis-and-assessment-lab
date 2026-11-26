@@ -1,0 +1,31 @@
+# Normalización de fin de línea. El repositorio se escribe desde Windows y desde
+# Linux, y la integración continua corre en Linux: fijar LF en el repositorio evita
+# que un cambio de plataforma produzca diferencias en archivos que nadie editó.
+* text=auto eol=lf
+
+# Binarios: nunca se normalizan.
+*.xlsx binary
+*.xls binary
+*.png binary
+*.jpg binary
+*.pdf binary
+*.zip binary
+
+# Los CSV de datos sintéticos se generan con utf-8-sig y LF; se tratan como texto
+# para que un cambio en el generador aparezca como diferencia legible.
+*.csv text eol=lf
+
+# Los notebooks son JSON: texto, pero se marcan para que las herramientas no intenten
+# resolver conflictos línea a línea sobre las salidas.
+*.ipynb text eol=lf linguist-language=Jupyter
+
+# El lockfile se versiona y no se diffea a mano.
+uv.lock linguist-generated=true
+
+# Documentación derivada: se genera con scripts/build_docs.py.
+docs/catalogo-casos.md linguist-generated=true
+docs/agentes.md linguist-generated=true
+docs/perfiles.md linguist-generated=true
+docs/programa.md linguist-generated=true
+docs/metodologia.md linguist-generated=true
+docs/conocimiento.md linguist-generated=true

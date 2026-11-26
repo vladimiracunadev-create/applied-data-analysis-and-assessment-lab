@@ -1,0 +1,260 @@
+[
+  {
+    "id": "gd-001-perfil-calidad",
+    "enunciado": "Lea los cuatro archivos del caso e informe, en una tabla, la cantidad de filas originales, los duplicados exactos, las claves que no existen en el catálogo de recorridos, los conteos de pasajeros ausentes o negativos y las fechas no interpretables. Indique para cada defecto qué indicador afecta y qué decide hacer con él.",
+    "competencias": ["calidad-datos", "lectura-escritura-datos"],
+    "herramientas": ["Python", "Pandas", "Excel"],
+    "dificultad": "introductorio",
+    "minutos": 30,
+    "entregable": "Hoja o tabla 'calidad' con indicador, valor, unidad y decisión tomada.",
+    "criterios": [
+      "Cada defecto está cuantificado, no descrito en prosa.",
+      "Se declara el efecto de cada defecto sobre cada indicador.",
+      "No se eliminan filas sin dejar constancia del recuento eliminado."
+    ],
+    "datos": "data/case_1",
+    "trampas": [
+      "Contar duplicados después de haberlos eliminado.",
+      "Confundir celda vacía con cero en el conteo de pasajeros."
+    ]
+  },
+  {
+    "id": "gd-002-tipos-y-fechas",
+    "enunciado": "Convierta las columnas de fecha-hora y la columna numérica de pasajeros a su tipo correcto. Informe cuántos valores no se pudieron interpretar en cada columna y qué supuso sobre el formato de fecha (día/mes/año o mes/día/año) y por qué.",
+    "competencias": ["fechas-horarios", "limpieza-normalizacion"],
+    "herramientas": ["Python", "Pandas", "Excel"],
+    "dificultad": "introductorio",
+    "minutos": 20,
+    "entregable": "Código o pasos de conversión más un recuento de valores no interpretables por columna.",
+    "criterios": [
+      "El supuesto de formato de fecha está declarado explícitamente.",
+      "Los valores no interpretables quedan como nulos y contados, no eliminados en silencio.",
+      "La conversión numérica distingue vacío de cero."
+    ],
+    "datos": "data/case_1",
+    "trampas": [
+      "Restar dos textos de fecha y obtener un error que luego se ignora.",
+      "Usar el formato regional por defecto sin declararlo."
+    ]
+  },
+  {
+    "id": "gd-003-duplicados",
+    "enunciado": "Distinga duplicados exactos de duplicados por clave de negocio. Informe cuántas filas son idénticas en todas sus columnas y cuántas repiten el identificador de viaje con contenido distinto. Proponga un tratamiento distinto para cada caso y justifíquelo.",
+    "competencias": ["calidad-datos", "limpieza-normalizacion"],
+    "herramientas": ["Python", "Pandas", "Excel"],
+    "dificultad": "intermedio",
+    "minutos": 20,
+    "entregable": "Tabla con ambos recuentos y una nota con el tratamiento elegido.",
+    "criterios": [
+      "Los dos tipos de duplicado se cuentan por separado.",
+      "El tratamiento propuesto no borra información sin registrarla.",
+      "Se explica por qué un duplicado exacto se puede eliminar y uno por clave no."
+    ],
+    "datos": "data/case_1",
+    "trampas": ["Tratar todo duplicado como exacto y perder registros legítimos."]
+  },
+  {
+    "id": "gd-004-cruce-con-cardinalidad",
+    "enunciado": "Cruce los viajes con el catálogo de recorridos y con el de operadores. Compruebe que el número de filas no aumenta después del cruce y cuantifique las claves que no encontraron correspondencia. Explique qué tipo de cruce usó y por qué.",
+    "competencias": ["cruce-consolidacion", "calidad-datos"],
+    "herramientas": ["Python", "Pandas", "Excel", "SQL"],
+    "dificultad": "intermedio",
+    "minutos": 30,
+    "entregable": "Dataset consolidado más una tabla de auditoría del cruce.",
+    "criterios": [
+      "Se verifica la cardinalidad antes y después del cruce.",
+      "Las claves desconocidas se reportan, no se descartan en silencio.",
+      "La elección entre cruce por la izquierda e interno está justificada."
+    ],
+    "datos": "data/case_1",
+    "trampas": [
+      "Usar un cruce interno y perder los viajes con clave desconocida sin notarlo.",
+      "Duplicar filas por un catálogo que no es único en su clave."
+    ]
+  },
+  {
+    "id": "gd-005-demanda-por-operador",
+    "enunciado": "Calcule la demanda de pasajeros por operador, considerando únicamente viajes realizados con clave conocida y conteo de pasajeros válido. Informe además cuántos viajes aportaron dato, de modo que se pueda juzgar la cobertura de la suma.",
+    "competencias": ["agregacion-indicadores", "calidad-datos"],
+    "herramientas": ["Python", "Pandas", "Excel"],
+    "dificultad": "intermedio",
+    "minutos": 25,
+    "entregable": "Tabla de demanda por operador con pasajeros y viajes con dato.",
+    "criterios": [
+      "El denominador o la cobertura del indicador está informada.",
+      "Los viajes cancelados quedan fuera de la demanda.",
+      "El resultado se puede reproducir con una segunda herramienta."
+    ],
+    "datos": "data/case_1",
+    "trampas": ["Sumar pasajeros sobre viajes cancelados, que tienen cero por convención."]
+  },
+  {
+    "id": "gd-006-demanda-por-hora",
+    "enunciado": "Calcule la demanda por hora del día a partir de la hora de inicio del viaje. Identifique la hora de mayor demanda y explique por qué la hora de inicio del viaje no equivale a la hora en que subió cada pasajero.",
+    "competencias": ["fechas-horarios", "agregacion-indicadores"],
+    "herramientas": ["Python", "Pandas", "Excel"],
+    "dificultad": "intermedio",
+    "minutos": 20,
+    "entregable": "Tabla y gráfico de demanda por hora, con la limitación declarada.",
+    "criterios": [
+      "La agrupación horaria cubre las 24 horas sin huecos.",
+      "La limitación del supuesto está escrita en el entregable.",
+      "El total por hora coincide con el total general."
+    ],
+    "datos": "data/case_1",
+    "trampas": ["Asignar toda la demanda del viaje a la hora de inicio sin advertirlo."]
+  },
+  {
+    "id": "gd-007-duracion-y-percentiles",
+    "enunciado": "Calcule, por recorrido, la duración media, la mediana y el percentil 90 en minutos. Declare el método de interpolación del percentil. Explique en qué situación informaría la mediana en lugar de la media.",
+    "competencias": ["estadistica-descriptiva", "fechas-horarios"],
+    "herramientas": ["Python", "Pandas", "Excel"],
+    "dificultad": "avanzado",
+    "minutos": 30,
+    "entregable": "Tabla de duración por recorrido con media, mediana, P90 y número de viajes.",
+    "criterios": [
+      "Las duraciones negativas o incompletas quedan excluidas y contadas.",
+      "El método de percentil está declarado.",
+      "La elección entre media y mediana está justificada con la forma de la distribución."
+    ],
+    "datos": "data/case_2",
+    "trampas": [
+      "Usar un percentil de Excel y otro de Python y presentar ambos como el mismo indicador.",
+      "Incluir viajes cancelados, cuya duración no existe."
+    ]
+  },
+  {
+    "id": "gd-008-cumplimiento",
+    "enunciado": "Calcule el cumplimiento de la programación por recorrido y día, y luego por operador. Conserve los días programados sin viajes realizados. Explique por qué el cumplimiento global no es el promedio de los cumplimientos diarios.",
+    "competencias": ["agregacion-indicadores", "cruce-consolidacion"],
+    "herramientas": ["Python", "Pandas", "Excel", "SQL"],
+    "dificultad": "avanzado",
+    "minutos": 35,
+    "entregable": "Dos tablas de cumplimiento, por recorrido/día y por operador, con la explicación del denominador.",
+    "criterios": [
+      "Los días programados sin viajes aparecen con cero realizados.",
+      "El cumplimiento global divide suma por suma, no promedia porcentajes.",
+      "No se recorta el indicador a 100 % sin declararlo."
+    ],
+    "datos": "data/case_2",
+    "trampas": [
+      "Promediar los porcentajes diarios.",
+      "Perder los días sin viajes al usar un cruce interno."
+    ]
+  },
+  {
+    "id": "gd-009-excel-verificable",
+    "enunciado": "Reproduzca en Excel la demanda por operador y el recuento de viajes realizados por recorrido, usando fórmulas o tablas dinámicas. El libro debe permitir auditar el cálculo abriendo las celdas, y debe separar las hojas de entrada, de cálculo y de resultado.",
+    "competencias": ["hojas-de-calculo", "agregacion-indicadores"],
+    "herramientas": ["Excel", "Google Sheets"],
+    "dificultad": "intermedio",
+    "minutos": 45,
+    "entregable": "Libro .xlsx con hojas de entradas, cálculos y resultados, y un gráfico rotulado.",
+    "criterios": [
+      "Los resultados son fórmulas, no valores pegados.",
+      "Las entradas no se editan.",
+      "El gráfico declara unidad y período."
+    ],
+    "datos": "data/case_1",
+    "trampas": [
+      "Pegar como valor el resultado calculado en Python.",
+      "Usar CONTAR.SI.CONJUNTO con el criterio \"<>\" y contar como válidas las celdas con cadena vacía."
+    ]
+  },
+  {
+    "id": "gd-010-validacion-cruzada",
+    "enunciado": "Compare los indicadores obtenidos en Excel con los obtenidos en Python o SQL. Construya una tabla de control que muestre, por indicador, el valor de cada herramienta, la diferencia y un veredicto. Explique el origen de cualquier diferencia que no sea cero.",
+    "competencias": ["validacion-independiente", "reproducibilidad"],
+    "herramientas": ["Excel", "Python", "SQL"],
+    "dificultad": "avanzado",
+    "minutos": 25,
+    "entregable": "Hoja de control con valores de ambas herramientas, diferencia y veredicto por indicador.",
+    "criterios": [
+      "Toda diferencia está cuantificada y explicada.",
+      "La segunda implementación no reutiliza el resultado de la primera.",
+      "Lo que no se pudo verificar se informa como tal, no como verificado."
+    ],
+    "datos": "data/case_1",
+    "trampas": ["Declarar validado un indicador copiando el valor de una herramienta a la otra."]
+  },
+  {
+    "id": "gd-011-sql-equivalente",
+    "enunciado": "Escriba las consultas SQL que producen la demanda por operador y el cumplimiento por recorrido y día. Indique el grano de cada consulta y la diferencia entre COUNT(*) y COUNT(columna) en este dataset.",
+    "competencias": ["sql", "agregacion-indicadores"],
+    "herramientas": ["SQL", "DuckDB", "SQLite"],
+    "dificultad": "avanzado",
+    "minutos": 30,
+    "entregable": "Consultas comentadas y sus resultados.",
+    "criterios": [
+      "El grano de cada consulta está declarado.",
+      "La diferencia entre COUNT(*) y COUNT(columna) se usa para cuantificar nulos.",
+      "El resultado coincide con la implementación en Pandas."
+    ],
+    "datos": "data/case_2",
+    "trampas": ["Usar COUNT(*) donde el indicador exige contar valores no nulos."]
+  },
+  {
+    "id": "gd-012-visualizacion",
+    "enunciado": "Construya dos gráficos: demanda por operador y demanda por hora. Cada uno debe llevar título informativo, rótulo de eje con unidad, período y fuente. Explique por qué el eje de magnitudes parte en cero.",
+    "competencias": ["visualizacion", "comunicacion-resultados"],
+    "herramientas": ["Python", "Excel", "Power BI"],
+    "dificultad": "intermedio",
+    "minutos": 20,
+    "entregable": "Dos gráficos rotulados, insertados en el informe o en el libro.",
+    "criterios": [
+      "Cada gráfico declara unidad, período y fuente.",
+      "La escala no exagera diferencias.",
+      "El color no es el único portador de información."
+    ],
+    "datos": "data/case_1",
+    "trampas": ["Truncar el eje para que una diferencia pequeña parezca grande."]
+  },
+  {
+    "id": "gd-013-informe-y-supuestos",
+    "enunciado": "Redacte un informe de una página con tres hallazgos, los supuestos aplicados y las limitaciones del análisis. Para cada hallazgo indique si es un hecho verificable en los datos, una inferencia o una hipótesis por contrastar.",
+    "competencias": ["comunicacion-resultados", "apoyo-decision"],
+    "herramientas": ["Markdown", "Word", "Excel"],
+    "dificultad": "intermedio",
+    "minutos": 30,
+    "entregable": "Informe con hallazgos clasificados, supuestos y limitaciones.",
+    "criterios": [
+      "Cada hallazgo está clasificado como hecho, inferencia o hipótesis.",
+      "Los supuestos aplicados aparecen enumerados.",
+      "Ninguna conclusión atribuye causas que los datos no permiten establecer."
+    ],
+    "datos": "data/case_3",
+    "trampas": ["Presentar una correlación como causa.", "Omitir las limitaciones por falta de tiempo."]
+  },
+  {
+    "id": "gd-014-prioridades-operacionales",
+    "enunciado": "Identifique los tres recorridos que requieren atención prioritaria. Declare el criterio de priorización, muéstrelo calculado y explique qué información adicional necesitaría para confirmar que la prioridad es correcta.",
+    "competencias": ["apoyo-decision", "agregacion-indicadores"],
+    "herramientas": ["Python", "Excel"],
+    "dificultad": "avanzado",
+    "minutos": 25,
+    "entregable": "Tabla de priorización con el criterio explícito y la justificación.",
+    "criterios": [
+      "El criterio es reproducible, no una apreciación.",
+      "Se declara qué información falta para confirmar la decisión.",
+      "El resultado no se presenta como diagnóstico de causa."
+    ],
+    "datos": "data/case_3",
+    "trampas": ["Priorizar por un solo indicador sin considerar el tamaño del recorrido."]
+  },
+  {
+    "id": "gd-015-exportacion-entregables",
+    "enunciado": "Exporte los resultados a un único libro de Excel con una hoja por indicador y a archivos CSV. Compruebe que los totales del libro coinciden con los del código y que los archivos se abren con la codificación correcta en un equipo distinto.",
+    "competencias": ["lectura-escritura-datos", "reproducibilidad"],
+    "herramientas": ["Python", "Pandas", "Excel"],
+    "dificultad": "introductorio",
+    "minutos": 15,
+    "entregable": "Libro .xlsx con una hoja por indicador y los CSV equivalentes.",
+    "criterios": [
+      "Los totales del libro coinciden con los del código.",
+      "La codificación de los CSV permite leer los acentos correctamente.",
+      "Los nombres de hoja y de archivo son explícitos."
+    ],
+    "datos": "data/case_1",
+    "trampas": ["Guardar un CSV en una codificación que rompe los acentos al abrirlo en Excel."]
+  }
+]

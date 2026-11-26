@@ -1,0 +1,86 @@
+{
+  "slug": "transport",
+  "titulo": "Indicadores operacionales de transporte público",
+  "disciplina": "analisis-de-datos",
+  "industria": "transporte",
+  "dificultad": "avanzado",
+  "metodologia": "descriptiva con validación cruzada entre herramientas",
+  "competencias": [
+    "lectura-escritura-datos",
+    "calidad-datos",
+    "limpieza-normalizacion",
+    "cruce-consolidacion",
+    "fechas-horarios",
+    "agregacion-indicadores",
+    "estadistica-descriptiva",
+    "visualizacion",
+    "hojas-de-calculo",
+    "sql",
+    "validacion-independiente",
+    "reproducibilidad"
+  ],
+  "estado": "implementado",
+  "tiempo_sugerido_min": 240,
+  "contexto": "Una autoridad metropolitana de transporte recibe registros de viajes de varios operadores y debe informar demanda, duración, puntualidad y cumplimiento de la programación. Los archivos llegan con duplicados exactos, claves que no existen en el catálogo de recorridos, conteos de pasajeros ausentes o negativos y fechas almacenadas como texto.",
+  "problema": "Producir indicadores operacionales defendibles a partir de cuatro archivos heterogéneos, declarando todas las exclusiones y el efecto de cada una sobre cada indicador.",
+  "objetivos": [
+    "Medir el estado de los datos antes de calcular cualquier indicador.",
+    "Consolidar viajes, recorridos, operadores y programación con cardinalidad controlada.",
+    "Calcular demanda por operador y por hora, duración por recorrido y cumplimiento por recorrido y día.",
+    "Reproducir los resultados en hoja de cálculo y en SQL, y confrontarlos entre sí."
+  ],
+  "restricciones": [
+    "Cuatro horas de trabajo.",
+    "Excel y Python con Pandas, o RStudio como alternativa.",
+    "No se permite imputar valores sin justificación explícita."
+  ],
+  "fuentes": [
+    "Datos sintéticos generados por scripts/generate_data.py con semilla fija 20261126 + número de caso. No contienen información de ninguna institución real."
+  ],
+  "datasets": [
+    "data/case_1, data/case_2 y data/case_3, cada uno con viajes.csv, recorridos.csv, operadores.csv y programacion.csv."
+  ],
+  "diccionario": "docs/diccionario.md, y la hoja 90_documentacion de cada libro resuelto.",
+  "supuestos": [
+    "Se eliminan duplicados exactos antes de contar.",
+    "Las claves desconocidas se excluyen de los indicadores por recorrido y se reportan aparte.",
+    "Un viaje realizado con pasajeros nulo o negativo se conserva para indicadores operacionales y se excluye de las sumas de pasajeros.",
+    "Los viajes cancelados se excluyen de duración y demanda.",
+    "El cumplimiento no se recorta a 100 %.",
+    "La puntualidad definida como duración menor o igual a la meta es pedagógica y no corresponde al indicador oficial de ningún sistema de transporte."
+  ],
+  "metodologias_alternativas": [
+    "Pandas sobre los CSV, con tipos resueltos por pd.to_numeric y pd.to_datetime.",
+    "SQL sobre los mismos archivos cargados como texto, con CAST, LEFT JOIN y strftime.",
+    "Excel con BUSCARX, SUMAR.SI.CONJUNTO, CONTAR.SI.CONJUNTO y tablas dinámicas."
+  ],
+  "implementaciones": [
+    "solutions/reference.py — implementación en Pandas.",
+    "solutions/sql_reference.py — implementación independiente en SQL.",
+    "scripts/build_excel_solutions.py — libro de Excel con fórmulas vivas."
+  ],
+  "soluciones": "solutions/reference.py, solutions/sql_reference.py, solutions/EXCEL.md y solutions/excel/case_N_resuelto.xlsx.",
+  "resultados": "reference_outputs/case_N/ con calidad, demanda, demanda_hora, duracion, cumplimiento, cumplimiento_operador y realizados_recorrido, más el libro de referencia en Excel.",
+  "validaciones": [
+    "tests/test_reference.py comprueba invariantes del procesamiento en los tres casos.",
+    "tests/test_cross_validation.py confronta Pandas contra SQL indicador por indicador con tolerancia 1e-9.",
+    "tests/test_excel_solutions.py verifica que las fórmulas del libro apunten a los rangos correctos.",
+    "La hoja 30_control de cada libro compara Excel contra Python al abrirlo en Excel."
+  ],
+  "interpretacion": "Las diferencias de cumplimiento entre operadores no permiten atribuir causas: el dato no incluye flota disponible, condiciones de vía ni incidentes. El análisis describe la brecha y señala qué información falta para explicarla.",
+  "limitaciones": [
+    "Los datos son sintéticos: las magnitudes no describen ningún sistema real.",
+    "La hora de inicio del viaje no equivale a la hora de cada validación de pasajero.",
+    "No hay información geográfica, por lo que no se puede analizar cobertura territorial."
+  ],
+  "conocimiento_adquirido": [
+    "La resta de fechas con julianday en SQLite introduce error de punto flotante que invierte la comparación duración ≤ meta en los empates; con segundos enteros el cálculo es exacto.",
+    "CONTAR.SI.CONJUNTO con el criterio \"<>\" cuenta como no vacías las celdas cuya fórmula devuelve cadena vacía, de modo que infla el denominador de una tasa.",
+    "Promediar porcentajes diarios no da el cumplimiento global: hay que dividir la suma de realizados por la suma de programados."
+  ],
+  "capacidades_reutilizables": [
+    "lab.sqlbridge, para validar cualquier resultado con una segunda implementación en SQL.",
+    "lab.excel, para generar libros con fórmulas auditables en cualquier caso.",
+    "lab.dates, para duraciones y bandas horarias en cualquier dominio con marcas de tiempo."
+  ]
+}

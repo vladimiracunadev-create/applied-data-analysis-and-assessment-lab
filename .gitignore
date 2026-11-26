@@ -1,0 +1,30 @@
+# Entornos y cachés
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.mypy_cache/
+
+# Trabajo propio de quien practica: no se versiona para no filtrar entregas.
+submissions/*
+!submissions/.gitkeep
+
+# Resultados generados. Se reconstruyen con:
+#   python solutions/reference.py <n>
+reference_outputs/
+
+# Libros de entrada generados por scripts/export_inputs.py. Los CSV sí se versionan;
+# el libro de Excel se reconstruye con un comando.
+data/case_*/entradas.xlsx
+
+# Referencias de los casos genéricos, reconstruibles con:
+#   python -m cases.retail.solution
+cases/*/reference.xlsx
+
+# Artefactos del sistema
+.DS_Store
+Thumbs.db
+desktop.ini

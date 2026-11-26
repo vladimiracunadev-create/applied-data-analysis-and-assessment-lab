@@ -1,0 +1,89 @@
+[project]
+name = "applied-data-analysis-and-assessment-lab"
+version = "0.1.0"
+description = "Laboratorio profesional y genérico de análisis de datos, investigación aplicada y preparación de evaluaciones técnicas."
+readme = "README.md"
+requires-python = ">=3.11,<3.15"
+license = { file = "LICENSE" }
+keywords = [
+    "data-analysis",
+    "data-quality",
+    "applied-research",
+    "technical-assessment",
+    "pandas",
+    "excel",
+    "education",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+]
+
+# Entorno mínimo funcional. Toda tecnología adicional va en [project.optional-dependencies]
+# y se detecta en tiempo de ejecución; tests/test_repo_coherence.py comprueba que esta
+# lista no crezca sin aviso.
+dependencies = [
+    "pandas>=2.2,<4",
+    "numpy>=1.26",
+    "openpyxl>=3.1",
+    "xlsxwriter>=3.2",
+    "matplotlib>=3.8",
+    "jupyterlab>=4",
+    "pytest>=8",
+]
+
+[project.optional-dependencies]
+# Motor SQL alternativo. El puente de validación funciona sin esto, con el sqlite3 de
+# la biblioteca estándar; DuckDB se detecta con lab.sqlbridge.duckdb_available().
+sql = ["duckdb>=1.0"]
+# Inferencia adicional. lab.stats implementa lo que el laboratorio usa sin estas
+# bibliotecas; sirven para contrastar resultados con una tercera implementación.
+stats = ["scipy>=1.11", "statsmodels>=0.14"]
+# Formatos columnares para datasets grandes.
+columnar = ["pyarrow>=15"]
+# Visualización interactiva.
+viz = ["seaborn>=0.13", "plotly>=5.18"]
+# Herramientas de desarrollo.
+dev = ["ruff>=0.5"]
+
+[project.urls]
+Homepage = "https://github.com/vladimiracunadev-create/applied-data-analysis-and-assessment-lab"
+Documentation = "https://github.com/vladimiracunadev-create/applied-data-analysis-and-assessment-lab#readme"
+Changelog = "https://github.com/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/CHANGELOG.md"
+
+[tool.uv]
+# El repositorio es un laboratorio, no una biblioteca publicable: no se construye como
+# paquete. Así `uv sync` instala las dependencias sin intentar empaquetar el árbol.
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers --strict-config"
+filterwarnings = [
+    "error::DeprecationWarning:lab.*",
+    "error::FutureWarning:lab.*",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+exclude = [".venv", "notebooks"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4", "SIM"]
+ignore = [
+    "E501",    # la longitud la controla el formateador; las tablas de documentación exceden
+    "SIM108",  # el operador ternario no siempre es más legible que un if explícito
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Los scripts y las soluciones ajustan sys.path antes de importar del repositorio.
+"scripts/*" = ["E402"]
+"solutions/*" = ["E402"]
+"tests/*" = ["E402"]

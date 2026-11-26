@@ -1,0 +1,63 @@
+{
+  "slug": "retail",
+  "titulo": "Ventas netas, margen y devoluciones por producto",
+  "disciplina": "analisis-de-negocios",
+  "industria": "comercio",
+  "dificultad": "intermedio",
+  "metodologia": "descriptiva con reglas de exclusión declaradas",
+  "competencias": [
+    "lectura-escritura-datos",
+    "calidad-datos",
+    "limpieza-normalizacion",
+    "agregacion-indicadores",
+    "hojas-de-calculo",
+    "comunicacion-resultados"
+  ],
+  "estado": "implementado",
+  "tiempo_sugerido_min": 90,
+  "contexto": "Un comercio registra ventas y devoluciones en una misma tabla, distinguidas por un campo de estado. El área comercial necesita ventas netas y margen por producto para decidir el surtido.",
+  "problema": "Calcular unidades, ventas netas y margen por producto descontando devoluciones, sobre una tabla con duplicados y cantidades inválidas.",
+  "objetivos": [
+    "Perfilar la calidad de la tabla de entrada.",
+    "Definir el signo de las unidades según el estado del registro.",
+    "Calcular unidades, ventas netas y margen por producto.",
+    "Reproducir los totales en Excel con SUMAR.SI.CONJUNTO o tabla dinámica."
+  ],
+  "restricciones": [
+    "Noventa minutos.",
+    "Las devoluciones restan unidades y margen; no se eliminan de la tabla."
+  ],
+  "fuentes": [
+    "Datos sintéticos en cases/retail/input.csv. No corresponden a ninguna empresa real."
+  ],
+  "datasets": ["cases/retail/input.csv"],
+  "diccionario": "id (identificador), product (producto), quantity (unidades), price (precio unitario), cost (costo unitario), status (SALE o RETURN).",
+  "supuestos": [
+    "Se eliminan duplicados exactos.",
+    "Se excluyen cantidades no positivas, precios o costos negativos y estados fuera del dominio.",
+    "Una devolución aporta unidades negativas con el mismo precio y costo de la venta."
+  ],
+  "metodologias_alternativas": [
+    "Pandas con una columna de signo derivada del estado.",
+    "Excel con columna auxiliar de unidades firmadas y tabla dinámica.",
+    "SQL con CASE WHEN sobre el estado."
+  ],
+  "implementaciones": ["cases/retail/solution.py"],
+  "soluciones": "cases/retail/solution.py produce cases/retail/reference.xlsx con hojas de calidad e indicadores.",
+  "resultados": "Unidades, ventas netas y margen por producto, más el perfil de calidad de la tabla original.",
+  "validaciones": [
+    "tests/test_generic.py comprueba el signo de las devoluciones con un caso mínimo calculado a mano.",
+    "tests/test_cases.py vuelve a ejecutar la solución sobre el dataset del repositorio y verifica la coherencia de los totales."
+  ],
+  "interpretacion": "Un producto con margen negativo no es necesariamente un producto a descontinuar: puede operar como gancho de tráfico. El indicador describe; no decide.",
+  "limitaciones": [
+    "No hay fecha en los registros, por lo que no se puede analizar estacionalidad.",
+    "El costo unitario se toma como dado y no incluye costos indirectos."
+  ],
+  "conocimiento_adquirido": [
+    "Separar la regla de signo en una columna explícita hace auditable el descuento de devoluciones, en lugar de esconderlo dentro de una resta."
+  ],
+  "capacidades_reutilizables": [
+    "El patrón de columna de signo derivada de un campo de estado sirve para cualquier dominio con movimientos de entrada y salida: inventarios, caja, cuentas corrientes."
+  ]
+}

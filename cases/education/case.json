@@ -1,0 +1,62 @@
+{
+  "slug": "education",
+  "titulo": "Asistencia ponderada por establecimiento",
+  "disciplina": "analisis-de-datos",
+  "industria": "educacion",
+  "dificultad": "introductorio",
+  "metodologia": "descriptiva con comparación de denominadores",
+  "competencias": [
+    "lectura-escritura-datos",
+    "calidad-datos",
+    "agregacion-indicadores",
+    "estadistica-descriptiva",
+    "hojas-de-calculo",
+    "comunicacion-resultados"
+  ],
+  "estado": "implementado",
+  "tiempo_sugerido_min": 90,
+  "contexto": "Un sostenedor educacional recibe días asistidos y días programados por curso y debe informar la asistencia por establecimiento. Los establecimientos tienen tamaños muy distintos entre sí.",
+  "problema": "Calcular la asistencia por establecimiento y explicar por qué la tasa ponderada difiere del promedio simple de porcentajes.",
+  "objetivos": [
+    "Identificar registros inválidos donde los días asistidos superan los programados.",
+    "Calcular la tasa ponderada y el promedio simple de tasas.",
+    "Explicar la diferencia en puntos porcentuales y decidir cuál indicador informar."
+  ],
+  "restricciones": [
+    "Noventa minutos.",
+    "Datos agregados por curso: no se trabaja con registros de personas identificables."
+  ],
+  "fuentes": [
+    "Datos sintéticos en cases/education/input.csv. No contienen datos personales."
+  ],
+  "datasets": ["cases/education/input.csv"],
+  "diccionario": "id (identificador), school (establecimiento), attended (días asistidos), scheduled (días programados).",
+  "supuestos": [
+    "Se eliminan duplicados exactos.",
+    "Se excluyen filas con días programados no positivos o asistidos fuera del rango de cero a programados.",
+    "Se informa la tasa ponderada como indicador del conjunto."
+  ],
+  "metodologias_alternativas": [
+    "Tasa ponderada: suma de asistidos sobre suma de programados.",
+    "Promedio simple de las tasas por curso.",
+    "Mediana de las tasas, cuando interesa el curso típico y no el conjunto."
+  ],
+  "implementaciones": ["cases/education/solution.py"],
+  "soluciones": "cases/education/solution.py produce cases/education/reference.xlsx.",
+  "resultados": "Asistencia ponderada y promedio simple por establecimiento, con los días asistidos y programados que las sostienen.",
+  "validaciones": [
+    "tests/test_generic.py verifica la tasa ponderada contra un cálculo manual.",
+    "tests/test_cases.py comprueba que ninguna tasa quede fuera del rango de 0 a 100."
+  ],
+  "interpretacion": "Cuando la tasa ponderada supera al promedio simple, los cursos grandes asisten más que los pequeños. Esa lectura es una inferencia sobre la composición de la matrícula, no una explicación de la causa de la ausencia.",
+  "limitaciones": [
+    "No hay información sobre motivos de ausencia.",
+    "Los datos agregados impiden analizar trayectorias individuales, lo que es deliberado para proteger la privacidad."
+  ],
+  "conocimiento_adquirido": [
+    "La diferencia entre tasa ponderada y promedio simple se expresa en puntos porcentuales, no en porcentaje, y debe informarse junto con el indicador elegido."
+  ],
+  "capacidades_reutilizables": [
+    "lab.metrics.compare_rates resuelve esta comparación en cualquier dominio con numerador y denominador por unidad de análisis."
+  ]
+}
