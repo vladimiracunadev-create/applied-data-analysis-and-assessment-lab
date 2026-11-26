@@ -3,10 +3,10 @@
 ![Applied Data Analysis and Assessment Lab](assets/banner.svg)
 
 [![Pruebas](https://github.com/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/actions/workflows/ci.yml)
-![Versión 0.9.0](https://img.shields.io/badge/versi%C3%B3n-0.9.0-11253B)
+![Versión 0.9.1](https://img.shields.io/badge/versi%C3%B3n-0.9.1-11253B)
 ![Python 3.11–3.14](https://img.shields.io/badge/Python-3.11%E2%80%933.14-3776AB)
 ![Licencia MIT](https://img.shields.io/badge/licencia-MIT-147D70)
-![701 pruebas](https://img.shields.io/badge/pruebas-701-147D70)
+![702 pruebas](https://img.shields.io/badge/pruebas-702-147D70)
 
 ---
 
@@ -74,7 +74,7 @@ uv run python scripts/generate_data.py
 uv run python -m pytest
 ```
 
-Tres comandos y 701 pruebas en verde. Después, el caso que mejor muestra de qué va
+Tres comandos y 702 pruebas en verde. Después, el caso que mejor muestra de qué va
 esto:
 
 ```powershell
@@ -184,7 +184,7 @@ fórmula que se puede abrir, sí.
 
 ## Qué comprueban las pruebas, y qué no
 
-701 pruebas en 33 archivos. Además de los cálculos:
+702 pruebas en 33 archivos. Además de los cálculos:
 
 - **Validación cruzada entre tecnologías**: Pandas contra SQL, indicador por indicador,
   con tolerancia 10⁻⁹.

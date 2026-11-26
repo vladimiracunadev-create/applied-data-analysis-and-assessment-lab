@@ -113,6 +113,23 @@ uv run python -m lab.learning
 Los seis comandos deben terminar sin error. El cuarto falla si cambió el código y no
 regeneró la documentación derivada.
 
+### Y una comprobación más, si tocó un caso con datos reales
+
+La suite **tiene que pasar sin los archivos descargados**, porque así corre en
+integración continua. Una prueba que llama sin darse cuenta a una función que lee
+`data/original/` pasa en su máquina y falla en CI.
+
+Para comprobarlo como lo hace CI, aparte la carpeta y corra la suite:
+
+```powershell
+Move-Item data\original ..\original-apartado; uv run python -m pytest; Move-Item ..\original-apartado data\original
+```
+
+Si alguna prueba falla con `FileNotFoundError: Faltan N de los N archivos`, la causa es
+una función de informe con una lectura de disco escondida. La corrección es **recibir**
+la tabla como argumento en lugar de calcularla dentro, no marcar la prueba como
+omitida.
+
 ## Mensajes de commit
 
 Una línea de asunto en imperativo, de 72 caracteres o menos, y un cuerpo que explique

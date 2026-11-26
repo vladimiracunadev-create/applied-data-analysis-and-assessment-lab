@@ -321,9 +321,18 @@ def test_el_detector_externo_respeta_su_umbral(gtfs, bip_metro):
 
 
 def test_la_tabla_de_detectores_declara_el_punto_ciego_de_cada_uno(gtfs, bip_metro):
-    """Es el entregable conceptual: tres de los cuatro no necesitan fuente externa."""
+    """Es el entregable conceptual: tres de los cuatro no necesitan fuente externa.
+
+    El resultado del detector 3 se le pasa construido. La primera versión lo calculaba
+    dentro, leyendo los cinco Excel reales: la prueba pasaba en una máquina con los
+    archivos descargados y fallaba en integración continua.
+    """
     conciliado = conciliar(gtfs, bip_metro)
-    tabla = tabla_de_detectores(bip_metro, conciliado)
+    marcadas = pd.DataFrame([
+        {"tipo_local": "Estación de Metro", "nombre": "SOLITARIA",
+         "km_a_su_comuna": 12.0},
+    ])
+    tabla = tabla_de_detectores(bip_metro, conciliado, marcadas)
     assert len(tabla) == 4
     assert (tabla["ciego_a"].str.len() > 10).all()
     assert list(tabla["fuente_externa"]) == ["no", "no", "no", "sí"]
@@ -425,3 +434,12 @@ def test_una_estacion_sin_coordenada_no_revienta(tablas, gtfs, bip_metro):
     tabla = correspondencia(roto, buses)
     assert len(tabla) == len(gtfs)
     assert tabla["paradas_de_bus"].iloc[0] == 0
+
+
+def test_la_tabla_de_detectores_admite_un_detector_3_sin_hallazgos(gtfs, bip_metro):
+    """Sin filas marcadas por comuna, el detector informa cero y no falla."""
+    conciliado = conciliar(gtfs, bip_metro)
+    vacia = pd.DataFrame(columns=["tipo_local", "nombre", "km_a_su_comuna"])
+    tabla = tabla_de_detectores(bip_metro, conciliado, vacia)
+    tercero = tabla.loc[tabla["detector"].str.startswith("3.")].iloc[0]
+    assert tercero["hallazgos"] == 0

@@ -519,22 +519,34 @@ def detectar_contra_gtfs(
 
 
 def tabla_de_detectores(
-    bip_metro: pd.DataFrame, conciliado: pd.DataFrame
+    bip_metro: pd.DataFrame,
+    conciliado: pd.DataFrame,
+    marcadas_por_comuna: pd.DataFrame,
 ) -> pd.DataFrame:
     """Los cuatro detectores, lo que cada uno encuentra y a qué es ciego.
 
     Es el entregable conceptual del caso. La lectura que importa: **tres de los cuatro
     no necesitan ninguna fuente externa**, y el caso P01 solo corrió el primero.
+
+    Args:
+        bip_metro: las filas de Metro del Excel.
+        conciliado: salida de `conciliar`.
+        marcadas_por_comuna: salida de `detectar_contra_comuna`.
+
+    El tercer argumento se recibe en lugar de calcularse. La primera versión llamaba
+    aquí a `detectar_contra_comuna`, que lee los cinco Excel: una función de informe
+    con una lectura de disco escondida. Pasaba en esta máquina y fallaba en integración
+    continua, donde los archivos no se descargan, que es exactamente lo que la
+    convención del laboratorio pide evitar.
     """
     entre_filas = detectar_entre_filas(bip_metro)
     excede = (
         int((entre_filas["excede_el_umbral"] == "sí").sum())
         if not entre_filas.empty else 0
     )
-    metro_por_comuna = detectar_contra_comuna()
     metro_marcado = int(
-        (metro_por_comuna["tipo_local"] == bip.TIPOS["bip-metro"]).sum()
-    )
+        (marcadas_por_comuna["tipo_local"] == bip.TIPOS["bip-metro"]).sum()
+    ) if not marcadas_por_comuna.empty else 0
     contra_gtfs = detectar_contra_gtfs(conciliado)
     return pd.DataFrame([
         {
@@ -757,15 +769,16 @@ def analizar(feed: Path | None = None) -> dict[str, pd.DataFrame]:
     buses = paradas_de_bus(tablas)
     tabla = correspondencia(gtfs, buses)
 
+    por_comuna = detectar_contra_comuna()
     return {
         "resumen": resumen(conciliado, tabla, bip_metro),
         "grano": informe_de_grano(gtfs, bip_metro),
         "conciliacion": informe_de_conciliacion(conciliado),
         "criterios_discrepantes": criterios_discrepantes(conciliado),
-        "detectores": tabla_de_detectores(bip_metro, conciliado),
+        "detectores": tabla_de_detectores(bip_metro, conciliado, por_comuna),
         "detector_1_interno": detectar_discrepancia_interna(bip_metro),
         "detector_2_entre_filas": detectar_entre_filas(bip_metro),
-        "detector_3_contra_comuna": detectar_contra_comuna(),
+        "detector_3_contra_comuna": por_comuna,
         "detector_3_sensibilidad": sensibilidad_del_detector_de_comuna(),
         "detector_4_contra_gtfs": detectar_contra_gtfs(conciliado),
         "correspondencia": informe_de_correspondencia(tabla),

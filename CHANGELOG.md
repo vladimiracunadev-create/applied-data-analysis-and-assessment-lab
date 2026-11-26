@@ -6,6 +6,27 @@ Este proyecto usa [versionado semántico](https://semver.org/lang/es/).
 La **primera versión oficial es la 0.1.0**. Los prototipos anteriores no se consideran
 releases y no se publican como tales.
 
+## [0.9.1] — 2026-11-26
+
+### Corregido
+
+- **`tabla_de_detectores` de P10 leía los cinco Excel por su cuenta.** Una función de
+  informe con una lectura de disco escondida: llamaba a `detectar_contra_comuna()`, que
+  llama a `consolidar()`. Pasaba en una máquina con los archivos descargados y **falló
+  en integración continua** en los tres Python de la matriz y en el canario. Ahora
+  recibe la tabla del detector 3 como argumento, que `analizar` ya calculaba, de modo
+  que además deja de calcularla dos veces.
+
+  La prueba que debía cubrirlo tenía el mismo defecto heredado: se le pasa ahora una
+  tabla sintética, y se agregó una que comprueba el caso sin hallazgos.
+
+### Agregado
+
+- **La comprobación que faltaba en CONTRIBUTING**: cómo correr la suite sin los archivos
+  descargados, que es como corre en integración continua. Verificado que las 702
+  pruebas pasan con `data/original/` apartada. La corrección cuando falla es recibir la
+  tabla como argumento, no marcar la prueba como omitida.
+
 ## [0.9.0] — 2026-11-26
 
 ### Agregado
