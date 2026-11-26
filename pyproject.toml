@@ -1,6 +1,6 @@
 [project]
 name = "applied-data-analysis-and-assessment-lab"
-version = "0.5.0"
+version = "0.5.1"
 description = "Laboratorio profesional y genérico de análisis de datos, investigación aplicada y preparación de evaluaciones técnicas."
 readme = "README.md"
 requires-python = ">=3.11,<3.15"

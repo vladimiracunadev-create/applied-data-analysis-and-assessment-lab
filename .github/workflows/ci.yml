@@ -29,8 +29,41 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Preparar el entorno
-        run: uv sync --python ${{ matrix.python-version }}
+      # --locked, no --upgrade: falla si uv.lock está desincronizado de pyproject.toml,
+      # en lugar de resolver dependencias nuevas en silencio. Sin esto, cada cambio de
+      # versión del proyecto hacía que CI instalara versiones distintas de las
+      # probadas en local, y las pruebas fallaban por una obsolescencia que nadie
+      # había visto.
+      - name: Preparar el entorno (dependencias fijadas)
+        run: uv sync --locked --python ${{ matrix.python-version }}
+
+      - name: Generar los datos sintéticos
+        run: uv run python scripts/generate_data.py
+
+      - name: Ejecutar la suite de pruebas
+        run: uv run python -m pytest
+
+  # Canario de dependencias: resuelve las versiones más nuevas compatibles y corre la
+  # suite. El filtro de advertencias del proyecto convierte las obsolescencias de
+  # `lab.*` en errores, de modo que este trabajo avisa de un cambio en pandas antes de
+  # que rompa nada. No bloquea la publicación: informa.
+  dependencias-al-dia:
+    name: Canario de dependencias
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Resolver las versiones más nuevas compatibles
+        run: uv sync --upgrade
+
+      - name: Versiones instaladas
+        run: uv run python -c "import pandas, numpy; print('pandas', pandas.__version__); print('numpy', numpy.__version__)"
 
       - name: Generar los datos sintéticos
         run: uv run python scripts/generate_data.py
@@ -49,8 +82,8 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Preparar el entorno
-        run: uv sync
+      - name: Preparar el entorno (dependencias fijadas)
+        run: uv sync --locked
 
       - name: Generar los datos sintéticos
         run: uv run python scripts/generate_data.py

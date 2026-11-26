@@ -6,6 +6,40 @@ Este proyecto usa [versionado semántico](https://semver.org/lang/es/).
 La **primera versión oficial es la 0.1.0**. Los prototipos anteriores no se consideran
 releases y no se publican como tales.
 
+## [0.5.1] — 2026-11-26
+
+### Corregido
+
+- **La integración continua instalaba dependencias distintas de las probadas.** El paso
+  usaba `uv sync`, que vuelve a resolver cuando cambia el `pyproject.toml` —y cambia en
+  cada subida de versión—, de modo que CI traía versiones más nuevas que `uv.lock`. Dos
+  veces falló por una obsolescencia de pandas que nadie había visto en local. Ahora los
+  trabajos de prueba usan `uv sync --locked`, que **falla si el lockfile está
+  desincronizado** en lugar de resolver en silencio.
+- **`lab.calendars` usaba `DatetimeIndex.weekday`**, obsoleto en pandas 4, que el filtro
+  de advertencias del proyecto convierte en error. Reemplazado por `day_of_week`.
+
+### Agregado
+
+- **Canario de dependencias** en integración continua: un trabajo que resuelve las
+  versiones más nuevas compatibles y corre la suite. No bloquea la publicación
+  (`continue-on-error`), pero avisa de una obsolescencia antes de que rompa algo. Es el
+  mecanismo que faltaba para que la detección temprana no dependiera de que el
+  lockfile quedara desactualizado por accidente.
+
+### Cambiado
+
+- **README reescrito.** Antes abría con una definición abstracta del laboratorio y no
+  decía qué problema resuelve. Ahora abre con el problema concreto —datos ajenos con
+  encabezados corridos, claves que no son claves, horas que ninguna librería acepta,
+  indicadores con reglas en una nota al pie—, una tabla de **por dónde entrar** según
+  lo que uno necesite, y los seis casos con **lo que cada uno encontró** en lugar de
+  una lista de características.
+- **Nuevo [índice de la documentación](docs/README.md)**, organizado por lo que el
+  lector viene a hacer: prepararse para una evaluación, resolver un problema, aprender,
+  o entender el estado real del repositorio. Incluye las cuatro convenciones que
+  explican por qué algunos párrafos dicen «no se verificó» en lugar de callarlo.
+
 ## [0.5.0] — 2026-11-26
 
 Resuelve el problema **P11**: reconstruir el calendario de medición de un indicador

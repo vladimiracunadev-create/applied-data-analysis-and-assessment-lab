@@ -124,7 +124,7 @@ def weekends(weekdays_off: Sequence[int] = FIN_DE_SEMANA, source: str = "") -> D
     return DayRule(
         name="fin_de_semana",
         description=f"Solo días laborales: se excluyen {nombres}",
-        exclude=lambda f: np.isin(f.weekday, dias),
+        exclude=lambda f: np.isin(f.day_of_week, dias),
         source=source,
     )
 
@@ -219,7 +219,7 @@ def weeks_containing(dates: Iterable[date | str], name: str, description: str,
     semanas: list[tuple[pd.Timestamp, pd.Timestamp]] = []
     for valor in dates:
         ancla = pd.Timestamp(valor).normalize()
-        desplazamiento = (ancla.weekday() - week_start) % 7
+        desplazamiento = (ancla.day_of_week - week_start) % 7
         inicio = ancla - pd.Timedelta(days=desplazamiento)
         semanas.append((inicio, inicio + pd.Timedelta(days=6)))
 
@@ -304,8 +304,8 @@ def build_calendar(
         "anio": fechas.year,
         "mes": fechas.month,
         "dia": fechas.day,
-        "dia_semana": fechas.weekday,
-        "nombre_dia": [NOMBRES_DIA[d] for d in fechas.weekday],
+        "dia_semana": fechas.day_of_week,
+        "nombre_dia": [NOMBRES_DIA[d] for d in fechas.day_of_week],
     })
     excluido = np.zeros(len(fechas), dtype=bool)
     for regla in rules:
