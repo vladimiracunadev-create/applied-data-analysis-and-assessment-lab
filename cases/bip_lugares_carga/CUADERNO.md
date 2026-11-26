@@ -2,6 +2,8 @@
 
 [Todos los cuadernos](../../docs/cuadernos.md) · [P08 · El cruce que no tiene clave](../cobertura_de_carga/README.md) ▶
 
+[![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/bip_lugares_carga/cuaderno/colab.ipynb) — corre los pasos sin instalar nada: el cuaderno clona el repositorio y descarga los datos del portal.
+
 > **¿Cuántos lugares de carga de la tarjeta bip! hay, dónde están, y qué identifica a cada uno?**
 
 ## 1 · El problema
@@ -96,9 +98,10 @@ obvia, que es la parte que no está en ningún tutorial y la que se pregunta en 
 
 | Archivo | Qué es |
 | --- | --- |
-| [`caso-completo.zip`](cuaderno/caso-completo.zip) | **todo el caso en un ZIP**: el cuaderno, el script, el libro de Excel y las figuras |
+| [`P01-caso-completo.zip`](cuaderno/P01-caso-completo.zip) | **todo el caso en un ZIP**: el cuaderno, el script, el libro de Excel y las figuras |
 | [`pasos.py`](cuaderno/pasos.py) | los 12 pasos seguidos. Se corre y muestra cada salida |
-| [`practica.xlsx`](cuaderno/practica.xlsx) | las fórmulas y **el resultado que deben dar**, para corregirse solo |
+| [`practica.xlsx`](cuaderno/practica.xlsx) | las fórmulas y **el resultado que deben dar**, para corregirse solo. Se abre igual en Google Sheets |
+| [`colab.ipynb`](cuaderno/colab.ipynb) | el cuaderno **ejecutable en Colab**: clona, descarga los datos del portal y corre los 12 pasos |
 
 ---
 
@@ -217,6 +220,8 @@ p01.informe_de_esquemas(hojas)
 
 `=COINCIDIR(A1;$B$1:$B$10;0)` da `#N/D` donde el campo no existe.
 
+**En Google Sheets:** la misma fórmula, sin cambios.
+
 > **La trampa.** Una columna trae un **espacio al final del nombre**. Es invisible, y un renombrado por igualdad exacta falla sin error: la columna queda fuera del esquema.
 
 [↑ volver al recorrido](#2--la-solución-que-se-va-a-aplicar)
@@ -314,6 +319,8 @@ Medirlo cuesta una línea, y hay que hacerlo antes de cruzar.
 
 Debe dar: **136 filas con código repetido, de 1 928**
 
+**En Google Sheets:** la misma fórmula, sin cambios.
+
 > **La trampa.** En el archivo de Metro el código es la **línea** (`L1`, `L5`), no el local: 143 estaciones con 7 códigos. Y tampoco sirve `archivo + código`.
 
 [↑ volver al recorrido](#2--la-solución-que-se-va-a-aplicar)
@@ -344,6 +351,8 @@ Debe dar: **136 filas con código repetido, de 1 928**
 `=MAYUSC(ESPACIOS(B2))` cubre mayúsculas y espacios. Las tildes, con `SUSTITUIR` anidado una por vocal.
 
 Debe dar: **4 valores crudos, 3 normalizados**
+
+**En Google Sheets:** la misma fórmula, sin cambios.
 
 > **La trampa.** Guardar **las dos** formas: la clave para agrupar y la etiqueta para mostrar. Con solo la clave, el informe dice `NUNOA` en vez de `Ñuñoa`.
 
@@ -383,6 +392,8 @@ p01.por_comuna(consolidado)
 
 Debe dar: **Maipú 157, Santiago 148, Las Condes 104**
 
+**En Google Sheets:** la misma fórmula, sin cambios.
+
 > **La trampa.** `groupby` **descarta los nulos de la clave** sin avisar, y el total deja de sumar las filas. Con `dropna=False` aparecen como grupo propio.
 
 [↑ volver al recorrido](#2--la-solución-que-se-va-a-aplicar)
@@ -418,6 +429,8 @@ def cobertura(tabla):
 `=CONTAR.SI(F2:F1929;"?*")/FILAS(F2:F1929)`, en formato porcentaje.
 
 Debe dar: **18,10 % sobre las 1 928 filas · 18,06 % sobre las 1 927 abiertas**
+
+**En Google Sheets:** la misma fórmula, sin cambios.
 
 > **La trampa.** Dos trampas en el mismo paso. Una: `CONTARA` y `CONTAR.SI(...;"<>")` cuentan como no vacía una celda con **fórmula que devuelve cadena vacía**, de modo que una columna traída por una consulta da 100 % estando vacía; `"?*"` exige al menos un carácter. Otra: el **denominador es una decisión**. 18,10 % y 18,06 % son la misma medición sobre dos poblaciones distintas, y hay que decir cuál se publica.
 
@@ -472,6 +485,8 @@ Y el histograma: topes en `P1:P6`, y `=FRECUENCIA(N2:N1929;P1:P6)` seleccionando
 
 Debe dar: **109 filas bajo 10 m y 1 768 entre 58 y 62 m**
 
+**En Google Sheets:** la misma fórmula, sin cambios.
+
 > **La trampa.** La media y los percentiles 50, 90 y 99 **esconden el hallazgo**: los tres caen en 61 m y parece un desvío único con tres atípicos. El histograma muestra **dos grupos**, que es la firma de dos datums distintos y no de un redondeo. Un resumen de cinco números no los distingue.
 
 [↑ volver al recorrido](#2--la-solución-que-se-va-a-aplicar)
@@ -505,6 +520,8 @@ p01.coordenadas_sospechosas(consolidado)[
 Con el desvío en N: `=SI(N2>200;"revisar";"")` y autofiltro.
 
 Debe dar: **3 filas, con desvíos de 893 m a 10,3 km**
+
+**En Google Sheets:** la misma fórmula, sin cambios.
 
 > **La trampa.** El umbral es una **decisión** y se escribe con su motivo. Elegirlo después de ver los datos, para que el número de hallazgos quede cómodo, es el resultado disfrazado de criterio.
 

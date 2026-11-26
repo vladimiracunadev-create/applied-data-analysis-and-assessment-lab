@@ -46,14 +46,16 @@ if str(ROOT) not in sys.path:
 
 from lab.console import enable_utf8  # noqa: E402
 from lab.cuaderno import (  # noqa: E402
+    ARCHIVO_IPYNB,
     ARCHIVO_PY,
     ARCHIVO_XLSX,
-    ARCHIVO_ZIP,
     CARPETA,
     ejecutar,
+    escribir_colab,
     escribir_pasos_py,
     escribir_practica_xlsx,
     escribir_zip,
+    nombre_zip,
     render,
 )
 
@@ -115,7 +117,7 @@ def construir(slug: str, artefactos: bool = True) -> tuple[Path, str, list[str]]
     if artefactos:
         svg.mkdir(parents=True, exist_ok=True)
 
-    documento = render(cuaderno, carpeta=svg if artefactos else None)
+    documento = render(cuaderno, carpeta=svg if artefactos else None, slug=slug)
     destino = carpeta_caso / NOMBRE_SALIDA
     escritos: list[str] = []
     if artefactos:
@@ -124,13 +126,16 @@ def construir(slug: str, artefactos: bool = True) -> tuple[Path, str, list[str]]
         escritos.append(f"{CARPETA}/{ARCHIVO_PY}")
         escribir_practica_xlsx(cuaderno, salidas, carpeta / ARCHIVO_XLSX)
         escritos.append(f"{CARPETA}/{ARCHIVO_XLSX}")
+        escribir_colab(cuaderno, salidas, slug, carpeta / ARCHIVO_IPYNB)
+        escritos.append(f"{CARPETA}/{ARCHIVO_IPYNB}")
         escritos.extend(
             f"{CARPETA}/svg/{ruta.name}" for ruta in sorted(svg.glob("*.svg"))
         )
         # El documento se escribe antes del ZIP, para que el ZIP lo lleve dentro.
         destino.write_text(documento, encoding="utf-8")
-        escribir_zip(cuaderno, carpeta_caso, carpeta / ARCHIVO_ZIP)
-        escritos.append(f"{CARPETA}/{ARCHIVO_ZIP}")
+        zip_nombre = nombre_zip(cuaderno.caso)
+        escribir_zip(cuaderno, carpeta_caso, carpeta / zip_nombre)
+        escritos.append(f"{CARPETA}/{zip_nombre}")
     return destino, documento, escritos
 
 

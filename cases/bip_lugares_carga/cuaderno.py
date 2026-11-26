@@ -629,6 +629,7 @@ def construir() -> Cuaderno:
             "ESQUEMA = list(p01.ESQUEMA)"
         ),
         columnas_excel=COLUMNAS,
+        fuentes_datos="bip-metro bip-puntos bip-centros-alto-estandar bip-centros-estandar bip-retail",
         problema=PROBLEMA,
         solucion=SOLUCION,
         flujo=FLUJO,

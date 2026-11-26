@@ -75,7 +75,14 @@ line-length = 100
 target-version = "py311"
 # Los pasos.py de los cuadernos son GENERADOS por scripts/build_cuadernos.py: se
 # revisa el generador, no su salida.
-exclude = [".venv", "notebooks", "cases/*/cuaderno/pasos.py"]
+# Los artefactos de los cuadernos son GENERADOS por scripts/build_cuadernos.py: se
+# revisa el generador, no su salida.
+exclude = [
+    ".venv",
+    "notebooks",
+    "cases/*/cuaderno/pasos.py",
+    "cases/*/cuaderno/colab.ipynb",
+]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP", "B", "C4", "SIM"]

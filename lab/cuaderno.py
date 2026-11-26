@@ -84,8 +84,20 @@ ARCHIVO_PY = "pasos.py"
 #: datos de terceros**: quien practica pega el consolidado que obtuvo él mismo.
 ARCHIVO_XLSX = "practica.xlsx"
 
-#: Un ZIP con todo el contenido del caso, para llevárselo de una vez.
-ARCHIVO_ZIP = "caso-completo.zip"
+#: El cuaderno ejecutable para Google Colab. Mismo contenido que el documento, en celdas.
+ARCHIVO_IPYNB = "colab.ipynb"
+
+#: Repositorio público, para el botón de Colab y el clonado del cuaderno ejecutable.
+REPO = "vladimiracunadev-create/applied-data-analysis-and-assessment-lab"
+
+#: Plantilla del ZIP con todo el contenido del caso. Lleva el código del problema en
+#: el nombre para que, descargado entre otros, se reconozca de qué caso es.
+PLANTILLA_ZIP = "{caso}-caso-completo.zip"
+
+
+def nombre_zip(caso: str) -> str:
+    """El nombre del ZIP de un caso, por ejemplo `P01-caso-completo.zip`."""
+    return PLANTILLA_ZIP.format(caso=caso)
 
 #: El índice de todos los cuadernos, al que apunta la navegación de cada uno.
 INDICE = "../../docs/cuadernos.md"
@@ -117,6 +129,9 @@ class Paso:
             permite que la hoja de práctica corrija por su cuenta.
         hoja: fragmento de hoja de cálculo a dibujar, con la fórmula en su celda. Una
             fórmula en prosa no dice dónde va ni sobre qué rango opera; dibujada, sí.
+        sheets: qué cambia en Google Sheets. **Solo cuando cambia**: la mayoría de las
+            funciones se llaman igual, y repetir la misma fórmula dos veces hace creer
+            que son distintas. Si está vacío, el cuaderno dice que es idéntica.
     """
 
     titulo: str
@@ -132,6 +147,7 @@ class Paso:
     formula_excel: str = ""
     esperado: str = ""
     hoja: Hoja | None = None
+    sheets: str = ""
 
 
 @dataclass
@@ -149,6 +165,9 @@ class Cuaderno:
     #: Líneas de importación que `pasos.py` necesita para correr por su cuenta. Se
     #: escriben una vez por caso en lugar de repetirlas en cada paso.
     importes: str = ""
+    #: Fuentes que `scripts/fetch_data.py` debe descargar para que el cuaderno de
+    #: Colab corra. Sin esto, la celda de preparación no descarga nada.
+    fuentes_datos: str = ""
     #: Encabezados de la hoja donde se pega el consolidado, en su orden. Son los que
     #: hacen que las referencias de las fórmulas —`A2`, `$E$2:$E$1929`— sean correctas.
     columnas_excel: tuple[str, ...] = ()
@@ -320,7 +339,8 @@ def _enlace(par: tuple[str, str] | None) -> str:
     return f"[{texto}]({ruta})"
 
 
-def render(cuaderno: Cuaderno, carpeta: Path | None = None) -> str:
+def render(cuaderno: Cuaderno, carpeta: Path | None = None,
+           slug: str = "") -> str:
     """El cuaderno completo como documento de Markdown.
 
     El orden no es casual. Primero **el problema**, porque sin él los pasos son
@@ -341,6 +361,12 @@ def render(cuaderno: Cuaderno, carpeta: Path | None = None) -> str:
         _enlace(cuaderno.siguiente) and f"{_enlace(cuaderno.siguiente)} ▶",
     ]
     escribir(" · ".join(parte for parte in navegacion if parte) + "\n\n")
+    if slug:
+        escribir(
+            "[![Abrir en Colab](https://colab.research.google.com/assets/"
+            f"colab-badge.svg)]({url_colab(slug)}) — corre los pasos sin instalar "
+            "nada: el cuaderno clona el repositorio y descarga los datos del portal.\n\n"
+        )
     escribir(f"> **{cuaderno.pregunta}**\n\n")
 
     # -------------------------------------------------------------------- el problema
@@ -375,7 +401,8 @@ def render(cuaderno: Cuaderno, carpeta: Path | None = None) -> str:
     escribir("### Para trabajar\n\n")
     escribir("| Archivo | Qué es |\n| --- | --- |\n")
     escribir(
-        f"| [`{ARCHIVO_ZIP}`]({CARPETA}/{ARCHIVO_ZIP}) "
+        f"| [`{nombre_zip(cuaderno.caso)}`]"
+        f"({CARPETA}/{nombre_zip(cuaderno.caso)}) "
         "| **todo el caso en un ZIP**: el cuaderno, el script, el libro de Excel y "
         "las figuras |\n"
     )
@@ -385,8 +412,15 @@ def render(cuaderno: Cuaderno, carpeta: Path | None = None) -> str:
     )
     escribir(
         f"| [`{ARCHIVO_XLSX}`]({CARPETA}/{ARCHIVO_XLSX}) "
-        "| las fórmulas y **el resultado que deben dar**, para corregirse solo |\n"
+        "| las fórmulas y **el resultado que deben dar**, para corregirse solo. "
+        "Se abre igual en Google Sheets |\n"
     )
+    if slug:
+        escribir(
+            f"| [`{ARCHIVO_IPYNB}`]({CARPETA}/{ARCHIVO_IPYNB}) "
+            "| el cuaderno **ejecutable en Colab**: clona, descarga los datos del "
+            f"portal y corre los {len(salidas)} pasos |\n"
+        )
     escribir("\n---\n\n")
 
     # ------------------------------------------------------------------------ los pasos
@@ -412,6 +446,10 @@ def render(cuaderno: Cuaderno, carpeta: Path | None = None) -> str:
         escribir(f"{paso.excel}\n\n")
         if paso.esperado:
             escribir(f"Debe dar: **{paso.esperado}**\n\n")
+        if paso.sheets:
+            escribir(f"**En Google Sheets:** {paso.sheets}\n\n")
+        elif paso.formula_excel:
+            escribir("**En Google Sheets:** la misma fórmula, sin cambios.\n\n")
         if paso.trampa:
             cuerpo_trampa = paso.trampa.strip().replace("\n\n", "\n>\n> ")
             escribir(f"> **La trampa.** {cuerpo_trampa}\n\n")
@@ -648,5 +686,134 @@ def escribir_practica_xlsx(cuaderno: Cuaderno, salidas: list[Salida],
         # Las fórmulas son el CONTENIDO de este libro: evaluadas sobre una hoja vacía
         # darían 0, y lo que hace falta es poder leerlas y copiarlas.
         strings_to_formulas=False,
+    )
+    return destino
+
+
+def url_colab(slug: str) -> str:
+    """El enlace que abre el cuaderno ejecutable de un caso directamente en Colab."""
+    return (
+        f"https://colab.research.google.com/github/{REPO}/blob/main/"
+        f"cases/{slug}/{CARPETA}/{ARCHIVO_IPYNB}"
+    )
+
+
+def _celda(tipo: str, texto: str) -> dict[str, Any]:
+    """Una celda de notebook. Las líneas van con su salto, como pide el formato."""
+    lineas = texto.splitlines(keepends=True)
+    celda: dict[str, Any] = {
+        "cell_type": tipo,
+        "metadata": {},
+        "source": lineas,
+    }
+    if tipo == "code":
+        celda["execution_count"] = None
+        celda["outputs"] = []
+    return celda
+
+
+def escribir_colab(cuaderno: Cuaderno, salidas: list[Salida], slug: str,
+                   destino: Path) -> Path:
+    """Escribe el cuaderno ejecutable para Google Colab.
+
+    Qué lleva
+        El mismo contenido del documento, en celdas: el problema, el plan, y por cada
+        paso una celda de texto con el objetivo, la fórmula de Excel y la trampa, más
+        una celda de código con el paso.
+
+    Por qué la primera celda clona y descarga
+        En Colab no hay repositorio ni datos. La celda de preparación clona el
+        repositorio público e invoca `scripts/fetch_data.py`, que **descarga los
+        archivos desde el portal de datos abiertos**, no de aquí: el laboratorio no
+        redistribuye datos de terceros, y en Colab tampoco.
+
+        Eso hace que el cuaderno corra de principio a fin sin instalar nada en la
+        máquina de quien estudia, que es la única razón de que exista esta versión.
+    """
+    import json
+
+    cabecera = (
+        f"# {cuaderno.caso} · {cuaderno.titulo}\n"
+        f"\n> **{cuaderno.pregunta}**\n"
+        f"\n{cuaderno.datos}\n"
+        f"\nEste cuaderno corre de principio a fin en Colab. La explicación completa, "
+        f"con las hojas de Excel dibujadas, está en "
+        f"[CUADERNO.md](https://github.com/{REPO}/blob/main/cases/{slug}/CUADERNO.md).\n"
+        f"\n*Generado por `scripts/build_cuadernos.py`. No editar a mano: los cambios se "
+        f"pierden al regenerar.*\n"
+    )
+
+    preparacion = (
+        "# Preparación: clona el repositorio y descarga los datos públicos.\n"
+        "# Los datos NO vienen del repositorio: se descargan del portal de datos\n"
+        "# abiertos, porque el laboratorio no redistribuye datos de terceros.\n"
+        f"!git clone --depth 1 https://github.com/{REPO}.git lab-dtpm\n"
+        "%cd lab-dtpm\n"
+        "!pip install --quiet 'pandas>=2.2' 'numpy>=1.26' openpyxl XlsxWriter matplotlib\n"
+        f"!python scripts/fetch_data.py {cuaderno.fuentes_datos or ''}\n"
+    )
+
+    celdas = [
+        _celda("markdown", cabecera),
+        _celda("code", preparacion),
+    ]
+    if cuaderno.problema:
+        celdas.append(_celda("markdown", "## 1 · El problema\n\n"
+                             + cuaderno.problema.strip() + "\n"))
+    if cuaderno.solucion:
+        celdas.append(_celda("markdown", "## 2 · La solución que se va a aplicar\n\n"
+                             + cuaderno.solucion.strip() + "\n"))
+
+    importes = cuaderno.importes.strip()
+    if importes:
+        celdas.append(_celda(
+            "code",
+            "import sys\nfrom pathlib import Path\n\n"
+            "ROOT = Path.cwd()\n"
+            "if str(ROOT) not in sys.path:\n    sys.path.insert(0, str(ROOT))\n\n"
+            + importes + "\n\n"
+            "pd.set_option('display.width', 140)\n"
+            "pd.set_option('display.max_columns', 30)\n",
+        ))
+
+    celdas.append(_celda("markdown", "## 3 · Los pasos\n"))
+    for salida in salidas:
+        paso = salida.paso
+        texto = [f"### Paso {salida.numero} · {paso.titulo}\n", "", paso.objetivo, ""]
+        if paso.formula_excel:
+            texto += [f"**En Excel:** `{paso.formula_excel}`", ""]
+            if paso.esperado:
+                texto += [f"Debe dar: **{paso.esperado}**", ""]
+        if paso.sheets:
+            texto += [f"**En Google Sheets:** {paso.sheets}", ""]
+        elif paso.formula_excel:
+            texto += ["**En Google Sheets:** la misma fórmula, sin cambios.", ""]
+        if paso.trampa:
+            texto += [f"> ⚠️ {paso.trampa}", ""]
+        celdas.append(_celda("markdown", "\n".join(texto)))
+        celdas.append(_celda("code", paso.pandas.strip() + "\n"))
+
+    cierre = []
+    if cuaderno.cierre:
+        cierre.append("## 4 · El resultado\n\n" + cuaderno.cierre.strip())
+    if cuaderno.aprendizajes:
+        lista = "\n".join(f"{n}. {a}" for n, a in enumerate(cuaderno.aprendizajes, 1))
+        cierre.append("## 5 · Qué queda aprendido\n\n" + lista)
+    if cierre:
+        celdas.append(_celda("markdown", "\n\n".join(cierre) + "\n"))
+
+    notebook = {
+        "cells": celdas,
+        "metadata": {
+            "colab": {"provenance": [], "toc_visible": True},
+            "kernelspec": {"display_name": "Python 3", "name": "python3"},
+            "language_info": {"name": "python"},
+        },
+        "nbformat": 4,
+        "nbformat_minor": 0,
+    }
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    destino.write_text(
+        json.dumps(notebook, ensure_ascii=False, indent=1) + "\n", encoding="utf-8"
     )
     return destino

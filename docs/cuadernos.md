@@ -20,7 +20,7 @@ sirve para auditar el resultado.
 | P03 · Validación cruzada de coordenadas | pendiente | [`correspondencia_metro`](../cases/correspondencia_metro/README.md) |
 | P04 · Normalizar comuna y entidad para agrupar | [dentro del de P01, paso 8](../cases/bip_lugares_carga/CUADERNO.md) | [`bip_lugares_carga`](../cases/bip_lugares_carga/README.md) |
 | P05 · Interpretar horarios escritos en texto libre | pendiente | [`carga_nocturna`](../cases/carga_nocturna/README.md) |
-| P06 · Expediciones por hora en un día laboral | pendiente | [`gtfs_red_movilidad`](../cases/gtfs_red_movilidad/README.md) |
+| P06 · Expediciones por hora en un día laboral | [**abrir**](../cases/gtfs_red_movilidad/CUADERNO.md) | [`gtfs_red_movilidad`](../cases/gtfs_red_movilidad/README.md) |
 | P07 · ¿Cuándo conviene dejar Pandas? | pendiente · falta el análisis | — |
 | P08 · Distancia de cada parada al lugar de carga | pendiente | [`cobertura_de_carga`](../cases/cobertura_de_carga/README.md) |
 | P09 · Cobertura de carga en el servicio nocturno | pendiente | [`carga_nocturna`](../cases/carga_nocturna/README.md) |
@@ -32,7 +32,7 @@ sirve para auditar el resultado.
 | P15 · Evolución de la oferta programada por año | pendiente · falta el análisis | — |
 | P16 · Informe de una página para quien decide | pendiente · falta el análisis | — |
 
-**1 de 16 cuadernos propios**, más 2 problemas
+**2 de 16 cuadernos propios**, más 2 problemas
 cubiertos dentro del cuaderno de otro. Los problemas sin caso necesitan el
 análisis además del cuaderno. El estado detallado de cada uno, con lo que
 enseña y lo que no se puede contestar, está en el

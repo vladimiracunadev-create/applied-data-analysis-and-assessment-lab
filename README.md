@@ -1,4 +1,12 @@
+<img src="assets/logo.svg" alt="" width="84" align="left" hspace="18" vspace="4">
+
 # Applied Data Analysis and Assessment Lab
+
+**Datos reales, problemas reales, resueltos paso a paso.** Cada caso trae el código de
+Python con su salida real, la fórmula de Excel dibujada en su hoja, las trampas de
+hacerlo de la forma obvia, y lo que los datos **no** permiten concluir.
+
+<br clear="left">
 
 ![Applied Data Analysis and Assessment Lab](assets/banner.svg)
 
@@ -7,6 +15,7 @@
 ![Python 3.11–3.14](https://img.shields.io/badge/Python-3.11%E2%80%933.14-3776AB)
 ![Licencia MIT](https://img.shields.io/badge/licencia-MIT-147D70)
 ![702 pruebas](https://img.shields.io/badge/pruebas-702-147D70)
+[![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/bip_lugares_carga/cuaderno/colab.ipynb)
 
 ---
 
