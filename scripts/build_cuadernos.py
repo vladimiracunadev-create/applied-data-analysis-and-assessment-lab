@@ -38,7 +38,15 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from lab.console import enable_utf8  # noqa: E402
-from lab.cuaderno import render  # noqa: E402
+from lab.cuaderno import (  # noqa: E402
+    ARCHIVO_PY,
+    ARCHIVO_XLSX,
+    CARPETA,
+    ejecutar,
+    escribir_pasos_py,
+    escribir_practica_xlsx,
+    render,
+)
 
 NOMBRE_SALIDA = "CUADERNO.md"
 
@@ -51,16 +59,37 @@ def casos_con_cuaderno() -> list[str]:
     )
 
 
-def construir(slug: str) -> tuple[Path, str]:
-    """Genera el cuaderno de un caso y devuelve su ruta y su contenido."""
+def construir(slug: str, artefactos: bool = True) -> tuple[Path, str, list[str]]:
+    """Genera el cuaderno de un caso, sus figuras y sus artefactos descargables.
+
+    Returns:
+        La ruta del `CUADERNO.md`, su contenido, y los nombres de los artefactos
+        escritos junto a él.
+    """
     modulo = importlib.import_module(f"cases.{slug}.cuaderno")
     if not hasattr(modulo, "construir"):
         raise AttributeError(
             f"cases/{slug}/cuaderno.py no define construir(); "
             "tiene que devolver un lab.cuaderno.Cuaderno"
         )
-    documento = render(modulo.construir())
-    return ROOT / "cases" / slug / NOMBRE_SALIDA, documento
+    cuaderno = modulo.construir()
+    carpeta = ROOT / "cases" / slug / CARPETA
+    svg = carpeta / "svg"
+    if artefactos:
+        svg.mkdir(parents=True, exist_ok=True)
+
+    documento = render(cuaderno, carpeta=svg if artefactos else None)
+    escritos: list[str] = []
+    if artefactos:
+        salidas = ejecutar(cuaderno, carpeta=svg)
+        escribir_pasos_py(cuaderno, salidas, carpeta / ARCHIVO_PY)
+        escritos.append(f"{CARPETA}/{ARCHIVO_PY}")
+        escribir_practica_xlsx(cuaderno, salidas, carpeta / ARCHIVO_XLSX)
+        escritos.append(f"{CARPETA}/{ARCHIVO_XLSX}")
+        escritos.extend(
+            f"{CARPETA}/svg/{ruta.name}" for ruta in sorted(svg.glob("*.svg"))
+        )
+    return ROOT / "cases" / slug / NOMBRE_SALIDA, documento, escritos
 
 
 def main() -> int:
@@ -80,7 +109,9 @@ def main() -> int:
 
     desfasados: list[str] = []
     for slug in seleccion:
-        destino, documento = construir(slug)
+        # Con --check no se escriben artefactos: solo se comprueba que el documento
+        # siga siendo el que el código produce.
+        destino, documento, escritos = construir(slug, artefactos=not argumentos.check)
         relativo = destino.relative_to(ROOT).as_posix()
         if argumentos.check:
             actual = destino.read_text(encoding="utf-8") if destino.exists() else ""
@@ -93,6 +124,8 @@ def main() -> int:
         destino.write_text(documento, encoding="utf-8")
         pasos = documento.count("\n## Paso ")
         print(f"escrito {relativo}  ({pasos} pasos, {len(documento):,} caracteres)")
+        for artefacto in escritos:
+            print(f"        + cases/{slug}/{artefacto}")
 
     if desfasados:
         print(

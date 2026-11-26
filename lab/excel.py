@@ -115,6 +115,7 @@ def write_workbook(
     title: str = "",
     source: str = "",
     include_index: bool = True,
+    strings_to_formulas: bool = True,
 ) -> Path:
     """Escribe un libro con presentación profesional y hoja índice.
 
@@ -124,6 +125,10 @@ def write_workbook(
         title: título del trabajo, mostrado en el índice.
         source: procedencia de los datos, mostrada en el índice.
         include_index: si se agrega la hoja `00_indice`.
+        strings_to_formulas: por omisión, un texto que empieza por `=` se escribe como
+            **fórmula**, que es lo que quiere un libro de resultados. Con `False` se
+            escribe como texto, que es lo que quiere un libro donde las fórmulas son
+            el contenido a leer y copiar: evaluadas sobre una hoja vacía darían `0`.
 
     Returns:
         La ruta escrita.
@@ -140,8 +145,11 @@ def write_workbook(
     destination = Path(path)
     destination.parent.mkdir(parents=True, exist_ok=True)
 
-    with pd.ExcelWriter(destination, engine="xlsxwriter",
-                        datetime_format=NUMBER_FORMATS["fecha_hora"]) as writer:
+    with pd.ExcelWriter(
+        destination, engine="xlsxwriter",
+        datetime_format=NUMBER_FORMATS["fecha_hora"],
+        engine_kwargs={"options": {"strings_to_formulas": strings_to_formulas}},
+    ) as writer:
         book = writer.book
         styles = _build_styles(book)
         if include_index:

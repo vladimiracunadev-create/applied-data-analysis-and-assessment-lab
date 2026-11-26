@@ -1,17 +1,18 @@
 """Cuaderno de trabajo de P01: los pasos, en Pandas y en Excel.
 
-Declara los pasos y el espacio de nombres sobre el que corren. El documento se genera
-con `python scripts/build_cuadernos.py` y queda en `CUADERNO.md`, junto a este archivo.
+Declara los pasos y el espacio de nombres sobre el que corren. Se genera con
+`python scripts/build_cuadernos.py` y produce, junto a este archivo:
 
-El rango de Excel que se usa en las fórmulas supone el consolidado pegado en una hoja
-con encabezado en la fila 1 y los datos en las filas 2 a 1929, con las diez columnas del
-esquema común en este orden:
+    CUADERNO.md              el documento, para leer
+    cuaderno/pasos.py        el código seguido, para correr
+    cuaderno/practica.xlsx   las fórmulas y el resultado que deben dar
+    cuaderno/svg/            las figuras
+
+Las fórmulas suponen el consolidado pegado con encabezado en la fila 1 y los datos en
+las filas 2 a 1929, con las diez columnas del esquema en este orden:
 
     A codigo · B entidad · C nombre · D direccion · E comuna · F horario
     G este · H norte · I latitud · J longitud
-
-Ese libro se obtiene con `python scripts/export_inputs.py` o copiando la salida de
-`consolidar()`.
 """
 
 from __future__ import annotations
@@ -29,30 +30,44 @@ from cases.bip_lugares_carga import solution as p01  # noqa: E402
 from lab.cuaderno import Cuaderno, Paso  # noqa: E402
 from lab.excel import detect_header_row, read_all_sheets, sheet_names  # noqa: E402
 from lab.geo import haversine_km, utm_to_latlon  # noqa: E402
+from lab.hoja_svg import Columna, Hoja  # noqa: E402
 from lab.textual import normalize_key  # noqa: E402
+from lab.viz import bar_chart, histogram  # noqa: E402
 
-#: Última fila de datos en la hoja de Excel, para que las fórmulas del cuaderno sean
-#: copiables tal cual. 1 928 filas de datos más el encabezado.
-ULTIMA_FILA = 1929
+#: Última fila de datos en la hoja, para que las fórmulas se copien tal cual.
+FIN = 1929
+
+#: Columnas de la hoja donde se pega el consolidado, en su orden.
+COLUMNAS = (
+    "codigo", "entidad", "nombre", "direccion", "comuna", "horario",
+    "este", "norte", "latitud", "longitud",
+)
+
+
+#: Las columnas del fragmento que se dibuja, con su ancho. Se declaran una vez para
+#: que todos los pasos muestren la misma hoja y se reconozca de paso en paso.
+COL_A = Columna("A", "codigo", 84)
+COL_B = Columna("B", "entidad", 100)
+COL_E = Columna("E", "comuna", 116)
+COL_F = Columna("F", "horario", 150)
+COL_I = Columna("I", "latitud", 92)
+COL_J = Columna("J", "longitud", 96)
 
 
 def construir() -> Cuaderno:
-    """El cuaderno de P01, con los objetos que sus pasos necesitan."""
-    # Se usan dos archivos como ejemplo: el de retail, que es el único con hoja de
-    # cerrados, y el de Metro, cuyo encabezado está en la fila 7.
-    ruta_retail = p01.ORIGINAL / "bip-retail.xlsx"
-    ruta_metro = p01.ORIGINAL / "bip-metro.xlsx"
+    """El cuaderno de P01."""
     contexto = {
         "p01": p01,
-        "ruta_retail": ruta_retail,
-        "ruta_metro": ruta_metro,
         "ORIGINAL": p01.ORIGINAL,
+        "ruta_metro": p01.ORIGINAL / "bip-metro.xlsx",
         "sheet_names": sheet_names,
         "detect_header_row": detect_header_row,
         "read_all_sheets": read_all_sheets,
         "normalize_key": normalize_key,
         "utm_to_latlon": utm_to_latlon,
         "haversine_km": haversine_km,
+        "bar_chart": bar_chart,
+        "histogram": histogram,
         "ESQUEMA": list(p01.ESQUEMA),
         "pd": pd,
     }
@@ -61,164 +76,157 @@ def construir() -> Cuaderno:
         Paso(
             titulo="Mirar el archivo antes de leerlo",
             objetivo=(
-                "Un `read_excel` directo sobre uno de estos archivos devuelve basura, y "
-                "conviene saber por qué antes de que pase. Lo primero es cuántas hojas "
-                "hay y cómo se llaman. En el archivo de retail hay **dos**, y la segunda "
-                "describe locales fuera de servicio: si se leen juntas quedan contados "
-                "como abiertos."
+                "Cuántas hojas tiene cada archivo y cómo se llaman. Uno tiene dos, y la "
+                "segunda son locales **fuera de servicio**."
             ),
             pandas=(
                 "{archivo.stem: sheet_names(archivo)\n"
                 " for archivo in sorted(ORIGINAL.glob('bip-*.xlsx'))}"
             ),
-            excel=(
-                "Abrir el archivo y mirar las pestañas de abajo. Es el único paso del "
-                "cuaderno donde Excel es mejor herramienta que Pandas: la estructura se "
-                "ve de un vistazo."
-            ),
+            excel="Abrir el archivo y mirar las pestañas. Aquí Excel gana.",
             trampa=(
                 "`pd.read_excel(ruta)` sin `sheet_name` lee **solo la primera hoja** y no "
-                "avisa de que hay otras. En el archivo de retail eso descarta en silencio "
-                "la hoja `Cerrados`; en otro archivo podría descartar la mitad de los "
-                "datos. Con `sheet_name=None` devuelve un diccionario con todas.\n\n"
-                "Y de paso: las hojas no se llaman igual en los cinco archivos "
-                "—`Abiertos`, `Abierto`, `PCMA`—, de modo que tampoco sirve pedir una "
-                "hoja por nombre."
+                "avisa. Y las hojas no se llaman igual en los cinco archivos "
+                "—`Abiertos`, `Abierto`, `PCMA`—, de modo que tampoco sirve pedirla por "
+                "nombre."
             ),
             mostrar="valor",
         ),
         Paso(
-            titulo="Encontrar en qué fila está el encabezado",
+            titulo="Encontrar la fila del encabezado",
             objetivo=(
-                "El encabezado de estos archivos no está en la fila 1: está en la 7, la "
-                "9, la 13, la 10 y la 9, una distinta por archivo, porque arriba hay un "
-                "título y filas vacías. Fijar `header=0` produce columnas llamadas "
-                "`Unnamed: 0` y los nombres reales metidos como una fila de datos."
+                "No está en la fila 1: está en la 7, 9, 13, 10 y 9, una por archivo. Con "
+                "`header=0` las columnas salen como `Unnamed: 0`."
             ),
             pandas=(
                 "crudo = pd.read_excel(ruta_metro, sheet_name='Abiertos', header=None)\n"
                 "detect_header_row(crudo)"
             ),
             excel=(
-                "Mirar la hoja y contar las filas. Para leer desde ahí: "
-                "**Datos ▸ Obtener datos ▸ Desde un libro**, y en el editor de Power "
-                "Query usar **Quitar filas superiores** y **Usar la primera fila como "
-                "encabezado**."
+                "**Datos ▸ Obtener datos ▸ Desde un libro**, y en Power Query "
+                "**Quitar filas superiores** y **Usar la primera fila como encabezado**."
             ),
             trampa=(
-                "La detección no puede ser «la primera fila sin celdas vacías»: una fila "
-                "de datos también la cumple. `detect_header_row` busca la primera fila "
-                "con varias celdas de **texto** no vacías seguida de filas con datos, y "
-                "la declara. Si el archivo cambia de maqueta, el valor cambia y el "
-                "código no se toca."
+                "No sirve «la primera fila sin celdas vacías»: una fila de datos también "
+                "lo cumple. Hay que exigir varias celdas de **texto** seguidas de filas "
+                "con datos."
             ),
             mostrar="valor",
         ),
         Paso(
             titulo="Leer las seis hojas con su encabezado",
             objetivo=(
-                "`read_all_sheets` aplica la detección a cada hoja de cada archivo y "
-                "devuelve, junto a la tabla, un informe de qué hubo que hacer para "
-                "leerla. El informe no es decorativo: es lo que permite afirmar después "
-                "que el 1 928 no se inventó."
+                "El informe de lectura no es decorativo: es lo que permite afirmar "
+                "después que el 1 928 no se inventó."
             ),
-            pandas=(
-                "hojas = p01.cargar()\n"
-                "p01.informe_de_lectura(hojas)"
-            ),
-            excel=(
-                "Repetir el paso anterior cinco veces, una por archivo, y **anotar** la "
-                "fila de encabezado de cada uno. Esa anotación es el equivalente manual "
-                "de esta tabla, y es la que se pierde cuando alguien más abre el libro."
-            ),
+            pandas="hojas = p01.cargar()\np01.informe_de_lectura(hojas)",
+            excel="Repetir el paso anterior cinco veces y **anotar** la fila de cada uno.",
             filas=7,
         ),
         Paso(
-            titulo="Comprobar que los esquemas no coinciden",
+            titulo="Los esquemas no coinciden",
             objetivo=(
-                "Los cinco archivos describen lo mismo con columnas distintas: unos traen "
-                "nueve y otros diez, y el nombre del mismo campo cambia entre archivos "
-                "—`NOMBRE FANTASIA` y `NOMBRE DE FANTASIA`—. Apilarlos sin armonizar "
-                "produce una tabla con columnas duplicadas y medio llenas."
+                "Nueve columnas en unos archivos y diez en otros, y el mismo campo con "
+                "dos nombres: `NOMBRE FANTASIA` y `NOMBRE DE FANTASIA`."
             ),
             pandas="p01.informe_de_esquemas(hojas)",
-            excel=(
-                "Pegar los encabezados de los cinco archivos en columnas contiguas y "
-                "compararlos con `=COINCIDIR(A1;$B$1:$B$10;0)`: devuelve `#N/D` donde el "
-                "campo no existe en el otro archivo."
+            excel="`=COINCIDIR(A1;$B$1:$B$10;0)` da `#N/D` donde el campo no existe.",
+            formula_excel="=COINCIDIR(A1;$B$1:$B$10;0)",
+            hoja=Hoja(
+                columnas=[
+                    Columna("A", "campos archivo 1", 150),
+                    Columna("B", "campos archivo 2", 150),
+                    Columna("C", "¿existe en 2?", 118),
+                ],
+                filas=[
+                    ["CODIGO", "CODIGO", "1"],
+                    ["NOMBRE FANTASIA", "NOMBRE DE FANTASIA", "#N/D"],
+                    ["HORARIO REFERENCIAL", "HORARIO", "#N/D"],
+                ],
+                primera_fila=1,
+                celda="C1",
+                formula="=COINCIDIR(A1;$B$1:$B$10;0)",
+                resultado="1",
+                nota="#N/D marca el campo que el otro archivo llama de otra forma.",
             ),
             trampa=(
-                "Una de las columnas trae un **espacio al final del nombre**. Es "
-                "invisible en Excel y en la salida de Pandas, y hace que un renombrado "
-                "por igualdad exacta falle sin error: la columna simplemente no se "
-                "renombra y queda fuera del esquema común."
+                "Una columna trae un **espacio al final del nombre**. Es invisible, y un "
+                "renombrado por igualdad exacta falla sin error: la columna queda fuera "
+                "del esquema."
             ),
             filas=7,
         ),
         Paso(
             titulo="Apilar los cinco al esquema común",
             objetivo=(
-                "La correspondencia entre el nombre de cada archivo y el campo del "
-                "esquema está **declarada** en el diccionario `ALIAS`, no deducida por "
-                "parecido. Un acierto por casualidad hoy es un error mañana."
+                "La correspondencia está **declarada** en el diccionario `ALIAS`, no "
+                "deducida por parecido."
             ),
-            pandas=(
-                "consolidado = p01.consolidar(hojas)\n"
-                "consolidado[ESQUEMA]"
-            ),
+            pandas="consolidado = p01.consolidar(hojas)\nconsolidado[ESQUEMA]",
             excel=(
-                "**Datos ▸ Obtener datos ▸ Combinar consultas ▸ Anexar**. A mano sería "
-                "copiar y pegar cinco bloques, que funciona una vez y no se puede repetir "
-                "cuando el portal publique la versión siguiente."
+                "**Datos ▸ Obtener datos ▸ Combinar consultas ▸ Anexar**. Copiar y pegar "
+                "funciona una vez y no se repite cuando el portal publique otra versión."
             ),
-            # Sin `guardar_como`: la asignación del fragmento ya deja `consolidado` en
-            # el espacio de nombres, con sus columnas derivadas. Guardar el resultado de
-            # la última expresión lo reemplazaría por el subconjunto de diez columnas que
-            # se muestra, y los pasos siguientes perderían `tipo_local`.
             filas=5,
         ),
         Paso(
             titulo="El tipo de local no está en los datos",
             objetivo=(
-                "Ninguna columna dice si la fila es una estación de Metro, un punto bip! "
-                "o un local de retail. Esa información está en el **nombre del archivo**, "
-                "y si no se agrega al apilar se pierde para siempre."
+                "Está en el **nombre del archivo**. Si no se agrega al apilar, se pierde."
             ),
-            pandas="consolidado.groupby('tipo_local').size()",
+            pandas="consolidado.groupby('tipo_local').size().sort_values(ascending=False)",
             excel=(
-                "Antes de anexar, agregar en cada consulta una **columna personalizada** "
-                "con el tipo: en Power Query, `= \"Estación de Metro\"`. Copiando y "
-                "pegando a mano, escribir el tipo en una columna nueva antes de pegar el "
-                "bloque siguiente."
+                "En Power Query, una **columna personalizada** por consulta antes de "
+                "anexar: `= \"Estación de Metro\"`."
             ),
             trampa=(
-                "Es el error más fácil de cometer y el más difícil de notar: la tabla "
-                "consolidada queda completa, sumable y sin ningún hueco, y simplemente ya "
-                "no se puede responder «¿cuántos son estaciones de Metro?»."
+                "Es el error más fácil de no notar: la tabla queda completa, sumable y "
+                "sin huecos, y ya no se puede responder «¿cuántos son de Metro?»."
             ),
             mostrar="serie",
+            figura=(
+                "bar_chart(\n"
+                "    consolidado.groupby('tipo_local').size().rename('locales')\n"
+                "       .reset_index(),\n"
+                "    category='tipo_local', value='locales', path=SVG_DESTINO,\n"
+                "    title='Lugares de carga por tipo de local',\n"
+                "    ylabel='locales', xlabel='',\n"
+                "    source='Datos abiertos MTT · bip!, CC BY-NC 2.0')"
+            ),
+            pie_figura=(
+                "Los puntos bip! son el 82 % del archivo, y son también los que no "
+                "declaran horario."
+            ),
         ),
         Paso(
             titulo="¿La columna «código» es una clave?",
-            objetivo=(
-                "Se llama `codigo`, es la primera columna y parece un identificador. "
-                "Medirlo cuesta una línea, y conviene hacerlo **antes** de cruzar con "
-                "cualquier otra cosa."
-            ),
+            objetivo="Medirlo cuesta una línea, y hay que hacerlo antes de cruzar.",
             pandas=(
-                "len(consolidado), consolidado['codigo'].nunique(), "
-                "int(consolidado['codigo'].duplicated().sum())"
+                "{'filas': len(consolidado),\n"
+                " 'distintos': consolidado['codigo'].nunique(),\n"
+                " 'repetidos': int(consolidado['codigo'].duplicated().sum())}"
             ),
             excel=(
-                "En una columna libre, `=CONTAR.SI($A$2:$A$" + str(ULTIMA_FILA)
-                + ";A2)>1` y arrastrar. Cuenta de `VERDADERO` con "
-                "`=CONTAR.SI(K2:K" + str(ULTIMA_FILA) + ";VERDADERO)`. "
-                "Valores distintos: `=CONTARA(UNICOS(A2:A" + str(ULTIMA_FILA) + "))`."
+                f"`=CONTAR.SI($A$2:$A${FIN};A2)>1` y arrastrar. Distintos: "
+                f"`=CONTARA(UNICOS(A2:A{FIN}))`."
+            ),
+            formula_excel=f"=SUMAPRODUCTO((CONTAR.SI(A2:A{FIN};A2:A{FIN})>1)*1)",
+            esperado="136 filas con código repetido, de 1 928",
+            hoja=Hoja(
+                columnas=[COL_A, COL_B, COL_E, Columna("K", "repetido?", 124)],
+                filas=[
+                    ["L1", "METRO", "LO PRADO", "VERDADERO"],
+                    ["L1", "METRO", "LO PRADO", ""],
+                    ["9878", "FULLCARGA", "HUECHURABA", ""],
+                ],
+                celda="K2",
+                formula="=CONTAR.SI($A$2:$A$1929;A2)>1",
+                resultado="VERDADERO",
+                nota="Las dos primeras filas son estaciones distintas con el mismo código.",
             ),
             trampa=(
                 "En el archivo de Metro el código es la **línea** (`L1`, `L5`), no el "
-                "local: 143 estaciones con 7 códigos. Y tampoco sirve la clave compuesta "
-                "con el archivo de origen, que es la salida que uno probaría después."
+                "local: 143 estaciones con 7 códigos. Y tampoco sirve `archivo + código`."
             ),
             mostrar="valor",
         ),
@@ -226,138 +234,211 @@ def construir() -> Cuaderno:
             titulo="Normalizar antes de agrupar",
             objetivo=(
                 "`FULLCARGA` y `Fullcarga` son dos grupos para `groupby` y uno para una "
-                "persona. Normalizar es quitar tildes, pasar a mayúsculas y colapsar "
-                "espacios, con **la misma regla** en las dos tablas que se vayan a cruzar."
+                "persona."
             ),
             pandas=(
-                "crudas = consolidado['entidad'].nunique()\n"
-                "normalizadas = consolidado['entidad'].map(normalize_key).nunique()\n"
-                "{'crudas': crudas, 'normalizadas': normalizadas}"
+                "{'crudas': consolidado['entidad'].nunique(),\n"
+                " 'normalizadas': consolidado['entidad'].map(normalize_key).nunique()}"
             ),
             excel=(
-                "`=MAYUSC(ESPACIOS(B2))` cubre mayúsculas y espacios. Las tildes hay que "
-                "quitarlas a mano con `SUSTITUIR` anidado: "
-                "`=SUSTITUIR(SUSTITUIR(MAYUSC(ESPACIOS(B2));\"Á\";\"A\");\"É\";\"E\")`, "
-                "y así con cada vocal. Es feo, y es el motivo por el que esta parte se "
-                "hace en Pandas."
+                "`=MAYUSC(ESPACIOS(B2))` cubre mayúsculas y espacios. Las tildes, con "
+                "`SUSTITUIR` anidado una por vocal."
+            ),
+            formula_excel="=MAYUSC(ESPACIOS(B2))",
+            esperado="4 valores crudos, 3 normalizados",
+            hoja=Hoja(
+                columnas=[COL_B, Columna("L", "normalizada", 134)],
+                filas=[
+                    ["Fullcarga", "FULLCARGA"],
+                    ["FULLCARGA", ""],
+                    ["METRO", ""],
+                ],
+                celda="L2",
+                formula="=MAYUSC(ESPACIOS(B2))",
+                resultado="FULLCARGA",
+                nota="Dos formas crudas, un solo grupo. Sin esto, groupby cuenta dos.",
             ),
             trampa=(
-                "Hay que guardar **las dos** formas: la clave para agrupar y la etiqueta "
-                "para mostrar. Quedarse solo con la clave convierte `Ñuñoa` en `NUNOA` en "
-                "el informe final, que es un empobrecimiento gratuito."
+                "Guardar **las dos** formas: la clave para agrupar y la etiqueta para "
+                "mostrar. Con solo la clave, el informe dice `NUNOA` en vez de `Ñuñoa`."
             ),
             mostrar="valor",
         ),
         Paso(
             titulo="Contar por comuna",
-            objetivo=(
-                "La pregunta que se pedía: cuántos lugares de carga hay por comuna, con "
-                "el desglose por tipo de local. Se agrupa por la **clave** normalizada y "
-                "se muestra la **etiqueta** legible."
-            ),
+            objetivo="La pregunta que se pedía, con el desglose por tipo de local.",
             pandas="p01.por_comuna(consolidado)",
             excel=(
                 "**Insertar ▸ Tabla dinámica**: `comuna` en Filas, `tipo_local` en "
-                "Columnas, `codigo` en Valores con **Contar**. Sin dinámica: "
-                "`=CONTAR.SI.CONJUNTO($E$2:$E$" + str(ULTIMA_FILA) + ";$N2;"
-                "$M$2:$M$" + str(ULTIMA_FILA) + ";O$1)`, con la comuna en la columna N y "
-                "el tipo en la fila 1."
+                "Columnas, `codigo` en Valores con **Contar**."
             ),
+            formula_excel=f"=CONTAR.SI.CONJUNTO($E$2:$E${FIN};$N2;$M$2:$M${FIN};O$1)",
+            hoja=Hoja(
+                columnas=[
+                    Columna("N", "comuna", 120),
+                    Columna("O", "Punto bip!", 104),
+                    Columna("P", "Retail", 86),
+                    Columna("Q", "Metro", 84),
+                ],
+                filas=[
+                    ["MAIPU", "131", "19", "5"],
+                    ["SANTIAGO", "", "", ""],
+                    ["LAS CONDES", "", "", ""],
+                ],
+                primera_fila=2,
+                celda="O2",
+                formula="=CONTAR.SI.CONJUNTO($E$2:$E$1929;$N2;$M$2:$M$1929;O$1)",
+                resultado="131",
+                nota="El tipo de local va en la fila 1; la comuna, en la columna N.",
+            ),
+            esperado="Maipú 157, Santiago 148, Las Condes 104",
             trampa=(
-                "`groupby` **descarta los nulos de la clave** sin avisar. Si una fila no "
-                "trae comuna, desaparece del cuadro y el total deja de sumar el número de "
-                "filas. Con `dropna=False` aparece como grupo propio, que es lo que hay "
-                "que informar."
+                "`groupby` **descarta los nulos de la clave** sin avisar, y el total deja "
+                "de sumar las filas. Con `dropna=False` aparecen como grupo propio."
             ),
             filas=8,
         ),
         Paso(
-            titulo="Cuánto del campo «horario» existe de verdad",
+            titulo="Cuánto del campo «horario» existe",
             objetivo=(
-                "Antes de usar un campo hay que saber cuánto está lleno. Este está "
-                "presente en menos de la quinta parte de las filas, lo que limita "
-                "cualquier conclusión que dependa de él."
+                "Antes de usar un campo, saber cuánto está lleno. Y declarar **sobre "
+                "qué**: la cobertura cambia según se cuenten las 1 928 filas o las "
+                "1 927 abiertas."
             ),
             pandas=(
-                "con_dato = consolidado['horario'].notna() & "
-                "(consolidado['horario'].astype('string').str.strip() != '')\n"
-                "round(float(con_dato.mean() * 100), 2)"
+                "def cobertura(tabla):\n"
+                "    lleno = tabla['horario'].notna() & (\n"
+                "        tabla['horario'].astype('string').str.strip() != '')\n"
+                "    return round(float(lleno.mean() * 100), 2)\n"
+                "\n"
+                "{'todas las filas': cobertura(consolidado),\n"
+                " 'solo abiertas': cobertura(consolidado[consolidado['abierto']])}"
             ),
-            excel=(
-                "`=CONTARA(F2:F" + str(ULTIMA_FILA) + ")/FILAS(F2:F" + str(ULTIMA_FILA)
-                + ")`, con la celda en formato porcentaje."
+            excel=f"`=CONTAR.SI(F2:F{FIN};\"?*\")/FILAS(F2:F{FIN})`, en formato porcentaje.",
+            formula_excel=f'=CONTAR.SI(F2:F{FIN};"?*")/FILAS(F2:F{FIN})',
+            esperado="18,10 % sobre las 1 928 filas · 18,06 % sobre las 1 927 abiertas",
+            hoja=Hoja(
+                columnas=[COL_A, COL_F, Columna("M", "cobertura", 130)],
+                filas=[
+                    ["L1", "Lunes a Viernes: 6:00 a…", "18,10 %"],
+                    ["9878", "", ""],
+                    ["1224", "", ""],
+                ],
+                celda="M2",
+                formula='=CONTAR.SI(F2:F1929;"?*")/FILAS(F2:F1929)',
+                resultado="18,10 %",
+                nota='Con "<>" en vez de "?*" daría 100 % si la columna viene de una consulta.',
             ),
             trampa=(
-                "`CONTARA` cuenta como no vacía una celda con una **fórmula que devuelve "
-                "cadena vacía**. Si la columna viene de una consulta, el resultado es "
-                "100 % de cobertura sobre un campo vacío. `CONTAR.SI(F2:F"
-                + str(ULTIMA_FILA) + ";\"<>\")` tiene el mismo problema; la forma "
-                "fiable es `CONTAR.SI(F2:F" + str(ULTIMA_FILA) + ";\"?*\")`, que exige "
-                "al menos un carácter."
+                "Dos trampas en el mismo paso. Una: `CONTARA` y "
+                "`CONTAR.SI(...;\"<>\")` cuentan como no vacía una celda con **fórmula "
+                "que devuelve cadena vacía**, de modo que una columna traída por una "
+                "consulta da 100 % estando vacía; `\"?*\"` exige al menos un carácter. "
+                "Otra: el **denominador es una decisión**. 18,10 % y 18,06 % son la "
+                "misma medición sobre dos poblaciones distintas, y hay que decir cuál "
+                "se publica."
             ),
             mostrar="valor",
         ),
         Paso(
-            titulo="Las dos coordenadas de cada fila, y cuál no cuadra",
+            titulo="Las dos coordenadas de cada fila",
             objetivo=(
-                "Los archivos traen la **misma ubicación dos veces**: en UTM "
-                "(`este`/`norte`) y en grados (`latitud`/`longitud`). Convertir una y "
-                "compararla con la otra es una validación que no necesita ninguna fuente "
-                "externa, y es la que encontró tres errores de hasta 10,3 km."
+                "El archivo trae la misma ubicación en UTM y en grados. Convertir una y "
+                "comparar con la otra es una validación que no necesita fuente externa."
             ),
             pandas=(
-                "lat_utm, lon_utm = utm_to_latlon(consolidado['este'], consolidado['norte'], zona=19)\n"
-                "desvio_m = haversine_km(lat_utm, lon_utm, consolidado['latitud'], consolidado['longitud']) * 1000\n"
+                "lat_utm, lon_utm = utm_to_latlon(\n"
+                "    consolidado['este'], consolidado['norte'], zona=19)\n"
+                "desvio_m = haversine_km(\n"
+                "    lat_utm, lon_utm,\n"
+                "    consolidado['latitud'], consolidado['longitud']) * 1000\n"
                 "pd.cut(desvio_m, [0, 10, 50, 58, 62, 100, 1e9]).value_counts().sort_index()"
             ),
             excel=(
-                "La conversión de UTM a grados **no se hace en Excel** de forma "
-                "razonable: es una serie de ocho términos. Lo que sí se hace es la "
-                "distancia entre dos pares de grados, con haversine en una celda:\n\n"
+                "La conversión de UTM a grados no se hace en Excel: es una serie de ocho "
+                "términos. La distancia entre dos pares de grados, sí:\n\n"
                 "```\n=2*6371000*ASENO(RAIZ(SENO((RADIANES(I2)-RADIANES(L2))/2)^2\n"
                 "  + COS(RADIANES(L2))*COS(RADIANES(I2))\n"
                 "  * SENO((RADIANES(J2)-RADIANES(M2))/2)^2))\n```\n\n"
-                "con la coordenada publicada en I y J, y la convertida en L y M.\n\n"
-                "Y el histograma, que es lo que revela la forma: poner los topes de los "
-                "tramos en `P1:P6` y seleccionar `Q1:Q7` para "
-                "`=FRECUENCIA(N2:N" + str(ULTIMA_FILA) + ";P1:P6)`. Devuelve un "
-                "tramo más que topes, porque el último recoge todo lo que los supera."
+                f"Y el histograma: topes en `P1:P6`, y `=FRECUENCIA(N2:N{FIN};P1:P6)` "
+                "seleccionando `Q1:Q7`."
+            ),
+            formula_excel=f"=FRECUENCIA(N2:N{FIN};P1:P6)",
+            esperado="109 filas bajo 10 m y 1 768 entre 58 y 62 m",
+            hoja=Hoja(
+                columnas=[
+                    COL_I, COL_J,
+                    Columna("L", "lat. desde UTM", 112),
+                    Columna("M", "lon. desde UTM", 114),
+                    Columna("N", "desvío (m)", 100),
+                ],
+                filas=[
+                    ["-33,444355", "-70,723068", "-33,443805", "-70,723130", "61,2"],
+                    ["-33,451453", "-70,723086", "-33,450903", "-70,723148", ""],
+                    ["-33,457279", "-70,714218", "-33,456729", "-70,714280", ""],
+                ],
+                celda="N2",
+                formula=(
+                    "=2*6371000*ASENO(RAIZ(SENO((RADIANES(I2)-RADIANES(L2))/2)^2"
+                    "+COS(RADIANES(L2))*COS(RADIANES(I2))"
+                    "*SENO((RADIANES(J2)-RADIANES(M2))/2)^2))"
+                ),
+                resultado="61,2",
+                nota="Las columnas L y M vienen de convertir el UTM, que no se hace en Excel.",
             ),
             trampa=(
-                "Mirar la media, o incluso los percentiles 50, 90 y 99, **esconde el "
-                "hallazgo**: los tres caen en 61 m y la distribución parece un desvío "
-                "único con tres atípicos. El histograma muestra otra cosa: **109 filas "
-                "en torno a 0 m y 1 768 en torno a 61 m**, dos grupos nítidos.\n\n"
-                "Esa bimodalidad es la firma de **dos datums distintos** —parte del "
-                "archivo con un sistema de referencia y parte con otro— y no de un error "
-                "de redondeo, que daría una sola campana. Un resumen de cinco números no "
-                "distingue una cosa de la otra: hay que mirar la forma.\n\n"
-                "Y lo que corresponde con un hallazgo así es reportarlo al publicador, no "
-                "corregirlo en silencio: no se sabe cuál de las dos representaciones es "
-                "la buena."
+                "La media y los percentiles 50, 90 y 99 **esconden el hallazgo**: los tres "
+                "caen en 61 m y parece un desvío único con tres atípicos. El histograma "
+                "muestra **dos grupos**, que es la firma de dos datums distintos y no de "
+                "un redondeo. Un resumen de cinco números no los distingue."
             ),
             mostrar="serie",
             filas=10,
+            figura=(
+                "histogram(\n"
+                "    desvio_m[desvio_m < 100], path=SVG_DESTINO,\n"
+                "    title='Desvío entre las dos coordenadas del mismo archivo',\n"
+                "    xlabel='metros', bins=40,\n"
+                "    source='Datos abiertos MTT · bip!, CC BY-NC 2.0')"
+            ),
+            pie_figura=(
+                "Dos grupos: uno en 0 m y otro en 61 m. Se recortan los mayores de 100 m "
+                "—tres filas— para que la forma se vea; esos tres son el paso siguiente."
+            ),
         ),
         Paso(
             titulo="Las filas donde las dos coordenadas se contradicen",
             objetivo=(
                 "Con el desvío calculado, un umbral declarado separa el desplazamiento "
-                "sistemático de los errores reales. 200 m es holgado frente a los 61 m de "
-                "mediana y estricto frente a los errores, que son de kilómetros."
+                "sistemático de los errores reales."
             ),
             pandas=(
-                "sospechosas = p01.coordenadas_sospechosas(consolidado)\n"
-                "sospechosas[['fuente', 'codigo', 'comuna', 'desvio_m']]"
+                "p01.coordenadas_sospechosas(consolidado)[\n"
+                "    ['fuente', 'codigo', 'comuna', 'desvio_m']]"
             ),
-            excel=(
-                "Con el desvío en la columna N: filtro `>200`, o "
-                "`=SI(N2>200;\"revisar\";\"\")` y autofiltro sobre esa columna."
+            excel="Con el desvío en N: `=SI(N2>200;\"revisar\";\"\")` y autofiltro.",
+            formula_excel=f'=CONTAR.SI(N2:N{FIN};">200")',
+            esperado="3 filas, con desvíos de 893 m a 10,3 km",
+            hoja=Hoja(
+                columnas=[
+                    COL_A, COL_E,
+                    Columna("N", "desvío (m)", 100),
+                    Columna("O", "¿revisar?", 110),
+                ],
+                filas=[
+                    ["123375", "MACUL", "10.271,6", "revisar"],
+                    ["9878", "HUECHURABA", "10.087,0", ""],
+                    ["L1", "LO PRADO", "61,2", ""],
+                ],
+                celda="O2",
+                formula='=SI(N2>200;"revisar";"")',
+                resultado="revisar",
+                nota="El umbral de 200 m es una decisión declarada, no un resultado.",
             ),
             trampa=(
-                "El umbral es una **decisión** y hay que escribirla con su motivo. Un "
-                "umbral elegido después de ver los datos, para que el número de hallazgos "
-                "quede cómodo, no es un criterio: es el resultado disfrazado de criterio."
+                "El umbral es una **decisión** y se escribe con su motivo. Elegirlo "
+                "después de ver los datos, para que el número de hallazgos quede cómodo, "
+                "es el resultado disfrazado de criterio."
             ),
             filas=5,
         ),
@@ -371,23 +452,36 @@ def construir() -> Cuaderno:
             "identifica a cada uno?"
         ),
         datos=(
-            "Cinco archivos `.xlsx` del portal de datos abiertos del Ministerio de "
-            "Transportes, licencia CC BY-NC 2.0 verificada. Seis hojas en total, 1 928 "
-            "filas, de las cuales una está en la hoja de cerrados."
+            "Cinco `.xlsx` del portal de datos abiertos del MTT, licencia CC BY-NC 2.0 "
+            "verificada. Seis hojas, 1 928 filas, una en la hoja de cerrados."
         ),
         pasos=pasos,
         contexto=contexto,
+        importes=(
+            "from cases.bip_lugares_carga import solution as p01\n"
+            "from lab.excel import detect_header_row, read_all_sheets, sheet_names\n"
+            "from lab.geo import haversine_km, utm_to_latlon\n"
+            "from lab.textual import normalize_key\n"
+            "\n"
+            "import pandas as pd\n"
+            "\n"
+            "ORIGINAL = p01.ORIGINAL\n"
+            "ruta_metro = ORIGINAL / 'bip-metro.xlsx'\n"
+            "ESQUEMA = list(p01.ESQUEMA)"
+        ),
+        columnas_excel=COLUMNAS,
         cierre=(
-            "1 928 filas consolidadas, 1 927 abiertas, 46 comunas y 3 entidades. El "
-            "`codigo` no identifica una fila, ni junto al archivo de origen. La "
-            "validación cruzada de las dos coordenadas encontró tres errores de hasta "
-            "10,3 km y un desplazamiento sistemático de 61 m con distribución bimodal.\n\n"
-            "Lo que **no** se puede concluir con estos datos: cuánta gente usa cada "
-            "local —no hay transacciones—, ni si está abierto cuando alguien llega —el "
-            "horario está en el 18,06 % de las filas—."
+            "1 928 filas, 1 927 abiertas, 46 comunas, 3 entidades. El `codigo` no "
+            "identifica una fila, ni junto al archivo de origen. La validación cruzada de "
+            "las dos coordenadas encontró 3 errores de hasta 10,3 km y un desplazamiento "
+            "sistemático de 61 m con distribución bimodal.\n\n"
+            "**No** se puede concluir cuánta gente usa cada local —no hay transacciones— "
+            "ni si está abierto cuando alguien llega —el horario está en el 18,06 % de "
+            "las filas—."
         ),
         reproducir=(
             "python scripts/fetch_data.py bip-metro bip-puntos bip-centros-alto-estandar bip-centros-estandar bip-retail\n"
-            "python -m cases.bip_lugares_carga.solution"
+            "python -m cases.bip_lugares_carga.solution\n"
+            "python cases/bip_lugares_carga/cuaderno/pasos.py"
         ),
     )

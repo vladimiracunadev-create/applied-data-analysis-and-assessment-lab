@@ -10,6 +10,7 @@ Componentes
     `calendars`   calendarios por reglas, con auditoría de exclusiones.
     `schedules`   horarios de atención en texto libre, con lo ilegible como desconocido.
     `geo`         distancias sobre la esfera y conversión de UTM.
+    `hoja_svg`    dibuja un fragmento de hoja de cálculo, con su fórmula, en SVG.
     `keys`        qué identifica una fila, y qué hacer cuando nada lo hace.
     `stats`       inferencia estadística sin dependencias externas.
     `sources`     adquisición de datos públicos con registro de procedencia.
@@ -44,6 +45,7 @@ __all__ = [
     "dates",
     "excel",
     "geo",
+    "hoja_svg",
     "keys",
     "knowledge",
     "learning",
