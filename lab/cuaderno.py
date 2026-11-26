@@ -60,6 +60,7 @@ from typing import Any
 
 import pandas as pd
 
+from lab.diagrama_svg import Flujo, Mapa, render_flujo, render_mapa
 from lab.hoja_svg import Hoja, render_hoja
 
 #: Filas que se muestran de un resultado tabular, salvo que el paso pida otra cosa.
@@ -82,6 +83,12 @@ ARCHIVO_PY = "pasos.py"
 #: El libro de práctica: las fórmulas de Excel y el resultado que deben dar. **Sin
 #: datos de terceros**: quien practica pega el consolidado que obtuvo él mismo.
 ARCHIVO_XLSX = "practica.xlsx"
+
+#: Un ZIP con todo el contenido del caso, para llevárselo de una vez.
+ARCHIVO_ZIP = "caso-completo.zip"
+
+#: El índice de todos los cuadernos, al que apunta la navegación de cada uno.
+INDICE = "../../docs/cuadernos.md"
 
 
 @dataclass(frozen=True)
@@ -145,6 +152,22 @@ class Cuaderno:
     #: Encabezados de la hoja donde se pega el consolidado, en su orden. Son los que
     #: hacen que las referencias de las fórmulas —`A2`, `$E$2:$E$1929`— sean correctas.
     columnas_excel: tuple[str, ...] = ()
+    #: El problema explicado como problema: de dónde sale, a quién le importa y qué lo
+    #: vuelve difícil. Varios párrafos, antes de cualquier código.
+    problema: str = ""
+    #: Qué se va a hacer y en qué orden, **antes** de hacerlo. Un plan, no un resumen.
+    solucion: str = ""
+    #: Diagrama del problema: de dónde vienen los datos y qué sale.
+    flujo: Flujo | None = None
+    #: Mapa mental de la solución: los pasos agrupados por bloque.
+    mapa: Mapa | None = None
+    #: Qué se aprende, en una lista. Va al final, cuando ya se vio todo.
+    aprendizajes: tuple[str, ...] = ()
+    #: Cuadernos y documentos con los que este se relaciona: `(texto, ruta)`.
+    relacionados: tuple[tuple[str, str], ...] = ()
+    #: Navegación entre cuadernos: `(texto, ruta)` del anterior y del siguiente.
+    anterior: tuple[str, str] | None = None
+    siguiente: tuple[str, str] | None = None
 
 
 def _recortar(valor: object) -> str:
@@ -236,6 +259,13 @@ def ejecutar(cuaderno: Cuaderno, carpeta: Path | None = None) -> list[Salida]:
     espacio: dict[str, Any] = {"pd": pd, **cuaderno.contexto}
     if carpeta is not None:
         espacio["CARPETA_SVG"] = carpeta
+        # Los dos diagramas del cuaderno: el del problema y el de la solución.
+        if cuaderno.flujo is not None:
+            (carpeta / "flujo.svg").write_text(
+                render_flujo(cuaderno.flujo), encoding="utf-8")
+        if cuaderno.mapa is not None:
+            (carpeta / "mapa.svg").write_text(
+                render_mapa(cuaderno.mapa), encoding="utf-8")
     salidas: list[Salida] = []
     for numero, paso in enumerate(cuaderno.pasos, start=1):
         resultado = _correr(paso.pandas, espacio, cuaderno.caso, numero, paso.titulo)
@@ -282,39 +312,89 @@ def _correr(codigo: str, espacio: dict[str, Any], caso: str, numero: int,
         ) from error
 
 
+def _enlace(par: tuple[str, str] | None) -> str:
+    """Un par `(texto, ruta)` como enlace de Markdown. Vacío si no hay par."""
+    if not par:
+        return ""
+    texto, ruta = par
+    return f"[{texto}]({ruta})"
+
+
 def render(cuaderno: Cuaderno, carpeta: Path | None = None) -> str:
-    """El cuaderno completo como un documento de Markdown."""
+    """El cuaderno completo como documento de Markdown.
+
+    El orden no es casual. Primero **el problema**, porque sin él los pasos son
+    manipulaciones sin motivo. Después **el plan**, para saber a dónde va cada paso
+    antes de darlo. Luego los pasos. Y al final el resultado, lo que se aprende y los
+    límites de lo que se puede afirmar.
+    """
     salidas = ejecutar(cuaderno, carpeta)
     buffer = io.StringIO()
     escribir = buffer.write
-
     con_trampa = sum(1 for s in salidas if s.paso.trampa)
+
+    # ------------------------------------------------------------------ encabezado
     escribir(f"# {cuaderno.caso} · {cuaderno.titulo}\n\n")
+    navegacion = [
+        _enlace(cuaderno.anterior) and f"◀ {_enlace(cuaderno.anterior)}",
+        f"[Todos los cuadernos]({INDICE})",
+        _enlace(cuaderno.siguiente) and f"{_enlace(cuaderno.siguiente)} ▶",
+    ]
+    escribir(" · ".join(parte for parte in navegacion if parte) + "\n\n")
     escribir(f"> **{cuaderno.pregunta}**\n\n")
-    escribir(f"{cuaderno.datos}\n\n")
+
+    # -------------------------------------------------------------------- el problema
+    escribir("## 1 · El problema\n\n")
+    if cuaderno.problema:
+        escribir(cuaderno.problema.strip() + "\n\n")
+    escribir(f"**Los datos.** {cuaderno.datos}\n\n")
+    if cuaderno.flujo is not None:
+        escribir(f"![El flujo del problema]({CARPETA}/svg/flujo.svg)\n\n")
+
+    # -------------------------------------------------------------------- la solución
+    escribir("## 2 · La solución que se va a aplicar\n\n")
+    if cuaderno.solucion:
+        escribir(cuaderno.solucion.strip() + "\n\n")
+    if cuaderno.mapa is not None:
+        escribir(f"![El recorrido]({CARPETA}/svg/mapa.svg)\n\n")
+
     escribir(
         f"{len(salidas)} pasos. Cada uno trae el código de **Python**, la salida que "
-        f"devuelve de verdad, y la **fórmula de Excel** equivalente. "
-        f"{con_trampa} traen además la trampa de hacerlo de la forma obvia.\n\n"
+        f"devuelve de verdad, y la **fórmula de Excel** equivalente dibujada en su "
+        f"hoja. {con_trampa} traen además la trampa de hacerlo de la forma obvia.\n\n"
     )
-    escribir(
-        f"**Para trabajar:** [`pasos.py`]({CARPETA}/{ARCHIVO_PY}) corre los "
-        f"{len(salidas)} pasos seguidos · [`practica.xlsx`]({CARPETA}/{ARCHIVO_XLSX}) "
-        "trae las fórmulas y el resultado que deben dar.\n\n"
-    )
-
     escribir("| # | Paso | Trampa |\n| --- | --- | --- |\n")
     for salida in salidas:
         escribir(
             f"| {salida.numero} | [{salida.paso.titulo}](#paso-{salida.numero}) "
             f"| {'sí' if salida.paso.trampa else '—'} |\n"
         )
+    escribir("\n")
+
+    # ------------------------------------------------------------------- descargables
+    escribir("### Para trabajar\n\n")
+    escribir("| Archivo | Qué es |\n| --- | --- |\n")
+    escribir(
+        f"| [`{ARCHIVO_ZIP}`]({CARPETA}/{ARCHIVO_ZIP}) "
+        "| **todo el caso en un ZIP**: el cuaderno, el script, el libro de Excel y "
+        "las figuras |\n"
+    )
+    escribir(
+        f"| [`{ARCHIVO_PY}`]({CARPETA}/{ARCHIVO_PY}) "
+        f"| los {len(salidas)} pasos seguidos. Se corre y muestra cada salida |\n"
+    )
+    escribir(
+        f"| [`{ARCHIVO_XLSX}`]({CARPETA}/{ARCHIVO_XLSX}) "
+        "| las fórmulas y **el resultado que deben dar**, para corregirse solo |\n"
+    )
     escribir("\n---\n\n")
 
+    # ------------------------------------------------------------------------ los pasos
+    escribir("## 3 · Los pasos\n\n")
     for salida in salidas:
         paso = salida.paso
         escribir(f'<a id="paso-{salida.numero}"></a>\n\n')
-        escribir(f"## Paso {salida.numero} · {paso.titulo}\n\n")
+        escribir(f"### Paso {salida.numero} · {paso.titulo}\n\n")
         escribir(f"{paso.objetivo}\n\n")
 
         escribir("#### Python\n\n```python\n" + paso.pandas.strip() + "\n```\n\n")
@@ -333,20 +413,61 @@ def render(cuaderno: Cuaderno, carpeta: Path | None = None) -> str:
         if paso.esperado:
             escribir(f"Debe dar: **{paso.esperado}**\n\n")
         if paso.trampa:
-            # Sin envolver en `**`: la trampa ya trae sus propias negritas, y anidarlas
-            # produce asteriscos a la vista en lugar de texto en negrita.
             cuerpo_trampa = paso.trampa.strip().replace("\n\n", "\n>\n> ")
             escribir(f"> **La trampa.** {cuerpo_trampa}\n\n")
+        escribir("[↑ volver al recorrido](#2--la-solución-que-se-va-a-aplicar)\n\n")
         escribir("---\n\n")
 
+    # -------------------------------------------------------------------- el resultado
     if cuaderno.cierre:
-        escribir("## Resultado\n\n" + cuaderno.cierre.strip() + "\n\n")
+        escribir("## 4 · El resultado\n\n" + cuaderno.cierre.strip() + "\n\n")
+    if cuaderno.aprendizajes:
+        escribir("## 5 · Qué queda aprendido\n\n")
+        for numero, aprendizaje in enumerate(cuaderno.aprendizajes, start=1):
+            escribir(f"{numero}. {aprendizaje}\n")
+        escribir("\n")
     if cuaderno.reproducir:
         escribir(
             "## Reproducir\n\n```powershell\n" + cuaderno.reproducir.strip()
-            + "\n```\n"
+            + "\n```\n\n"
         )
+
+    # -------------------------------------------------------------------- navegación
+    escribir("## Seguir\n\n")
+    if cuaderno.relacionados:
+        escribir("Lo que este caso toca y se trata a fondo en otro sitio:\n\n")
+        for texto, ruta in cuaderno.relacionados:
+            escribir(f"- [{texto}]({ruta})\n")
+        escribir("\n")
+    escribir(" · ".join(parte for parte in navegacion if parte) + "\n")
     return buffer.getvalue()
+
+
+def escribir_zip(cuaderno: Cuaderno, carpeta_caso: Path, destino: Path) -> Path:
+    """Empaqueta todo el contenido del caso en un ZIP.
+
+    Lleva el cuaderno, el script, el libro de Excel y las figuras. **No lleva datos de
+    terceros**: ni los archivos del portal ni nada derivado de ellos que los reconstruya.
+    Lo que va dentro es texto, código y agregados, que es lo mismo que el repositorio
+    versiona.
+    """
+    import zipfile
+
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    nombre_base = f"{cuaderno.caso.lower()}-{carpeta_caso.name}"
+    # Se escribe a un temporal y se reemplaza al final: si el ZIP se escribiera sobre sí
+    # mismo mientras se recorre la carpeta, se incluiría a medio escribir.
+    temporal = destino.with_suffix(".zip.tmp")
+    with zipfile.ZipFile(temporal, "w", zipfile.ZIP_DEFLATED) as zf:
+        for ruta in sorted(carpeta_caso.rglob("*")):
+            if not ruta.is_file():
+                continue
+            relativa = ruta.relative_to(carpeta_caso)
+            if relativa.suffix in {".zip", ".tmp"} or "__pycache__" in relativa.parts:
+                continue
+            zf.write(ruta, arcname=f"{nombre_base}/{relativa.as_posix()}")
+    temporal.replace(destino)
+    return destino
 
 
 def escribir_pasos_py(cuaderno: Cuaderno, salidas: list[Salida], destino: Path) -> Path:

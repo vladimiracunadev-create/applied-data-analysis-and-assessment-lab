@@ -15,6 +15,7 @@ Componentes
     `stats`       inferencia estadística sin dependencias externas.
     `sources`     adquisición de datos públicos con registro de procedencia.
     `sqlbridge`   ejecución de SQL sobre DataFrames para validación independiente.
+    `diagrama_svg` diagramas de flujo y mapas mentales en SVG.
     `excel`       libros de Excel profesionales con fórmulas vivas.
     `viz`         gráficos con el estándar visual del laboratorio.
     `report`      informes de caso y de investigación con secciones obligatorias.
@@ -43,6 +44,7 @@ __all__ = [
     "cuaderno",
     "core",
     "dates",
+    "diagrama_svg",
     "excel",
     "geo",
     "hoja_svg",

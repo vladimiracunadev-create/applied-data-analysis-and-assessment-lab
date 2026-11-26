@@ -26,6 +26,9 @@ qué tecnología se usó, por qué, y qué trampa tenía cada dato.
 
 ### Si vienes a aprender a hacerlo: los cuadernos de trabajo
 
+> **[Índice de los dieciséis cuadernos](docs/cuadernos.md)** — con el estado de
+> cada problema y el enlace a su cuaderno.
+
 Un caso tiene dos documentos y sirven para cosas distintas:
 
 | Documento | Qué es | Cuándo sirve |

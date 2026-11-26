@@ -28,6 +28,16 @@ if str(ROOT) not in sys.path:
 
 from cases.bip_lugares_carga import solution as p01  # noqa: E402
 from lab.cuaderno import Cuaderno, Paso  # noqa: E402
+from lab.diagrama_svg import (  # noqa: E402
+    ACENTO,
+    AZUL,
+    OCRE,
+    TINTA,
+    Etapa,
+    Flujo,
+    Mapa,
+    Rama,
+)
 from lab.excel import detect_header_row, read_all_sheets, sheet_names  # noqa: E402
 from lab.geo import haversine_km, utm_to_latlon  # noqa: E402
 from lab.hoja_svg import Columna, Hoja  # noqa: E402
@@ -52,6 +62,155 @@ COL_E = Columna("E", "comuna", 116)
 COL_F = Columna("F", "horario", 150)
 COL_I = Columna("I", "latitud", 92)
 COL_J = Columna("J", "longitud", 96)
+
+
+PROBLEMA = """
+Para pagar un viaje en el transporte público de Santiago hay que llevar saldo en la
+tarjeta bip!, y el saldo se carga en locales físicos. El organismo publica dónde están
+esos locales, y lo publica como lo publica un organismo: **cinco archivos de Excel
+distintos**, uno por tipo de local, hechos en momentos distintos por personas distintas.
+
+La pregunta que llega es simple y legítima: *¿cuántos lugares de carga hay y dónde
+están?* Alguien tiene que contestarla para decidir dónde instalar el próximo, o para
+responder una consulta ciudadana, o para cruzarla con la red de transporte.
+
+**Lo que la vuelve difícil no es el volumen.** Son 1 928 filas: cabrían en una pantalla
+y media. Lo difícil es que los cinco archivos no se parecen entre sí:
+
+- el **encabezado no está en la primera fila** de ninguno, y está en una distinta en
+  cada uno, porque arriba hay un título y filas en blanco;
+- los **esquemas no coinciden**: unos traen nueve columnas y otros diez, y el mismo
+  campo se llama de dos formas;
+- el **tipo de local no está en los datos**: está en el nombre del archivo;
+- una hoja describe locales **fuera de servicio**, y si se lee todo junto quedan
+  contados como abiertos;
+- la columna que parece la clave **no identifica una fila**;
+- y la misma ubicación viene **dos veces**, en dos sistemas de coordenadas que no
+  coinciden.
+
+Ninguno de esos seis problemas produce un error. Cada uno produce una tabla que se puede
+sumar, graficar y presentar, con un número equivocado.
+
+Ese es el trabajo real de quien gestiona datos que no generó: no calcular, sino
+**descubrir en qué no se puede confiar antes de calcular**. Y es exactamente lo que se
+pide en una evaluación técnica de cuatro horas con Excel y Pandas.
+"""
+
+SOLUCION = """
+El recorrido va de lo que no se puede suponer a lo que sí se puede afirmar, en cinco
+bloques.
+
+**Leer lo que no está ordenado** (pasos 1 a 3). Antes de leer, mirar: cuántas hojas hay
+y en qué fila empieza cada tabla. La fila del encabezado se **detecta** en lugar de
+fijarse, y de cada lectura queda un informe de qué hubo que hacer. Ese informe es lo que
+después permite defender el recuento.
+
+**Armonizar lo que no coincide** (pasos 4 a 6). La correspondencia entre el nombre de
+cada archivo y el campo del esquema común se **declara** en una tabla, no se adivina por
+parecido: un acierto por casualidad hoy es un error mañana. Y al apilar se agrega el tipo
+de local, que vive en el nombre del archivo y se perdería para siempre.
+
+**Comprobar lo que se supone** (pasos 7 y 8). Dos suposiciones que todo el mundo hace y
+nadie mide: que la columna llamada «código» es una clave, y que los textos que nombran lo
+mismo están escritos igual. Las dos son falsas en este archivo, y medirlo cuesta una
+línea cada una.
+
+**Responder, y declarar el límite** (pasos 9 y 10). Recién aquí se cuenta por comuna. Y
+se mide cuánto del campo de horario existe de verdad, porque de eso depende qué se puede
+concluir después.
+
+**Validar sin fuente externa** (pasos 11 y 12). El archivo trae la ubicación dos veces.
+Convertir una y compararla con la otra es una validación que no necesita pedirle nada a
+nadie, y es la que encuentra los tres errores de kilómetros que ninguna de las
+comprobaciones anteriores podía ver.
+
+Cada paso trae el Pandas, su salida real, y la fórmula de Excel dibujada en su hoja. Diez
+de los doce traen además **la trampa**: lo que sale mal si el paso se hace de la forma
+obvia, que es la parte que no está en ningún tutorial y la que se pregunta en una prueba.
+"""
+
+FLUJO = Flujo(
+    titulo="El problema: cinco planillas que describen lo mismo y no se parecen",
+    etapas=[
+        Etapa("5 archivos .xlsx",
+              ["Metro, Puntos, Retail,", "Centros estándar y alto", "6 hojas en total"],
+              nota="1 928 filas", color=TINTA),
+        Etapa("Leer",
+              ["Encabezado en fila 7, 9,", "13, 10 y 9", "Una hoja de cerrados"],
+              nota="y el informe de qué costó", color=AZUL),
+        Etapa("Armonizar",
+              ["9 y 10 columnas", "Un campo, dos nombres",
+               "El tipo, en el nombre del archivo"],
+              nota="esquema de 10 campos", color=AZUL),
+        Etapa("Comprobar",
+              ["El código no es clave", "Dos coordenadas por fila",
+               "Horario en el 18 %"],
+              nota="3 errores de hasta 10,3 km", color=OCRE),
+        Etapa("Una tabla que se cuenta",
+              ["46 comunas", "3 entidades", "5 tipos de local"],
+              nota="y sus límites, escritos", color=ACENTO),
+    ],
+)
+
+MAPA = Mapa(
+    centro="P01 · Consolidar cinco Excel",
+    subtitulo="12 pasos · 10 trampas",
+    ramas=[
+        Rama("Leer lo que no está ordenado",
+             ["1 · Mirar las hojas antes de leer",
+              "2 · Encontrar la fila del encabezado",
+              "3 · Leer las seis con su informe"], color=AZUL),
+        Rama("Armonizar lo que no coincide",
+             ["4 · Los esquemas no coinciden",
+              "5 · Apilar al esquema común",
+              "6 · El tipo no está en los datos"], color=AZUL),
+        Rama("Comprobar lo que se supone",
+             ["7 · El código no es una clave",
+              "8 · Normalizar antes de agrupar"], color=OCRE),
+        Rama("Responder, y declarar el límite",
+             ["9 · Contar por comuna",
+              "10 · Cuánto del horario existe"], color=ACENTO),
+        Rama("Validar sin fuente externa",
+             ["11 · Las dos coordenadas de cada fila",
+              "12 · Dónde se contradicen"], color=OCRE),
+    ],
+)
+
+APRENDIZAJES = (
+    "El encabezado de una planilla real **no está en la primera fila**, y la fila se "
+    "detecta en lugar de fijarse: así el código sobrevive a la versión siguiente.",
+    "Una correspondencia de columnas se **declara**. Deducirla por parecido acierta hoy "
+    "y falla cuando cambie un nombre, sin avisar.",
+    "Lo que no está en ninguna columna —aquí, el tipo de local— se pierde al apilar si "
+    "no se agrega a propósito. Y la tabla resultante queda completa y sumable.",
+    "Una columna llamada «código» **no es una clave hasta que se mide**, y en este "
+    "archivo no lo es ni junto al nombre del archivo de origen.",
+    "Normalizar es decidir qué cosas son la misma, y hay que guardar **las dos** formas: "
+    "la clave para agrupar y la etiqueta para mostrar.",
+    "El **denominador es una decisión**: la cobertura del horario es 18,10 % o 18,06 % "
+    "según se cuenten todas las filas o solo las abiertas, y hay que decir cuál se "
+    "publica.",
+    "Un campo redundante —la misma ubicación dos veces— es una validación gratuita que "
+    "no necesita ninguna fuente externa.",
+    "Un resumen de cinco números **esconde la forma**: la media y los percentiles no "
+    "distinguen dos sistemas de coordenadas de un error de redondeo. El histograma, sí.",
+    "Un umbral se escribe con su motivo. Elegirlo después de ver los datos, para que el "
+    "número de hallazgos quede cómodo, es el resultado disfrazado de criterio.",
+    "Lo que corresponde con un error de datos ajenos es **reportarlo al publicador**, no "
+    "corregirlo en silencio: no se sabe cuál de las dos versiones es la buena.",
+)
+
+RELACIONADOS = (
+    ("Qué se encontró, con las cifras y los límites — README del caso", "README.md"),
+    ("P08 · El cruce que no tiene clave, que usa esta tabla",
+     "../cobertura_de_carga/README.md"),
+    ("P10 · Lo que esta validación de coordenadas no puede ver",
+     "../correspondencia_metro/README.md"),
+    ("Equivalencias entre SQL, Pandas, Excel y R",
+     "../../docs/equivalencias.md"),
+    ("Mapa de los 16 problemas de la instancia",
+     "../../docs/problemas-de-la-instancia.md"),
+)
 
 
 def construir() -> Cuaderno:
@@ -470,6 +629,14 @@ def construir() -> Cuaderno:
             "ESQUEMA = list(p01.ESQUEMA)"
         ),
         columnas_excel=COLUMNAS,
+        problema=PROBLEMA,
+        solucion=SOLUCION,
+        flujo=FLUJO,
+        mapa=MAPA,
+        aprendizajes=APRENDIZAJES,
+        relacionados=RELACIONADOS,
+        siguiente=("P08 · El cruce que no tiene clave",
+                   "../cobertura_de_carga/README.md"),
         cierre=(
             "1 928 filas, 1 927 abiertas, 46 comunas, 3 entidades. El `codigo` no "
             "identifica una fila, ni junto al archivo de origen. La validación cruzada de "

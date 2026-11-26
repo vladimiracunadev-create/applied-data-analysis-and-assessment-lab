@@ -8,6 +8,8 @@ repositorio.
 
 ## Vengo a aprender a hacerlo, no a leer qué se encontró
 
+**[Índice de cuadernos](cuadernos.md)** — el estado de los dieciséis problemas.
+
 Los **cuadernos de trabajo** son el problema resuelto paso a paso, con el código de
 Pandas, la salida real y la fórmula de Excel equivalente, en un solo archivo.
 

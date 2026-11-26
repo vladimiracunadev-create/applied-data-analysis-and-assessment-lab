@@ -1,29 +1,36 @@
-"""Genera los cuadernos de trabajo de los casos que declaran uno.
+"""Genera los cuadernos de trabajo de los casos que declaran uno, y su índice.
 
-Un cuaderno es el caso resuelto **paso a paso**: para cada paso, el código de Pandas,
-la salida que devuelve de verdad, y cómo se hace lo mismo en Excel. Se lee de arriba
+Un cuaderno es el caso resuelto **paso a paso**: el problema explicado como problema, el
+plan de la solución antes de ejecutarla, y para cada paso el código de Python, la salida
+que devuelve de verdad, y la fórmula de Excel dibujada en su hoja. Se lee de arriba
 abajo sin abrir ningún otro archivo.
 
-Qué hace
-    Busca en `cases/*/cuaderno.py` una función `construir()` que devuelva un
-    `lab.cuaderno.Cuaderno`, lo ejecuta, y escribe `CUADERNO.md` junto al caso.
+Qué escribe por cada caso
+
+    CUADERNO.md                      el documento
+    cuaderno/pasos.py                el código seguido, que corre y muestra sus salidas
+    cuaderno/practica.xlsx           las fórmulas y el resultado que deben dar
+    cuaderno/svg/flujo.svg           el diagrama del problema
+    cuaderno/svg/mapa.svg            el mapa mental de la solución
+    cuaderno/svg/paso-NN*.svg        las figuras y las hojas de Excel de cada paso
+    cuaderno/caso-completo.zip       todo lo anterior, más el caso, en un archivo
+
+Y un índice común en `docs/cuadernos.md`, con el estado de los dieciséis problemas.
 
 Por qué se genera y no se escribe
-    Porque el código que aparece es el que se ejecutó y la salida es la que devolvió.
-    Un apunte con salidas copiadas a mano envejece sin avisar, y el día que se estudia
-    ya no describe lo que pasa. Si el código deja de funcionar, el cuaderno no se
-    genera: no hay forma de que el documento mienta y siga publicado.
+    El código que aparece es el que se ejecutó y la salida es la que devolvió. Si el
+    código deja de funcionar, el cuaderno no se genera: no hay forma de que el documento
+    mienta y siga publicado. Un apunte con salidas copiadas a mano envejece sin avisar.
 
 Necesita los datos descargados
-    A diferencia de `build_docs.py`, este script **ejecuta el caso**, de modo que
-    necesita los archivos públicos en `data/original/`. No corre en integración
-    continua por eso, y el `CUADERNO.md` resultante se versiona —es texto y salidas
-    agregadas, no datos de terceros—, igual que las tablas de `resultados/`.
+    A diferencia de `build_docs.py`, este script **ejecuta el caso**. No corre en
+    integración continua por eso, y lo que produce se versiona —texto, código y
+    agregados, nunca datos de terceros—, igual que las tablas de `resultados/`.
 
 Uso
     python scripts/build_cuadernos.py                # todos los declarados
     python scripts/build_cuadernos.py bip_lugares_carga
-    python scripts/build_cuadernos.py --check       # falla si alguno quedó desfasado
+    python scripts/build_cuadernos.py --check        # falla si alguno quedó desfasado
 """
 
 from __future__ import annotations
@@ -41,14 +48,44 @@ from lab.console import enable_utf8  # noqa: E402
 from lab.cuaderno import (  # noqa: E402
     ARCHIVO_PY,
     ARCHIVO_XLSX,
+    ARCHIVO_ZIP,
     CARPETA,
     ejecutar,
     escribir_pasos_py,
     escribir_practica_xlsx,
+    escribir_zip,
     render,
 )
 
 NOMBRE_SALIDA = "CUADERNO.md"
+
+#: El índice de cuadernos, al que apunta la navegación de cada uno. Se genera para que
+#: no se desvíe: un índice escrito a mano envejece en cuanto se agrega un cuaderno.
+INDICE_SALIDA = ROOT / "docs" / "cuadernos.md"
+
+#: Los dieciséis problemas de la instancia DTPM, con el caso que los resuelve. El estado
+#: detallado vive en `docs/problemas-de-la-instancia.md`; aquí solo hace falta saber a
+#: qué caso mirar. Un problema sin caso necesita el análisis además del cuaderno, y el
+#: cuarto elemento dice en qué pasos de otro cuaderno queda cubierto, cuando no tiene
+#: uno propio: decir «abrir» sin más haría creer que hay un cuaderno dedicado.
+PROBLEMAS: tuple[tuple[str, str, str, str], ...] = (
+    ("P01", "Consolidar los cinco Excel de lugares de carga", "bip_lugares_carga", ""),
+    ("P02", "¿El código es una clave?", "bip_lugares_carga", "pasos 7 y 8"),
+    ("P03", "Validación cruzada de coordenadas", "correspondencia_metro", ""),
+    ("P04", "Normalizar comuna y entidad para agrupar", "bip_lugares_carga", "paso 8"),
+    ("P05", "Interpretar horarios escritos en texto libre", "carga_nocturna", ""),
+    ("P06", "Expediciones por hora en un día laboral", "gtfs_red_movilidad", ""),
+    ("P07", "¿Cuándo conviene dejar Pandas?", "", ""),
+    ("P08", "Distancia de cada parada al lugar de carga", "cobertura_de_carga", ""),
+    ("P09", "Cobertura de carga en el servicio nocturno", "carga_nocturna", ""),
+    ("P10", "Correspondencia entre buses y Metro", "correspondencia_metro", ""),
+    ("P11", "El calendario de medición de un indicador oficial", "calendario_medicion", ""),
+    ("P12", "El ICF sobre la oferta programada", "", ""),
+    ("P13", "Distribución de la frecuencia programada", "", ""),
+    ("P14", "Qué cambió entre dos versiones del feed", "", ""),
+    ("P15", "Evolución de la oferta programada por año", "", ""),
+    ("P16", "Informe de una página para quien decide", "", ""),
+)
 
 
 def casos_con_cuaderno() -> list[str]:
@@ -63,8 +100,7 @@ def construir(slug: str, artefactos: bool = True) -> tuple[Path, str, list[str]]
     """Genera el cuaderno de un caso, sus figuras y sus artefactos descargables.
 
     Returns:
-        La ruta del `CUADERNO.md`, su contenido, y los nombres de los artefactos
-        escritos junto a él.
+        La ruta del `CUADERNO.md`, su contenido, y los artefactos escritos junto a él.
     """
     modulo = importlib.import_module(f"cases.{slug}.cuaderno")
     if not hasattr(modulo, "construir"):
@@ -73,12 +109,14 @@ def construir(slug: str, artefactos: bool = True) -> tuple[Path, str, list[str]]
             "tiene que devolver un lab.cuaderno.Cuaderno"
         )
     cuaderno = modulo.construir()
-    carpeta = ROOT / "cases" / slug / CARPETA
+    carpeta_caso = ROOT / "cases" / slug
+    carpeta = carpeta_caso / CARPETA
     svg = carpeta / "svg"
     if artefactos:
         svg.mkdir(parents=True, exist_ok=True)
 
     documento = render(cuaderno, carpeta=svg if artefactos else None)
+    destino = carpeta_caso / NOMBRE_SALIDA
     escritos: list[str] = []
     if artefactos:
         salidas = ejecutar(cuaderno, carpeta=svg)
@@ -89,7 +127,79 @@ def construir(slug: str, artefactos: bool = True) -> tuple[Path, str, list[str]]
         escritos.extend(
             f"{CARPETA}/svg/{ruta.name}" for ruta in sorted(svg.glob("*.svg"))
         )
-    return ROOT / "cases" / slug / NOMBRE_SALIDA, documento, escritos
+        # El documento se escribe antes del ZIP, para que el ZIP lo lleve dentro.
+        destino.write_text(documento, encoding="utf-8")
+        escribir_zip(cuaderno, carpeta_caso, carpeta / ARCHIVO_ZIP)
+        escritos.append(f"{CARPETA}/{ARCHIVO_ZIP}")
+    return destino, documento, escritos
+
+
+def codigo_de(slug: str) -> str:
+    """El código del problema cuyo caso lleva ese slug como cuaderno propio."""
+    for codigo, _, otro, donde in PROBLEMAS:
+        if otro == slug and not donde:
+            return codigo
+    return slug
+
+
+def escribir_indice(con_cuaderno: set[str]) -> Path:
+    """Escribe el índice de cuadernos, con el estado de los dieciséis problemas."""
+    lineas = [
+        "# Cuadernos de trabajo",
+        "",
+        "Un **cuaderno** es el problema resuelto paso a paso: el problema explicado como",
+        "problema, el plan de la solución antes de ejecutarla, y para cada paso el",
+        "código de Python, la salida que devuelve de verdad, y la fórmula de Excel",
+        "dibujada en su hoja. Se lee de arriba abajo y trae sus descargables al lado,",
+        "incluido un ZIP con todo el caso.",
+        "",
+        "No es lo mismo que el `README.md` de un caso, que cuenta **qué se encontró** y",
+        "sirve para auditar el resultado.",
+        "",
+        "> Archivo generado por `scripts/build_cuadernos.py`. No lo edite a mano.",
+        "",
+        "## Los dieciséis problemas de la instancia DTPM",
+        "",
+        "| Problema | Cuaderno | Caso |",
+        "| --- | --- | --- |",
+    ]
+    propios = 0
+    dentro_de_otro = 0
+    for codigo, titulo, slug, donde in PROBLEMAS:
+        ruta = f"../cases/{slug}/{NOMBRE_SALIDA}"
+        if slug and slug in con_cuaderno and not donde:
+            enlace = f"[**abrir**]({ruta})"
+            propios += 1
+        elif slug and slug in con_cuaderno:
+            enlace = f"[dentro del de {codigo_de(slug)}, {donde}]({ruta})"
+            dentro_de_otro += 1
+        elif slug:
+            enlace = "pendiente"
+        else:
+            enlace = "pendiente · falta el análisis"
+        caso = f"[`{slug}`](../cases/{slug}/README.md)" if slug else "—"
+        lineas.append(f"| {codigo} · {titulo} | {enlace} | {caso} |")
+
+    lineas += [
+        "",
+        f"**{propios} de 16 cuadernos propios**, más {dentro_de_otro} problemas",
+        "cubiertos dentro del cuaderno de otro. Los problemas sin caso necesitan el",
+        "análisis además del cuaderno. El estado detallado de cada uno, con lo que",
+        "enseña y lo que no se puede contestar, está en el",
+        "[mapa de problemas](problemas-de-la-instancia.md).",
+        "",
+        "## Regenerar",
+        "",
+        "```powershell",
+        "python scripts/build_cuadernos.py",
+        "```",
+        "",
+        "Necesita los datos descargados: un cuaderno se genera **ejecutando el caso**,",
+        "de modo que el código que aparece es el que corrió y la salida es la que",
+        "devolvió.",
+    ]
+    INDICE_SALIDA.write_text("\n".join(lineas) + "\n", encoding="utf-8")
+    return INDICE_SALIDA
 
 
 def main() -> int:
@@ -121,11 +231,14 @@ def main() -> int:
             else:
                 print(f"al día    {relativo}")
             continue
-        destino.write_text(documento, encoding="utf-8")
-        pasos = documento.count("\n## Paso ")
+        pasos = documento.count("\n### Paso ")
         print(f"escrito {relativo}  ({pasos} pasos, {len(documento):,} caracteres)")
         for artefacto in escritos:
             print(f"        + cases/{slug}/{artefacto}")
+
+    if not argumentos.check:
+        indice = escribir_indice(set(casos_con_cuaderno()))
+        print(f"escrito {indice.relative_to(ROOT).as_posix()}")
 
     if desfasados:
         print(

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1146" height="206" viewBox="0 0 1146 206" role="img">
+<rect width="1146" height="206" fill="#FFFFFF"/>
+<text x="16.0" y="30.0" fill="#11253B" font-size="13.5" font-weight="700" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">El problema: cinco planillas que describen lo mismo y no se parecen</text>
+<rect x="16.0" y="46.0" width="186.0" height="124.0" rx="8" fill="#F4F7FA" stroke="#11253B" stroke-width="1.6"/>
+<text x="28.0" y="70.0" fill="#11253B" font-size="12.5" font-weight="700" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">5 archivos .xlsx</text>
+<text x="28.0" y="92.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">Metro, Puntos, Retail,</text>
+<text x="28.0" y="109.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">Centros estándar y alto</text>
+<text x="28.0" y="126.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">6 hojas en total</text>
+<text x="28.0" y="185.0" fill="#5C6B7A" font-size="11" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">1 928 filas</text>
+<line x1="210.0" y1="108.0" x2="234.0" y2="108.0" stroke="#5C6B7A" stroke-width="1.6"/><path d="M 240.0 108.0 l -7 -4.5 l 0 9 z" fill="#5C6B7A"/>
+<rect x="248.0" y="46.0" width="186.0" height="124.0" rx="8" fill="#F4F7FA" stroke="#1A6FB5" stroke-width="1.6"/>
+<text x="260.0" y="70.0" fill="#1A6FB5" font-size="12.5" font-weight="700" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">Leer</text>
+<text x="260.0" y="92.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">Encabezado en fila 7, 9,</text>
+<text x="260.0" y="109.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">13, 10 y 9</text>
+<text x="260.0" y="126.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">Una hoja de cerrados</text>
+<text x="260.0" y="185.0" fill="#5C6B7A" font-size="11" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">y el informe de qué costó</text>
+<line x1="442.0" y1="108.0" x2="466.0" y2="108.0" stroke="#5C6B7A" stroke-width="1.6"/><path d="M 472.0 108.0 l -7 -4.5 l 0 9 z" fill="#5C6B7A"/>
+<rect x="480.0" y="46.0" width="186.0" height="124.0" rx="8" fill="#F4F7FA" stroke="#1A6FB5" stroke-width="1.6"/>
+<text x="492.0" y="70.0" fill="#1A6FB5" font-size="12.5" font-weight="700" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">Armonizar</text>
+<text x="492.0" y="92.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">9 y 10 columnas</text>
+<text x="492.0" y="109.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">Un campo, dos nombres</text>
+<text x="492.0" y="126.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">El tipo, en el nombre del</text>
+<text x="492.0" y="143.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">archivo</text>
+<text x="492.0" y="185.0" fill="#5C6B7A" font-size="11" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">esquema de 10 campos</text>
+<line x1="674.0" y1="108.0" x2="698.0" y2="108.0" stroke="#5C6B7A" stroke-width="1.6"/><path d="M 704.0 108.0 l -7 -4.5 l 0 9 z" fill="#5C6B7A"/>
+<rect x="712.0" y="46.0" width="186.0" height="124.0" rx="8" fill="#F4F7FA" stroke="#B08A3E" stroke-width="1.6"/>
+<text x="724.0" y="70.0" fill="#B08A3E" font-size="12.5" font-weight="700" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">Comprobar</text>
+<text x="724.0" y="92.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">El código no es clave</text>
+<text x="724.0" y="109.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">Dos coordenadas por fila</text>
+<text x="724.0" y="126.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">Horario en el 18 %</text>
+<text x="724.0" y="185.0" fill="#5C6B7A" font-size="11" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">3 errores de hasta 10,3 km</text>
+<line x1="906.0" y1="108.0" x2="930.0" y2="108.0" stroke="#5C6B7A" stroke-width="1.6"/><path d="M 936.0 108.0 l -7 -4.5 l 0 9 z" fill="#5C6B7A"/>
+<rect x="944.0" y="46.0" width="186.0" height="124.0" rx="8" fill="#F4F7FA" stroke="#55D6BE" stroke-width="1.6"/>
+<text x="956.0" y="70.0" fill="#55D6BE" font-size="12.5" font-weight="700" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">Una tabla que se cuenta</text>
+<text x="956.0" y="92.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">46 comunas</text>
+<text x="956.0" y="109.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">3 entidades</text>
+<text x="956.0" y="126.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">5 tipos de local</text>
+<text x="956.0" y="185.0" fill="#5C6B7A" font-size="11" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">y sus límites, escritos</text>
+</svg>
