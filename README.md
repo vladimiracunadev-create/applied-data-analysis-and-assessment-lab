@@ -28,7 +28,7 @@ qué tecnología se usó, por qué, y qué trampa tenía cada dato.
 
 | Si necesitas… | Empieza por |
 | --- | --- |
-| **Prepararte para una evaluación técnica** de datos con Excel y Pandas | [Mapa de problemas](docs/problemas-de-la-instancia.md) — 16 problemas, tres resueltos paso a paso |
+| **Prepararte para una evaluación técnica** de datos con Excel y Pandas | [Mapa de problemas](docs/problemas-de-la-instancia.md) — 16 problemas: tres resueltos paso a paso y uno resuelto en parte |
 | **Resolver un problema de datos** de tu trabajo | [El recorrido de nueve etapas](docs/instancias.md) |
 | **Aprender** con material que explica el por qué | [Programa de aprendizaje](docs/programa.md) — 8 clases con 17 secciones cada una |
 | **Reproducir un indicador oficial** | [Indicadores oficiales del transporte](docs/indicadores-oficiales-transporte.md) |
