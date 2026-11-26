@@ -1,0 +1,6 @@
+indicador,valor,unidad
+campos_declarados,codigo + direccion + fuente,
+filas,1928,filas
+identificadores_distintos,1928,ids
+filas_con_identidad_repetida,0,filas
+es_clave,sí,sí significa que los campos declarados distinguen cada fila

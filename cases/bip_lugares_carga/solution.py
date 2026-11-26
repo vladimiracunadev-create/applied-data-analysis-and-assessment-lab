@@ -84,9 +84,16 @@ if str(ROOT) not in sys.path:
 
 from lab.excel import SheetReport, read_all_sheets  # noqa: E402
 from lab.geo import haversine_km, utm_to_latlon  # noqa: E402
+from lab.keys import candidate_keys, key_report, surrogate_key, surrogate_report  # noqa: E402
 from lab.metrics import indicator_table, safe_ratio  # noqa: E402
 from lab.sources import BIP_SOURCES, Provenance  # noqa: E402
-from lab.textual import normalize_key, normalize_label, normalize_series  # noqa: E402
+from lab.textual import (  # noqa: E402
+    merge_audit,
+    normalization_report,
+    normalize_key,
+    normalize_label,
+    normalize_series,
+)
 
 HERE = Path(__file__).resolve().parent
 ORIGINAL = ROOT / "data" / "original"
@@ -134,6 +141,24 @@ UMBRAL_COORDENADA_M = 200.0
 
 #: Zona UTM de Santiago de Chile.
 ZONA_UTM = 19
+
+#: Columnas que se evalúan como candidatas a clave. Son las que vienen del archivo:
+#: las derivadas por este código no cuentan, porque una clave tiene que poder
+#: reconstruirse desde la fuente.
+COLUMNAS_CANDIDATAS: tuple[str, ...] = (
+    "fuente", "hoja", "codigo", "entidad", "nombre", "direccion", "comuna",
+    "este", "norte", "tipo_local",
+)
+
+#: Campos que **se declaran** como la identidad de un lugar de carga, para construir la
+#: clave subrogada. La elección se razona en `claves_candidatas`: no hay clave natural
+#: sólida, y de las tres combinaciones mínimas que resultan únicas, esta es la única que
+#: no depende de una coordenada medida.
+IDENTIDAD: tuple[str, ...] = ("fuente", "codigo", "direccion")
+
+#: Prefijo del identificador subrogado, para que se reconozca de dónde viene al verlo
+#: en una tabla ajena.
+PREFIJO_ID = "bip-"
 
 
 def _exigir_archivos() -> list[Path]:
@@ -422,6 +447,174 @@ def por_entidad(consolidado: pd.DataFrame) -> pd.DataFrame:
 
 
 # ---------------------------------------------------------------------------- informe
+
+# --------------------------------------------- P02: ¿qué identifica un lugar de carga?
+def claves_candidatas(consolidado: pd.DataFrame) -> pd.DataFrame:
+    """Las combinaciones mínimas de columnas que identifican una fila.
+
+    `validar_clave` contesta la pregunta estrecha —«¿es `codigo` una clave?»— y la
+    respuesta es que no, ni solo ni junto al archivo de origen: 136 filas comparten
+    `fuente + codigo`. Esta función contesta la pregunta amplia: **¿hay alguna?**
+
+    Sí, tres. Y ninguna sirve, por lo que explica `claves_candidatas_evaluadas`.
+    """
+    return candidate_keys(consolidado, list(COLUMNAS_CANDIDATAS))
+
+
+def claves_candidatas_evaluadas(consolidado: pd.DataFrame) -> pd.DataFrame:
+    """Por qué ninguna de las tres claves candidatas es un identificador aceptable.
+
+    Que una combinación resulte única en los datos de hoy no la vuelve un
+    identificador: eso depende de si sus campos son **estables**.
+
+    La más instructiva es `codigo + este`. Es única hoy. Y P10 demostró que varias
+    coordenadas de este archivo están equivocadas por kilómetros, de modo que el día en
+    que el publicador corrija la de Santa Lucía, esa fila cambiará de identidad y
+    aparecerá como un lugar nuevo. Una clave que cambia cuando se corrige un error no
+    es una clave: es un número de serie del error.
+    """
+    candidatas = candidate_keys(consolidado, list(COLUMNAS_CANDIDATAS))
+    motivos = {
+        "codigo + direccion": (
+            "no",
+            "`direccion` es texto libre: una tilde corregida o un espacio de mas "
+            "cambian la identidad de la fila",
+        ),
+        "codigo + este": (
+            "no",
+            "`este` es una coordenada MEDIDA. P10 encontro coordenadas erradas por "
+            "kilometros en este archivo: corregirlas cambiaria la identidad",
+        ),
+        "codigo + norte": (
+            "no",
+            "igual que `este`: una clave que cambia cuando se corrige un error no es "
+            "una clave",
+        ),
+    }
+    filas = []
+    for columnas in candidatas["columnas"]:
+        sirve, motivo = motivos.get(columnas, ("se desconoce", "no evaluada"))
+        filas.append({
+            "clave_candidata": columnas,
+            "unica_hoy": "si",
+            "sirve_de_identificador": sirve,
+            "por_que": motivo,
+        })
+    return pd.DataFrame(filas)
+
+
+def informe_de_columnas(consolidado: pd.DataFrame) -> pd.DataFrame:
+    """Diagnóstico de cada columna candidata: nulos, distintos, repetidos y el motivo.
+
+    Se informa el motivo y no solo un sí o un no porque las dos causas piden acciones
+    distintas. `nombre` es el caso interesante: tiene **las dos**, 36 nulos y 98
+    repetidos, de modo que ni completándolo serviría.
+    """
+    return key_report(consolidado, list(COLUMNAS_CANDIDATAS))
+
+
+def clave_subrogada(consolidado: pd.DataFrame) -> pd.Series:
+    """El identificador que el consolidado no trae, derivado de la identidad declarada.
+
+    Es la salida cuando no hay clave natural sólida: un identificador determinista
+    calculado desde `IDENTIDAD`. Dos propiedades y una limitación:
+
+    - determinista, a diferencia de un número de fila, que es lo que los casos P08, P09
+      y P10 tuvieron que usar por no haber nada mejor;
+    - comprueba sus propias colisiones y falla en lugar de devolver duplicados;
+    - **hereda la inestabilidad de `direccion`**. No hay forma de evitarlo sin un
+      identificador provisto por la fuente, y pedirlo es lo que corresponde.
+    """
+    return surrogate_key(consolidado, list(IDENTIDAD), prefix=PREFIJO_ID)
+
+
+def informe_de_clave_subrogada(consolidado: pd.DataFrame) -> pd.DataFrame:
+    """Qué consigue la clave subrogada sobre este archivo."""
+    return surrogate_report(consolidado, list(IDENTIDAD), prefix=PREFIJO_ID)
+
+
+# ------------------------------------- P04: qué cambió la normalización, y si estuvo bien
+def efecto_de_normalizar(consolidado: pd.DataFrame) -> pd.DataFrame:
+    """Cuántos grupos espurios evita normalizar cada columna de agrupación.
+
+    Es el argumento a favor de normalizar, cuantificado. Sobre este archivo el
+    argumento es **flojo**, y eso también hay que decirlo: `comuna` no gana nada —46
+    valores crudos y 46 normalizados— y `entidad` gana uno.
+    """
+    filas = []
+    for columna in ("comuna", "entidad", "direccion"):
+        informe = normalization_report(consolidado[columna], columna)
+        valores = informe.set_index("indicador")["valor"]
+        filas.append({
+            "columna": columna,
+            "filas": int(valores["filas"]),
+            "distintos_crudos": int(valores["distintos_sin_normalizar"]),
+            "distintos_normalizados": int(valores["distintos_normalizados"]),
+            "grupos_espurios_evitados": int(valores["grupos_espurios_evitados"]),
+        })
+    return pd.DataFrame(filas)
+
+
+def auditoria_de_fusiones(consolidado: pd.DataFrame) -> pd.DataFrame:
+    """Cada fusión que hizo la normalización, con las formas crudas que absorbió.
+
+    Es la pregunta que `efecto_de_normalizar` no hace: **¿alguna fusión estuvo mal?**
+
+    Normalizar tiene dos direcciones de error y solo una se nota. Dejar separado lo que
+    es igual infla el número de grupos y salta a la vista. Juntar lo que es distinto
+    produce un grupo menos con un total mayor, y es perfectamente verosímil.
+
+    Sobre este archivo son seis fusiones en total y las seis son correctas: diferencias
+    de mayúsculas, de tildes, un apóstrofo escrito como acento grave y un espacio
+    doble. Que sean pocas y revisables es el punto: la salida de esta función es para
+    leerla, no para contarla.
+    """
+    partes = [
+        merge_audit(consolidado["comuna"], "comuna"),
+        merge_audit(consolidado["entidad"], "entidad"),
+        merge_audit(consolidado["direccion"], "direccion", expand_abbreviations=True),
+    ]
+    con_datos = [parte for parte in partes if not parte.empty]
+    if not con_datos:
+        return partes[0]
+    return pd.concat(con_datos, ignore_index=True)
+
+
+def aporte_de_las_abreviaturas(consolidado: pd.DataFrame) -> pd.DataFrame:
+    """Qué aporta expandir abreviaturas en este archivo. La respuesta es nada.
+
+    `lab.textual.ABREVIATURAS` declara trece equivalencias —`AV` por `AVENIDA`, `PJE`
+    por `PASAJE`— y la expansión está implementada y probada. Sobre las 1 928
+    direcciones reales de este archivo **no fusiona ni una**.
+
+    Las cinco fusiones de `direccion` las produce el resto de la normalización: tildes,
+    mayúsculas y espacios. La expansión no sobra —cuesta nada y protege de un archivo
+    donde sí haga falta— pero afirmar que hace algo aquí sería falso, y la tabla lo
+    deja medido.
+    """
+    sin_expandir = consolidado["direccion"].map(normalize_key)
+    con_expandir = consolidado["direccion"].map(
+        lambda valor: normalize_key(valor, expand_abbreviations=True)
+    )
+    crudas = int(consolidado["direccion"].astype("string").nunique())
+    return indicator_table({
+        "direcciones_crudas_distintas": (
+            crudas, "valores", "Tal como vienen en los cinco archivos"),
+        "normalizadas_sin_expandir": (
+            int(sin_expandir.nunique()), "valores",
+            "Minusculas, sin tildes, espacios colapsados"),
+        "normalizadas_expandiendo": (
+            int(con_expandir.nunique()), "valores",
+            "Lo anterior mas las trece abreviaturas declaradas"),
+        "fusiones_de_la_normalizacion": (
+            crudas - int(sin_expandir.nunique()), "grupos",
+            "Lo que gana normalizar, sin tocar abreviaturas"),
+        "fusiones_que_aporta_expandir": (
+            int(sin_expandir.nunique()) - int(con_expandir.nunique()), "grupos",
+            "Lo que gana la expansion de abreviaturas. Cero en este archivo: la "
+            "capacidad existe y aqui no hace nada"),
+    })
+
 def analizar() -> dict[str, pd.DataFrame]:
     """Ejecuta el caso completo y devuelve todas las tablas de resultado."""
     hojas = cargar()
@@ -431,6 +624,13 @@ def analizar() -> dict[str, pd.DataFrame]:
         "esquemas": informe_de_esquemas(hojas),
         "cobertura_campos": cobertura_de_campos(consolidado),
         "clave": validar_clave(consolidado),
+        "claves_candidatas": claves_candidatas(consolidado),
+        "claves_evaluadas": claves_candidatas_evaluadas(consolidado),
+        "columnas_como_clave": informe_de_columnas(consolidado),
+        "clave_subrogada": informe_de_clave_subrogada(consolidado),
+        "efecto_de_normalizar": efecto_de_normalizar(consolidado),
+        "auditoria_de_fusiones": auditoria_de_fusiones(consolidado),
+        "aporte_de_abreviaturas": aporte_de_las_abreviaturas(consolidado),
         "validacion_coordenadas": validar_coordenadas(consolidado),
         "coordenadas_sospechosas": coordenadas_sospechosas(consolidado),
         "resumen": resumen(consolidado),
@@ -478,6 +678,29 @@ def main() -> None:
 
     print("\n=== ¿El código es una clave? ===")
     print(resultados["clave"].to_string(index=False))
+
+    print("\n=== P02: qué columna podría ser clave, y por qué ninguna lo es ===")
+    print(resultados["columnas_como_clave"].to_string(index=False))
+
+    print("\n=== P02: las claves candidatas mínimas ===")
+    print(resultados["claves_candidatas"].to_string(index=False))
+
+    print("\n=== P02: y por qué ninguna sirve de identificador ===")
+    print(resultados["claves_evaluadas"].to_string(index=False))
+
+    print("\n=== P02: la clave subrogada, que es la salida ===")
+    print(resultados["clave_subrogada"].to_string(index=False))
+
+    print("\n=== P04: qué gana normalizar cada columna de agrupación ===")
+    print(resultados["efecto_de_normalizar"].to_string(index=False))
+
+    fusiones = resultados["auditoria_de_fusiones"]
+    print(f"\n=== P04: cada fusión, para poder verificarla ({len(fusiones)}) ===")
+    if len(fusiones):
+        print(fusiones[["columna", "clave_normalizada", "formas"]].to_string(index=False))
+
+    print("\n=== P04: qué aporta expandir abreviaturas en este archivo ===")
+    print(resultados["aporte_de_abreviaturas"].to_string(index=False))
 
     print("\n=== Validación cruzada de las dos coordenadas ===")
     print(resultados["validacion_coordenadas"].to_string(index=False))

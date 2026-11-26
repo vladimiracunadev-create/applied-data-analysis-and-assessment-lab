@@ -1,6 +1,6 @@
 {
   "slug": "bip_lugares_carga",
-  "titulo": "Consolidar cinco Excel públicos heterogéneos: lugares de carga de la tarjeta bip!",
+  "titulo": "Consolidar cinco Excel públicos heterogéneos, y establecer qué identifica una fila cuando nada lo hace",
   "disciplina": "gestion-de-datos",
   "industria": "transporte",
   "dificultad": "intermedio",
@@ -18,7 +18,7 @@
     "comunicacion-resultados"
   ],
   "estado": "implementado",
-  "tiempo_sugerido_min": 120,
+  "tiempo_sugerido_min": 180,
   "contexto": "La Subsecretaría de Transporte publica en el portal de datos abiertos del Estado los lugares donde se puede cargar la tarjeta bip!, repartidos en cinco archivos Excel: estaciones de Metro, Puntos bip!, centros de alto estándar, centros estándar y retail. Son 1 928 filas en seis hojas, con licencia Creative Commons Atribución-NoComercial 2.0 verificada. Están maquetados para que una persona los lea, no para que un programa los procese.",
   "problema": "Responder cuántos lugares de carga hay, de qué tipo, en qué comuna y de qué entidad, consolidando cinco archivos cuyo encabezado está en una fila distinta en cada uno y cuyos esquemas no coinciden.",
   "objetivos": [
@@ -27,7 +27,11 @@
     "Distinguir la hoja de locales cerrados de las de locales abiertos.",
     "Comprobar si el código es una clave, en lugar de suponerlo.",
     "Validar las dos representaciones de la coordenada una contra la otra.",
-    "Agrupar por comuna y por entidad sobre claves normalizadas."
+    "Agrupar por comuna y por entidad sobre claves normalizadas.",
+    "Buscar de forma exhaustiva las combinaciones mínimas de columnas que identifican una fila, y evaluar si alguna sirve de identificador (P02).",
+    "Construir una clave subrogada determinista a partir de los campos que se declaren como identidad, con comprobación de colisiones (P02).",
+    "Auditar qué fusionó la normalización, fusión por fusión, para poder verificar cada una (P04).",
+    "Medir aparte qué aporta la expansión de abreviaturas, en lugar de suponer que ayuda porque está implementada (P04)."
   ],
   "restricciones": [
     "Dos horas de trabajo.",
@@ -48,7 +52,9 @@
     "Las coordenadas UTM están en la zona 19 del hemisferio sur.",
     "Un desvío mayor que 200 metros entre las dos representaciones de la coordenada indica un error de registro, no una diferencia de datum.",
     "Las claves de agrupación se normalizan quitando tildes, pasando a mayúsculas y colapsando espacios; la etiqueta legible se conserva aparte.",
-    "No se imputa ningún valor: lo no interpretable queda nulo y contado."
+    "No se imputa ningún valor: lo no interpretable queda nulo y contado.",
+    "La identidad de un lugar de carga son los campos `fuente + codigo + direccion`. Es una DECLARACIÓN del caso y no un dato de la fuente: ninguna de las tres claves candidatas naturales sirve de identificador, y la elegida hereda la inestabilidad de `direccion`.",
+    "Una clave candidata que resulta única en los datos descargados no se acepta como identificador sin evaluar si sus campos son estables."
   ],
   "metodologias_alternativas": [
     "Pandas con detección de encabezado, que es lo implementado.",
@@ -59,22 +65,30 @@
     "cases/bip_lugares_carga/solution.py — resolución completa.",
     "lab/excel.py — detect_header_row, read_messy_sheet, read_all_sheets, sheet_names.",
     "lab/textual.py — normalize_key, normalize_label, similarity, duplicate_candidates.",
-    "lab/geo.py — utm_to_latlon, haversine_km, nearest_point."
+    "lab/geo.py — utm_to_latlon, haversine_km, nearest_point.",
+    "lab/keys.py — diagnóstico de columnas, claves candidatas mínimas y clave subrogada determinista.",
+    "lab/textual.py — merge_audit, que expone cada fusión con sus formas crudas."
   ],
   "soluciones": "cases/bip_lugares_carga/solution.py, documentada paso a paso en el README del caso.",
-  "resultados": "cases/bip_lugares_carga/resultados/ con nueve tablas: informe de lectura, correspondencia de esquemas, cobertura de campos, validación de clave, validación de coordenadas, filas sospechosas, resumen, agregado por comuna y agregado por entidad. Total: 1 928 lugares, 1 927 abiertos, 46 comunas, 3 entidades, 18,06 % con horario publicado.",
+  "resultados": "cases/bip_lugares_carga/resultados/ con nueve tablas: informe de lectura, correspondencia de esquemas, cobertura de campos, validación de clave, validación de coordenadas, filas sospechosas, resumen, agregado por comuna y agregado por entidad. Total: 1 928 lugares, 1 927 abiertos, 46 comunas, 3 entidades, 18,06 % con horario publicado. Para P02: ninguna columna identifica una fila, hay tres claves candidatas mínimas de dos columnas y ninguna sirve de identificador; la clave subrogada sobre `fuente + codigo + direccion` da 1 928 identificadores distintos sin colisiones. Para P04: la normalización fusiona seis veces en todo el archivo —cero en `comuna`, una en `entidad`, cinco en `direccion`—, las seis verificadas correctas, y la expansión de abreviaturas no aporta ninguna.",
   "validaciones": [
     "Validación cruzada interna: las dos representaciones de cada coordenada se comparan entre sí, sin fuente externa. Encontró tres errores de registro de 4,6 a 10,3 kilómetros.",
     "La distribución de los desvíos se analiza por tramos y resulta bimodal, lo que permite distinguir el desplazamiento sistemático de los errores reales.",
     "tests/test_bip.py reproduce la maqueta exacta de los cinco archivos con libros mínimos y comprueba la detección de encabezado, la armonización, la clave, la cobertura y la validación de coordenadas, sin descargar nada.",
-    "La cobertura de cada campo del esquema común se informa, junto con qué fuentes no lo traen."
+    "La cobertura de cada campo del esquema común se informa, junto con qué fuentes no lo traen.",
+    "La búsqueda de claves candidatas devuelve solo las mínimas y descarta de entrada las columnas con nulos; se prueba contra tablas con la respuesta conocida.",
+    "La clave subrogada se prueba determinista entre llamadas y ante un reordenamiento de las filas, y se prueba que una colisión real levante un error en lugar de devolver duplicados.",
+    "Cada fusión de la normalización se informa con sus formas crudas, y las seis del archivo se revisaron una por una.",
+    "El aporte de la expansión de abreviaturas se mide por separado del resto de la normalización, de modo que la cifra cero quede medida y no supuesta."
   ],
   "interpretacion": "El resultado describe la oferta de lugares de carga, no su uso ni su suficiencia. La distribución bimodal de los desvíos de coordenada indica que las dos columnas no se produjeron con un único proceso consistente: es un hallazgo de gobernanza de datos que corresponde consultar al publicador, no corregir por cuenta propia.",
   "limitaciones": [
     "No permite calcular cobertura por habitante ni por superficie: la comuna llega como texto, sin población ni límites geográficos.",
     "No dice nada sobre uso: los archivos tienen ubicación y horario, no transacciones.",
     "El horario es referencial, según lo declara el propio archivo, y solo está publicado para el 18,06 % de los locales.",
-    "Los archivos del portal se actualizan: las cifras corresponden a la versión del 26 de noviembre de 2026."
+    "Los archivos del portal se actualizan: las cifras corresponden a la versión del 26 de noviembre de 2026.",
+    "La clave subrogada no se pudo probar contra una segunda publicación de los archivos: solo hay una descarga. Su estabilidad entre versiones queda declarada como no verificada.",
+    "La identidad declarada incluye `direccion`, que es texto libre. Si el publicador corrige una dirección, el identificador de esa fila cambia. La solución real es que la fuente publique un identificador y lo mantenga."
   ],
   "conocimiento_adquirido": [
     "El encabezado de una planilla pública puede estar en cualquier fila: en cinco archivos del mismo organismo estaba en las filas 7, 9, 13, 10 y 9. Detectarlo es más robusto que fijarlo, y si la detección falla hay que fallar en lugar de adivinar.",
@@ -82,12 +96,21 @@
     "FULLCARGA y Fullcarga son dos grupos para groupby y uno para una persona. Hay que normalizar para agrupar y conservar la etiqueta legible para informar.",
     "Dos representaciones de la misma coordenada en un archivo permiten validarlo contra sí mismo. Aquí encontraron tres errores de hasta 10,3 kilómetros sin consultar ninguna fuente externa.",
     "Una distribución bimodal de desvíos separa el problema sistemático del error puntual: 1 779 filas desplazadas 61 metros son una diferencia de datum, 3 filas desplazadas kilómetros son errores. Confundirlos produce o un falso positivo masivo o una omisión.",
-    "Un campo que un archivo no publica no es un campo con nulos: es un campo que esa población no tiene. El horario cubre el 18,06 % porque 1 579 locales provienen de un archivo que no lo trae."
+    "Un campo que un archivo no publica no es un campo con nulos: es un campo que esa población no tiene. El horario cubre el 18,06 % porque 1 579 locales provienen de un archivo que no lo trae.",
+    "Ninguna columna del consolidado identifica una fila: `direccion`, `norte`, `este` y `codigo` tienen repetidos, y `nombre` falla por las dos causas a la vez —36 nulos y 98 repetidos—, de modo que ni completándolo serviría.",
+    "Una combinación única en los datos de hoy no es un identificador. `codigo + este` es única y depende de una coordenada medida: el día en que el publicador corrija una coordenada errada, esa fila cambia de identidad. Una clave que cambia cuando se corrige un error es un número de serie del error.",
+    "Cuando no hay clave natural sólida, la salida es una clave subrogada determinista sobre los campos que se declaran como identidad. Su ventaja sobre el número de fila es que no depende de la ejecución; su límite es que hereda la inestabilidad de sus campos.",
+    "Normalizar tiene dos direcciones de error y solo una se nota: dejar separado lo que es igual parte un total y salta a la vista; juntar lo que es distinto produce un grupo menos con un total mayor y es verosímil.",
+    "En este archivo la normalización fusiona seis veces en total, y `comuna` —el ejemplo clásico— no gana nada: 46 valores crudos y 46 normalizados. El riesgo de no normalizar era concreto y pequeño; conviene medirlo antes de suponerlo.",
+    "La expansión de trece abreviaturas declaradas no fusiona ni una de las 1 919 direcciones. Que una capacidad exista y esté probada no significa que aporte algo sobre los datos que uno tiene, y medirlo aparte evita atribuirle un mérito que no tiene."
   ],
   "capacidades_reutilizables": [
     "lab.excel.detect_header_row y read_all_sheets sirven para cualquier planilla que alguien maquetó para imprimir: informes de gestión, extractos bancarios, nóminas.",
     "lab.textual sirve para deduplicar y cruzar nombres de clientes, proveedores, empresas o localidades en cualquier dominio.",
     "lab.geo habilita el análisis de proximidad en cualquier caso con coordenadas, y la validación cruzada entre dos sistemas de coordenadas en el mismo archivo.",
-    "El patrón de validación interna —dos representaciones del mismo hecho en una sola fuente— se aplica a cualquier dato redundante: un total y sus partes, un monto en dos monedas, una fecha y su número de semana."
+    "El patrón de validación interna —dos representaciones del mismo hecho en una sola fuente— se aplica a cualquier dato redundante: un total y sus partes, un monto en dos monedas, una fecha y su número de semana.",
+    "lab.keys resuelve la primera pregunta de cualquier cruce —¿cuál es la clave de esta tabla?— con un diagnóstico por columna, la búsqueda exhaustiva de claves candidatas mínimas y una clave subrogada que comprueba sus colisiones. Sirve para cualquier tabla cuya clave no esté documentada, que son casi todas.",
+    "lab.textual.merge_audit devuelve las formas crudas que absorbió cada fusión de una normalización, que es la dirección del error que ninguna métrica de calidad mide.",
+    "El patrón de medir por separado lo que aporta cada componente de una transformación —aquí, la normalización básica frente a la expansión de abreviaturas— evita justificar una capacidad por su existencia."
   ]
 }

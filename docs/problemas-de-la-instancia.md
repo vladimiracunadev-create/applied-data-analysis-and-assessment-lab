@@ -85,14 +85,24 @@ errores de hasta 10,3 km) y P04 (normalización).
 
 **Datos.** Los cinco Excel.
 
-**Tecnología.** Pandas, `duplicated`, `nunique`.
+**Tecnología.** `lab.keys`: diagnóstico por columna, búsqueda exhaustiva de claves
+candidatas mínimas y clave subrogada determinista.
 
-**Qué enseña.** Que una columna llamada «código» no es una clave hasta que se mide. En
-el archivo de Metro los códigos son `L1`, `L2`… (la **línea**, no el local), mientras
-en los otros son numéricos. Al consolidar, el código **no** es único: hace falta una
-clave compuesta, o una clave nueva con el origen del archivo.
+**Qué enseña.** Que una columna llamada «código» no es una clave hasta que se mide —en
+el archivo de Metro el código es la **línea**, 143 estaciones con 7 códigos—, y algo
+más importante: que **una combinación única en los datos de hoy no es un
+identificador**. Hay tres claves candidatas mínimas y ninguna sirve, porque las tres
+dependen de un campo que se mide o se corrige.
 
-**Estado:** disponible.
+**El resultado.** Ninguna columna sola identifica una fila; `nombre` falla por las dos
+causas a la vez (36 nulos y 98 repetidos). **Ni `fuente + codigo`** identifica una
+fila: 136 filas lo comparten, de modo que la clave compuesta con el archivo de origen
+—que este enunciado proponía— no resuelve nada. La salida es una clave subrogada sobre
+la identidad declarada: 1 928 identificadores distintos, sin colisiones.
+
+**Estado:** **resuelto** dentro de
+[`cases/bip_lugares_carga`](../cases/bip_lugares_carga/README.md), sección 5.4b. El
+núcleo nuevo es [`lab/keys.py`](../lab/keys.py).
 
 ### P03. Validación cruzada de coordenadas: UTM contra latitud y longitud
 
@@ -120,14 +130,23 @@ amplía allí a cuatro detectores, cada uno con su punto ciego medido.
 
 **Datos.** Los cinco Excel.
 
-**Tecnología.** Normalización de texto: mayúsculas, tildes, espacios dobles, espacios
-al final.
+**Tecnología.** `lab.textual`: `normalize_key` para agrupar, `normalize_label` para
+mostrar, `normalization_report` para cuantificar y `merge_audit` para **revisar**.
 
 **Qué enseña.** Que `FULLCARGA` y `Fullcarga` son dos grupos para `groupby` y uno para
-una persona. Y que `CONCHALI` no cruza con `Conchalí` de ninguna otra fuente hasta que
-ambas se normalizan con la **misma** regla, declarada.
+una persona. Y la mitad que suele faltar: que **normalizar tiene dos direcciones de
+error y solo una se nota**. Dejar separado lo que es igual parte un total y salta a la
+vista; juntar lo que es distinto produce un grupo menos con un total mayor, y es
+perfectamente verosímil.
 
-**Estado:** disponible.
+**El resultado.** La normalización fusiona **seis veces en todo el archivo**: cero en
+`comuna` —46 valores crudos y 46 normalizados, el ejemplo clásico no gana nada—, una en
+`entidad` y cinco en `direccion`. Las seis se revisaron y son correctas. Y la expansión
+de las trece abreviaturas declaradas **no fusiona ninguna**: la capacidad existe, está
+probada, y sobre estos datos no hace nada.
+
+**Estado:** **resuelto** dentro de
+[`cases/bip_lugares_carga`](../cases/bip_lugares_carga/README.md), sección 5.5b.
 
 ### P05. Interpretar horarios escritos en texto libre
 
@@ -423,7 +442,9 @@ orden por rendimiento es:
 2. **P11** (calendario con reglas de exclusión oficiales) — **resuelto**: léalo. Es el
    que más se parece al trabajo real del cargo.
 3. **P06** (ya resuelto: leerlo y rehacerlo) — volumen, fechas y el error del atajo.
-4. **P04** y **P02** (normalización y claves) — rápidos, y aparecen siempre.
+4. **P04** y **P02** (normalización y claves) — **resueltos**: rápidos de leer, y
+   aparecen en toda prueba técnica. P02 deja la pregunta que conviene llevarse:
+   ¿esta combinación es única, o es un identificador?
 5. **P08** (proximidad) — **resuelto en parte**: léalo. Es el cruce sin clave, y el
    que mejor muestra cuánto del resultado lo pone el analista.
 6. **P09** (cobertura nocturna) — **resuelto**: léalo al final. Es el más difícil de

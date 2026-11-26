@@ -12,8 +12,8 @@ En orden, de lo que más rinde a lo que menos:
 
 | # | Documento | Qué te da |
 | --- | --- | --- |
-| 1 | [Mapa de problemas](problemas-de-la-instancia.md) | 16 problemas con su pregunta exacta, los datos que usa cada uno y su estado. Y **10 preguntas que estos datos no permiten contestar** |
-| 2 | [`cases/bip_lugares_carga`](../cases/bip_lugares_carga/README.md) | **P01 resuelto**: consolidar cinco Excel reales con nueve defectos. Es lo más parecido a una prueba de cuatro horas |
+| 1 | [Mapa de problemas](problemas-de-la-instancia.md) | 16 problemas con su pregunta exacta, los datos que usa cada uno y su estado: **nueve resueltos**. Y **10 preguntas que estos datos no permiten contestar** |
+| 2 | [`cases/bip_lugares_carga`](../cases/bip_lugares_carga/README.md) | **P01, P02 y P04 resueltos**: consolidar cinco Excel reales con nueve defectos, y establecer qué identifica una fila cuando nada lo hace. Es lo más parecido a una prueba de cuatro horas |
 | 3 | [`cases/calendario_medicion`](../cases/calendario_medicion/README.md) | **P11 resuelto**: reconstruir el denominador de un indicador oficial |
 | 4 | [`cases/cobertura_de_carga`](../cases/cobertura_de_carga/README.md) | **P08 resuelto en parte**: el cruce que no tiene clave, y cuánto del resultado lo pone el analista |
 | 5 | [`cases/carga_nocturna`](../cases/carga_nocturna/README.md) | **P09 y P05 resueltos**: un indicador con datos faltantes, publicado como intervalo en lugar de cifra |
@@ -35,7 +35,7 @@ conoce, y queda dicho en el mapa de problemas.
 | [Metodología de 18 etapas](metodologia.md) | La versión completa y auditable, implementada en `lab.method` |
 | [Método de investigación](research-method.md) | La versión corta, para un análisis acotado |
 | [Arquitectura](arquitectura.md) | Los contratos entre módulos y las decisiones técnicas con sus alternativas descartadas |
-| [Base de conocimiento](conocimiento.md) | 40 registros de cosas que costó descubrir. Búsqueda: `python -m lab.knowledge "consulta"` |
+| [Base de conocimiento](conocimiento.md) | 42 registros de cosas que costó descubrir. Búsqueda: `python -m lab.knowledge "consulta"` |
 | [Catálogo de casos](catalogo-casos.md) | Los nueve casos con sus metadatos y la cobertura de competencias |
 
 ---

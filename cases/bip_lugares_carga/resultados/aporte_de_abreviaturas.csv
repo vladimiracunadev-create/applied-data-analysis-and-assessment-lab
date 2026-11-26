@@ -1,0 +1,6 @@
+indicador,valor,unidad,definicion
+direcciones_crudas_distintas,1919,valores,Tal como vienen en los cinco archivos
+normalizadas_sin_expandir,1914,valores,"Minusculas, sin tildes, espacios colapsados"
+normalizadas_expandiendo,1914,valores,Lo anterior mas las trece abreviaturas declaradas
+fusiones_de_la_normalizacion,5,grupos,"Lo que gana normalizar, sin tocar abreviaturas"
+fusiones_que_aporta_expandir,0,grupos,Lo que gana la expansion de abreviaturas. Cero en este archivo: la capacidad existe y aqui no hace nada

@@ -8,6 +8,7 @@ import pytest
 from lab.textual import (
     ABREVIATURAS,
     duplicate_candidates,
+    merge_audit,
     normalization_report,
     normalize_key,
     normalize_label,
@@ -124,3 +125,61 @@ def test_normalization_report_cuantifica_los_grupos_espurios():
     assert tabla["distintos_normalizados"] == 2     # FULLCARGA y WALMART
     assert tabla["grupos_espurios_evitados"] == 2
     assert tabla["vacios_tras_normalizar"] == 1
+
+
+# --------------------------------------------- la dirección del error que nadie mide
+def test_merge_audit_devuelve_las_formas_crudas_de_cada_fusion():
+    """`normalization_report` cuenta cuántas fusiones hubo; esta función dice cuáles.
+
+    Es la única parte de una normalización que una persona tiene que confirmar: cada
+    fila es la afirmación de que dos textos distintos nombran la misma cosa.
+    """
+    serie = pd.Series(["FULLCARGA", "Fullcarga", "Fullcarga", "WALMART", "Metro"])
+    tabla = merge_audit(serie, "entidad")
+    assert len(tabla) == 1
+    fila = tabla.iloc[0]
+    assert fila["clave_normalizada"] == "FULLCARGA"
+    assert fila["formas_crudas"] == 2
+    assert fila["filas_afectadas"] == 3
+    assert "Fullcarga (2)" in fila["formas"]
+    assert "FULLCARGA (1)" in fila["formas"]
+    assert fila["columna"] == "entidad"
+
+
+def test_merge_audit_no_informa_lo_que_no_fusiono():
+    """Una columna que la normalización no toca devuelve una tabla vacía."""
+    tabla = merge_audit(pd.Series(["UNO", "DOS", "TRES"]), "x")
+    assert tabla.empty
+    assert list(tabla.columns) == [
+        "columna", "clave_normalizada", "formas_crudas", "formas", "filas_afectadas",
+    ]
+
+
+def test_merge_audit_delata_una_fusion_indebida():
+    """El caso peligroso: expandir abreviaturas junta dos cosas distintas.
+
+    `AV 100` y `AVENIDA 100` son el mismo lugar. Pero si una entidad se llamara
+    literalmente `AV`, la expansión la fundiría con `AVENIDA`. La función no decide:
+    pone las formas crudas a la vista para que alguien lo decida.
+    """
+    serie = pd.Series(["AV 100", "AVENIDA 100"])
+    assert merge_audit(serie, "direccion").empty
+    con_expansion = merge_audit(serie, "direccion", expand_abbreviations=True)
+    assert len(con_expansion) == 1
+    assert con_expansion["formas_crudas"].iloc[0] == 2
+    assert "AV 100" in con_expansion["formas"].iloc[0]
+    assert "AVENIDA 100" in con_expansion["formas"].iloc[0]
+
+
+def test_merge_audit_ordena_por_cuantas_formas_absorbio():
+    serie = pd.Series(["a", "A", "Á", "b", "B"])
+    tabla = merge_audit(serie, "x")
+    assert tabla["formas_crudas"].is_monotonic_decreasing
+    assert tabla["formas_crudas"].iloc[0] == 3
+
+
+def test_merge_audit_ignora_los_nulos_y_los_vacios():
+    serie = pd.Series(["UNO", "uno", None, "", "   "])
+    tabla = merge_audit(serie, "x")
+    assert len(tabla) == 1
+    assert tabla["filas_afectadas"].iloc[0] == 2

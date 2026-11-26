@@ -1,0 +1,4 @@
+clave_candidata,unica_hoy,sirve_de_identificador,por_que
+codigo + direccion,si,no,`direccion` es texto libre: una tilde corregida o un espacio de mas cambian la identidad de la fila
+codigo + este,si,no,`este` es una coordenada MEDIDA. P10 encontro coordenadas erradas por kilometros en este archivo: corregirlas cambiaria la identidad
+codigo + norte,si,no,igual que `este`: una clave que cambia cuando se corrige un error no es una clave

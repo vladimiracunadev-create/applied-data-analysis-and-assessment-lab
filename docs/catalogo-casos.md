@@ -11,7 +11,7 @@ marcado como tal, no se oculta.
 
 | Caso | Título | Disciplina | Industria | Dificultad | Estado | Tiempo | Metadatos |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| [`bip_lugares_carga`](../cases/bip_lugares_carga/README.md) | Consolidar cinco Excel públicos heterogéneos: lugares de carga de la tarjeta bip! | gestion-de-datos | transporte | intermedio | implementado | 120 min | sí |
+| [`bip_lugares_carga`](../cases/bip_lugares_carga/README.md) | Consolidar cinco Excel públicos heterogéneos, y establecer qué identifica una fila cuando nada lo hace | gestion-de-datos | transporte | intermedio | implementado | 180 min | sí |
 | [`calendario_medicion`](../cases/calendario_medicion/README.md) | Reconstruir el calendario de medición de un indicador oficial y auditar sus reglas | gobernanza-de-datos | administracion-publica | avanzado | implementado | 150 min | sí |
 | [`carga_nocturna`](../cases/carga_nocturna/README.md) | Cobertura de carga en el servicio nocturno: cuando la respuesta es un intervalo porque falta una columna | gobernanza-de-datos | transporte | avanzado | implementado | 180 min | sí |
 | [`cobertura_de_carga`](../cases/cobertura_de_carga/README.md) | Cruzar dos fuentes que no comparten ninguna clave: distancia de cada parada al lugar de carga más cercano | analisis-de-datos | transporte | intermedio | implementado | 120 min | sí |

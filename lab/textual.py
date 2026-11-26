@@ -237,3 +237,67 @@ def normalization_report(series: pd.Series, name: str = "") -> pd.DataFrame:
         ],
         columns=["indicador", "valor", "unidad"],
     )
+
+
+def merge_audit(
+    series: pd.Series,
+    name: str = "",
+    expand_abbreviations: bool = False,
+) -> pd.DataFrame:
+    """Qué fusionó la normalización, fusión por fusión, para poder verificarla.
+
+    Args:
+        series: la columna en su forma cruda.
+        name: nombre para el informe.
+        expand_abbreviations: si se expanden las abreviaturas declaradas.
+
+    Returns:
+        Una fila por clave normalizada que agrupa **más de una** forma cruda, con las
+        formas que absorbió y cuántas filas aporta cada una. Vacía si la normalización
+        no fusionó nada, que también es un resultado.
+
+    Por qué hace falta
+        `normalization_report` cuenta **cuántos** grupos espurios se evitaron, que es
+        el argumento a favor de normalizar. Esta función responde la pregunta opuesta,
+        que es la que nadie hace: **¿alguna de esas fusiones estaba mal?**
+
+        Normalizar tiene dos direcciones de error y solo una se mide. Dejar separado lo
+        que es igual —`FULLCARGA` y `Fullcarga`— infla el número de grupos, y se nota
+        porque aparecen dos filas donde debería haber una. Juntar lo que es distinto no
+        se nota de ninguna manera: produce un grupo menos, con un total mayor, y
+        perfectamente verosímil.
+
+        La expansión de abreviaturas es el caso de riesgo: `AV` por `AVENIDA` es
+        inofensivo hasta que una entidad se llama literalmente `AV`. Por eso esta
+        función existe y por eso devuelve las formas crudas en lugar de un recuento.
+
+    Qué hacer con el resultado
+        Leerlo. Cada fila es una afirmación de que dos textos distintos nombran la misma
+        cosa, y es la única parte de la normalización que una persona tiene que
+        confirmar. Son pocas filas: en datos reales la normalización suele fusionar
+        mucho menos de lo que se teme.
+    """
+    cruda = pd.Series(series).astype("string")
+    claves = cruda.map(lambda v: normalize_key(v, expand_abbreviations=expand_abbreviations))
+    tabla = pd.DataFrame({"clave": claves, "cruda": cruda}).dropna(subset=["cruda"])
+    tabla = tabla.loc[tabla["clave"] != ""]
+
+    filas = []
+    for clave, grupo in tabla.groupby("clave", observed=True):
+        formas = grupo["cruda"].value_counts()
+        if len(formas) < 2:
+            continue
+        filas.append({
+            "columna": name or (series.name or "sin nombre"),
+            "clave_normalizada": clave,
+            "formas_crudas": int(len(formas)),
+            "formas": " | ".join(f"{texto} ({cuenta})" for texto, cuenta in formas.items()),
+            "filas_afectadas": int(formas.sum()),
+        })
+
+    columnas = ["columna", "clave_normalizada", "formas_crudas", "formas", "filas_afectadas"]
+    if not filas:
+        return pd.DataFrame(columns=columnas)
+    return pd.DataFrame(filas, columns=columnas).sort_values(
+        ["formas_crudas", "filas_afectadas"], ascending=[False, False]
+    ).reset_index(drop=True)

@@ -9,6 +9,7 @@ Componentes
     `calendars`   calendarios por reglas, con auditoría de exclusiones.
     `schedules`   horarios de atención en texto libre, con lo ilegible como desconocido.
     `geo`         distancias sobre la esfera y conversión de UTM.
+    `keys`        qué identifica una fila, y qué hacer cuando nada lo hace.
     `stats`       inferencia estadística sin dependencias externas.
     `sources`     adquisición de datos públicos con registro de procedencia.
     `sqlbridge`   ejecución de SQL sobre DataFrames para validación independiente.
@@ -28,7 +29,7 @@ Los submódulos se importan de forma explícita (`from lab import metrics`) para
 costo de importar matplotlib o pandas se pague solo cuando se usa.
 """
 
-__version__ = "0.8.0"
+__version__ = "0.9.0"
 
 __all__ = [
     "agents",
@@ -41,6 +42,7 @@ __all__ = [
     "dates",
     "excel",
     "geo",
+    "keys",
     "knowledge",
     "learning",
     "method",

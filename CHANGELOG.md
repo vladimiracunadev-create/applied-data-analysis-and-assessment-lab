@@ -6,6 +6,101 @@ Este proyecto usa [versionado semántico](https://semver.org/lang/es/).
 La **primera versión oficial es la 0.1.0**. Los prototipos anteriores no se consideran
 releases y no se publican como tales.
 
+## [0.9.0] — 2026-11-26
+
+### Agregado
+
+- **P02 y P04 resueltos**, los dos dentro de
+  [`cases/bip_lugares_carga`](cases/bip_lugares_carga/README.md), que es el caso que
+  tiene esos datos. No se creó un caso nuevo para no duplicar la lectura de los cinco
+  Excel, igual que P05 se resolvió dentro de `carga_nocturna` y P03 dentro de
+  `correspondencia_metro`.
+
+- **`lab/keys.py`**, módulo nuevo del núcleo: contesta la primera pregunta de cualquier
+  cruce, que casi nunca tiene respuesta escrita. `key_report` diagnostica cada columna
+  —nulos, repetidos y **por qué** no es clave, porque las dos causas piden acciones
+  distintas—; `candidate_keys` busca de forma exhaustiva las combinaciones **mínimas**
+  que identifican una fila; y `surrogate_key` construye un identificador determinista
+  sobre los campos que se declaren como identidad, con comprobación de colisiones.
+
+- **`lab.textual.merge_audit`**: por cada clave normalizada, las formas crudas que
+  absorbió. Es la dirección del error que ninguna métrica de calidad mide.
+
+### Lo que P02 encontró
+
+- **Ninguna columna del consolidado identifica una fila.** `direccion` tiene 9
+  repetidos, `norte` 91, `este` 108 y `codigo` 136. Y `nombre` falla por **las dos**
+  causas a la vez —36 nulos y 98 repetidos—, de modo que ni completándolo serviría.
+
+- **Ni `fuente + codigo` identifica una fila**: 136 filas lo comparten. El enunciado de
+  P02 proponía «una clave compuesta, o una clave nueva con el origen del archivo», y la
+  segunda mitad de esa frase no resuelve nada. El enunciado quedó corregido en el mapa
+  de problemas.
+
+- **Hay tres claves candidatas mínimas y ninguna sirve de identificador**:
+  `codigo + direccion`, `codigo + este` y `codigo + norte`. La segunda es la lección:
+  es perfectamente única hoy, y P10 demostró que varias coordenadas de este archivo
+  están equivocadas por kilómetros. El día en que el publicador corrija la de Santa
+  Lucía, esa fila cambiará de identidad y aparecerá como un lugar nuevo.
+
+  > Una clave que cambia cuando se corrige un error no es una clave: es un número de
+  > serie del error.
+
+- **La salida es una clave subrogada** sobre la identidad declarada
+  `fuente + codigo + direccion`: 1 928 identificadores distintos, sin colisiones. Su
+  ventaja sobre el número de fila —que es lo que P08, P09 y P10 tuvieron que usar por no
+  haber nada mejor— es que no depende de la ejecución. Su límite queda dicho: hereda la
+  inestabilidad de `direccion`, y la solución real es que la fuente publique un
+  identificador y lo mantenga.
+
+### Lo que P04 encontró, y es más modesto de lo esperado
+
+- **La normalización fusiona seis veces en todo el archivo.** Cero en `comuna` —46
+  valores crudos y 46 normalizados, de modo que el ejemplo clásico no gana nada—, una en
+  `entidad` y cinco en `direccion`. El riesgo de no normalizar era concreto y pequeño.
+
+- **Las seis fusiones se revisaron una por una y son correctas**: mayúsculas, tildes, un
+  apóstrofo escrito como acento grave y un espacio doble. Y se puede afirmar **porque se
+  leyeron**, no porque el recuento pareciera razonable. Para eso existe `merge_audit`.
+
+- **La expansión de abreviaturas no fusiona ninguna de las 1 919 direcciones.**
+  `ABREVIATURAS` declara trece equivalencias, está implementada y probada, y sobre estos
+  datos no hace nada: las cinco fusiones de `direccion` las produce el resto de la
+  normalización. La capacidad no sobra —cuesta nada y protege de un archivo donde haga
+  falta— pero atribuirle un mérito aquí sería falso, y ahora está medido aparte.
+
+- **Normalizar tiene dos direcciones de error y solo una se nota.** Dejar separado lo
+  que es igual parte un total y salta a la vista. Juntar lo que es distinto produce un
+  grupo menos con un total mayor, y es perfectamente verosímil. La expansión de
+  abreviaturas es la única transformación que puede hacerlo, porque reemplaza por
+  significado y no por forma.
+
+### Corregido
+
+- **El README de P01 decía «tres entidades, no cinco variantes»** donde el texto crudo
+  trae cuatro valores y la normalización deja tres. Una fusión, no dos. La cifra
+  inflaba el mérito de la normalización, que es justamente lo que esta versión mide.
+
+- **El contrato de `analizar()` en las pruebas de P01** se actualizó a las siete tablas
+  nuevas. La prueba existía para fijar ese contrato y funcionó: falló al cambiarlo.
+
+### Agregado al núcleo y a las pruebas
+
+- **Dos registros nuevos en la base de conocimiento**, que pasa de 40 a 42:
+  `clave-candidata-no-es-identificador` y `normalizar-tiene-dos-direcciones`.
+
+- **42 pruebas nuevas** (`tests/test_keys.py`, más las de `merge_audit` en
+  `tests/test_textual.py` y las de P02 y P04 en `tests/test_bip.py`). La suite pasa de
+  659 a **701**.
+
+### Límites declarados
+
+- **La estabilidad de la clave subrogada entre publicaciones no se pudo verificar**:
+  solo hay una descarga de los archivos. Queda declarado como no verificado en lugar de
+  suponerlo.
+- **La identidad declarada incluye un campo de texto libre.** Es la menos mala de las
+  opciones disponibles, no una buena.
+
 ## [0.8.0] — 2026-11-26
 
 ### Agregado

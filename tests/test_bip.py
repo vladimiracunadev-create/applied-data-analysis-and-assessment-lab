@@ -350,7 +350,13 @@ def test_analizar_devuelve_todas_las_tablas_y_exportar_las_escribe(caso, tmp_pat
     resultados = caso.analizar()
     esperadas = {"lectura", "esquemas", "cobertura_campos", "clave",
                  "validacion_coordenadas", "coordenadas_sospechosas", "resumen",
-                 "por_comuna", "por_entidad"}
+                 "por_comuna", "por_entidad",
+                 # P02: qué identifica una fila.
+                 "claves_candidatas", "claves_evaluadas", "columnas_como_clave",
+                 "clave_subrogada",
+                 # P04: qué cambió la normalización y si estuvo bien.
+                 "efecto_de_normalizar", "auditoria_de_fusiones",
+                 "aporte_de_abreviaturas"}
     assert set(resultados) == esperadas
     destino = caso.exportar(resultados, destino=tmp_path / "salida")
     assert {p.stem for p in destino.glob("*.csv")} == esperadas
@@ -366,3 +372,150 @@ def test_los_archivos_ausentes_explican_como_conseguirlos(tmp_path):
             solution.cargar()
     finally:
         solution.ORIGINAL = original
+
+
+# ============================================================ P02: claves · P04: normalización
+#
+# Estas pruebas no construyen libros: las funciones de P02 y P04 reciben el consolidado,
+# de modo que se les pasa una tabla con la **forma** del real y las cifras conocidas.
+
+def consolidado_de_prueba() -> pd.DataFrame:
+    """Seis filas con la estructura del consolidado real.
+
+    Reproduce lo que P02 mide: **ninguna columna sola identifica una fila**.
+
+    - `codigo` vale la línea en Metro y se repite;
+    - las dos filas de Metro son la misma estación, de modo que comparten coordenada;
+    - `direccion` se repite entre dos locales de retail del mismo centro comercial;
+    - `nombre` falla por las dos causas a la vez: tiene un nulo **y** un repetido.
+
+    Y lo que P04 audita: `Fullcarga` contra `FULLCARGA`, una dirección con tilde que la
+    normalización fusiona, y un `PJE` contra `PASAJE` que solo fusiona la expansión de
+    abreviaturas.
+    """
+    return pd.DataFrame({
+        "fuente": ["bip-metro", "bip-metro", "bip-retail", "bip-retail",
+                   "bip-puntos", "bip-puntos"],
+        "hoja": ["Abiertos"] * 6,
+        "codigo": ["L1", "L1", "R1", "R2", "P1", "P2"],
+        "entidad": ["METRO", "METRO", "WALMART", "WALMART", "Fullcarga", "FULLCARGA"],
+        "nombre": ["SAN PABLO", None, "LIDER UNO", "LIDER DOS", "ALMACEN", "ALMACEN"],
+        "direccion": ["AV. AMÉRICO VESPUCIO 1", "AV. AMERICO VESPUCIO 1",
+                      "CALLE UNO 10", "CALLE UNO 10", "PJE TRES 30", "PASAJE TRES 30"],
+        "comuna": ["Santiago", "Santiago", "Maipu", "Maipu", "Ñuñoa", "Ñuñoa"],
+        "este": [340000, 340000, 341000, 342000, 343000, 344000],
+        "norte": [6290000, 6290000, 6291000, 6292000, 6293000, 6294000],
+        "tipo_local": ["Estación de Metro", "Estación de Metro", "Retail", "Retail",
+                       "Punto bip!", "Punto bip!"],
+    })
+
+
+def test_p02_ninguna_columna_sola_identifica_una_fila():
+    from cases.bip_lugares_carga.solution import informe_de_columnas
+
+    informe = informe_de_columnas(consolidado_de_prueba()).set_index("columna")
+    assert (informe["es_clave"] == "no").all()
+    # El código de Metro vale la línea y se repite.
+    assert informe.loc["codigo", "repetidos"] == 1
+    # `nombre` falla por las dos causas a la vez, igual que en el archivo real, de modo
+    # que completarlo no bastaría.
+    assert informe.loc["nombre", "nulos"] == 1
+    assert informe.loc["nombre", "repetidos"] == 1
+    assert informe.loc["nombre", "por_que_no"] == "tiene nulos y repetidos"
+    # Y todas las que fallan dicen por qué.
+    assert (informe["por_que_no"].str.len() > 0).all()
+
+
+def test_p02_la_clave_compuesta_con_el_archivo_tampoco_basta():
+    """Es la corrección al enunciado de P02, que proponía esa salida.
+
+    El enunciado decía «hace falta una clave compuesta, o una clave nueva con el origen
+    del archivo». La primera mitad es cierta y la segunda no: en el archivo real 136
+    filas comparten `fuente + codigo`.
+    """
+    from cases.bip_lugares_carga.solution import claves_candidatas
+
+    consolidado = consolidado_de_prueba()
+    assert consolidado[["fuente", "codigo"]].duplicated().any()
+    candidatas = list(claves_candidatas(consolidado)["columnas"])
+    assert "fuente + codigo" not in candidatas
+
+
+def test_p02_las_candidatas_son_minimas_y_se_evaluan_todas():
+    from cases.bip_lugares_carga.solution import (
+        claves_candidatas,
+        claves_candidatas_evaluadas,
+    )
+
+    consolidado = consolidado_de_prueba()
+    candidatas = claves_candidatas(consolidado)
+    evaluadas = claves_candidatas_evaluadas(consolidado)
+    assert len(evaluadas) == len(candidatas)
+    # Ninguna candidata se declara apta sin justificar por qué.
+    assert (evaluadas["por_que"].str.len() > 10).all()
+    assert (evaluadas["unica_hoy"] == "si").all()
+
+
+def test_p02_la_clave_subrogada_identifica_cada_fila():
+    from cases.bip_lugares_carga.solution import (
+        PREFIJO_ID,
+        clave_subrogada,
+        informe_de_clave_subrogada,
+    )
+
+    consolidado = consolidado_de_prueba()
+    ids = clave_subrogada(consolidado)
+    assert ids.nunique() == len(consolidado)
+    assert ids.str.startswith(PREFIJO_ID).all()
+    informe = informe_de_clave_subrogada(consolidado).set_index("indicador")["valor"]
+    assert informe["es_clave"] == "sí"
+    assert informe["filas_con_identidad_repetida"] == 0
+
+
+def test_p02_la_clave_subrogada_es_determinista_entre_llamadas():
+    """Es su única ventaja frente al número de fila que usaron P08, P09 y P10."""
+    from cases.bip_lugares_carga.solution import clave_subrogada
+
+    consolidado = consolidado_de_prueba()
+    assert list(clave_subrogada(consolidado)) == list(clave_subrogada(consolidado))
+    revuelto = consolidado.iloc[[3, 1, 5, 0, 4, 2]]
+    assert set(clave_subrogada(revuelto)) == set(clave_subrogada(consolidado))
+
+
+def test_p04_el_efecto_de_normalizar_se_mide_por_columna():
+    from cases.bip_lugares_carga.solution import efecto_de_normalizar
+
+    tabla = efecto_de_normalizar(consolidado_de_prueba()).set_index("columna")
+    # `Fullcarga` y `FULLCARGA` son un grupo, no dos.
+    assert tabla.loc["entidad", "grupos_espurios_evitados"] == 1
+    # La comuna no gana nada, igual que en el archivo real.
+    assert tabla.loc["comuna", "grupos_espurios_evitados"] == 0
+    assert tabla.loc["direccion", "grupos_espurios_evitados"] >= 1
+
+
+def test_p04_cada_fusion_queda_a_la_vista_para_poder_verificarla():
+    from cases.bip_lugares_carga.solution import auditoria_de_fusiones
+
+    tabla = auditoria_de_fusiones(consolidado_de_prueba())
+    assert not tabla.empty
+    entidad = tabla.loc[tabla["columna"] == "entidad"].iloc[0]
+    assert entidad["clave_normalizada"] == "FULLCARGA"
+    assert "Fullcarga" in entidad["formas"]
+    assert "FULLCARGA" in entidad["formas"]
+    # Toda fusión informada nombra al menos dos formas crudas.
+    assert (tabla["formas_crudas"] >= 2).all()
+
+
+def test_p04_la_expansion_de_abreviaturas_se_mide_aparte():
+    """En el fixture sí aporta —`PJE TRES 30` y `PASAJE TRES 30`—; en el archivo real, no.
+
+    Separar las dos cifras es lo que permite afirmar que sobre los datos reales la
+    expansión no fusiona nada, en lugar de suponer que ayuda porque existe.
+    """
+    from cases.bip_lugares_carga.solution import aporte_de_las_abreviaturas
+
+    tabla = aporte_de_las_abreviaturas(consolidado_de_prueba()).set_index("indicador")
+    valores = tabla["valor"]
+    assert valores["fusiones_que_aporta_expandir"] == 1
+    assert valores["normalizadas_expandiendo"] < valores["normalizadas_sin_expandir"]
+    assert valores["fusiones_de_la_normalizacion"] >= 1

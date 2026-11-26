@@ -3,10 +3,10 @@
 ![Applied Data Analysis and Assessment Lab](assets/banner.svg)
 
 [![Pruebas](https://github.com/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/actions/workflows/ci.yml)
-![Versión 0.8.0](https://img.shields.io/badge/versi%C3%B3n-0.8.0-11253B)
+![Versión 0.9.0](https://img.shields.io/badge/versi%C3%B3n-0.9.0-11253B)
 ![Python 3.11–3.14](https://img.shields.io/badge/Python-3.11%E2%80%933.14-3776AB)
 ![Licencia MIT](https://img.shields.io/badge/licencia-MIT-147D70)
-![659 pruebas](https://img.shields.io/badge/pruebas-659-147D70)
+![701 pruebas](https://img.shields.io/badge/pruebas-701-147D70)
 
 ---
 
@@ -28,7 +28,7 @@ qué tecnología se usó, por qué, y qué trampa tenía cada dato.
 
 | Si necesitas… | Empieza por |
 | --- | --- |
-| **Prepararte para una evaluación técnica** de datos con Excel y Pandas | [Mapa de problemas](docs/problemas-de-la-instancia.md) — 16 problemas: siete resueltos paso a paso y uno resuelto en parte |
+| **Prepararte para una evaluación técnica** de datos con Excel y Pandas | [Mapa de problemas](docs/problemas-de-la-instancia.md) — 16 problemas: nueve resueltos paso a paso y uno resuelto en parte |
 | **Resolver un problema de datos** de tu trabajo | [El recorrido de nueve etapas](docs/instancias.md) |
 | **Aprender** con material que explica el por qué | [Programa de aprendizaje](docs/programa.md) — 8 clases con 17 secciones cada una |
 | **Reproducir un indicador oficial** | [Indicadores oficiales del transporte](docs/indicadores-oficiales-transporte.md) |
@@ -44,7 +44,7 @@ detectar.
 
 | Caso | Datos | La pregunta | Lo que encontró |
 | --- | --- | --- | --- |
-| [`bip_lugares_carga`](cases/bip_lugares_carga/README.md) | **reales**, licencia verificada | ¿Cuántos lugares de carga hay y dónde? | El encabezado en **5 filas distintas**; el código **no es clave**; y la validación cruzada de las dos coordenadas del archivo destapó **3 errores de hasta 10,3 km** |
+| [`bip_lugares_carga`](cases/bip_lugares_carga/README.md) | **reales**, licencia verificada | ¿Cuántos lugares de carga hay, y qué identifica a cada uno? | El encabezado en **5 filas distintas**; **ninguna columna identifica una fila**, ni `fuente + codigo`; y la validación cruzada de coordenadas destapó **3 errores de hasta 10,3 km** |
 | [`calendario_medicion`](cases/calendario_medicion/README.md) | **reales**, metodología oficial | ¿Qué días entran en la medición de un indicador oficial? | De 261 días laborales quedan **78 medibles**, y **4 de las 8 reglas oficiales no cambian el denominador** |
 | [`gtfs_red_movilidad`](cases/gtfs_red_movilidad/README.md) | **reales**, 1,1 M de filas | ¿Cuántas expediciones salen por hora? | El **77,5 %** de la tabla de horarios **no contiene horas**, y el conteo ingenuo se equivoca en **−87,65 %** |
 | [`cobertura_de_carga`](cases/cobertura_de_carga/README.md) | **reales**, dos fuentes sin clave común | ¿A qué distancia está el lugar de carga más cercano de cada parada? | **59,29 %** de las paradas lo tiene a 300 m en línea recta y **46,02 %** con un rodeo de 1,3: las decisiones del método mueven la respuesta **entre 39 % y 81 %** |
@@ -56,7 +56,7 @@ detectar.
 
 Los nueve hallazgos salieron de ejecutar el código, no de la intuición. Cada uno está
 documentado con su magnitud, su causa y su corrección en la
-[base de conocimiento](docs/conocimiento.md), que tiene 40 registros.
+[base de conocimiento](docs/conocimiento.md), que tiene 42 registros.
 
 ---
 
@@ -74,7 +74,7 @@ uv run python scripts/generate_data.py
 uv run python -m pytest
 ```
 
-Tres comandos y 659 pruebas en verde. Después, el caso que mejor muestra de qué va
+Tres comandos y 701 pruebas en verde. Después, el caso que mejor muestra de qué va
 esto:
 
 ```powershell
@@ -184,7 +184,7 @@ fórmula que se puede abrir, sí.
 
 ## Qué comprueban las pruebas, y qué no
 
-659 pruebas en 32 archivos. Además de los cálculos:
+701 pruebas en 33 archivos. Además de los cálculos:
 
 - **Validación cruzada entre tecnologías**: Pandas contra SQL, indicador por indicador,
   con tolerancia 10⁻⁹.

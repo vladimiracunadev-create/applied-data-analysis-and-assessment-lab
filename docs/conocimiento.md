@@ -2,24 +2,25 @@
 
 # Índice de la base de conocimiento
 
-**40 registros**. Búsqueda: `python -m lab.knowledge "consulta"`.
+**42 registros**. Búsqueda: `python -m lab.knowledge "consulta"`.
 
 ## Por tipo
 
 | Tipo | Registros |
 | --- | --- |
-| concepto | 3 |
+| concepto | 4 |
 | definicion | 3 |
 | error | 8 |
 | formula | 3 |
 | leccion | 7 |
 | metodologia | 5 |
-| patron | 11 |
+| patron | 12 |
 
 ## Registros
 
 | Tipo | Registro | Título | Etiquetas |
 | --- | --- | --- | --- |
+| concepto | [`clave-candidata-no-es-identificador`](../knowledge/clave-candidata-no-es-identificador.md) | Una combinación única en los datos de hoy no es un identificador | calidad-datos, cruce-consolidacion, gobernanza-datos, pensamiento-critico, errores-frecuentes |
 | concepto | [`correlacion-no-es-causalidad`](../knowledge/correlacion-no-es-causalidad.md) | Qué permite y qué no permite concluir una correlación | estadistica, inferencia-estadistica, pensamiento-critico, errores-frecuentes |
 | concepto | [`tasa-ponderada-vs-promedio-simple`](../knowledge/tasa-ponderada-vs-promedio-simple.md) | Tasa ponderada frente a promedio simple de porcentajes | estadistica, indicadores, denominadores, errores-frecuentes |
 | concepto | [`vacio-no-es-cero`](../knowledge/vacio-no-es-cero.md) | Ausente, cero e inválido son tres estados distintos | calidad-datos, limpieza-normalizacion, pandas, sql, excel |
@@ -57,6 +58,7 @@
 | patron | [`grano-antes-de-cruzar`](../knowledge/grano-antes-de-cruzar.md) | Antes de cruzar dos inventarios, nombrar el grano de cada uno y cerrar la identidad | cruce-consolidacion, calidad-datos, metodologia, datos-reales, gobernanza-datos |
 | patron | [`intervalo-en-vez-de-cifra`](../knowledge/intervalo-en-vez-de-cifra.md) | Cuando el denominador tiene huecos, el indicador es un intervalo y su ancho es otro indicador | indicadores, incertidumbre, comunicacion-resultados, gobernanza-datos, denominadores |
 | patron | [`normalizar-antes-de-agrupar`](../knowledge/normalizar-antes-de-agrupar.md) | Normalizar para agrupar y conservar la etiqueta para informar | limpieza-normalizacion, cruce-consolidacion, pandas, datos-reales, comunicacion-resultados |
+| patron | [`normalizar-tiene-dos-direcciones`](../knowledge/normalizar-tiene-dos-direcciones.md) | Normalizar tiene dos direcciones de error y solo una se nota | limpieza-normalizacion, calidad-datos, errores-frecuentes, pandas, comunicacion-resultados |
 | patron | [`regla-redundante`](../knowledge/regla-redundante.md) | Distinguir una regla redundante por construcción de una redundante por azar | indicadores, gobernanza-datos, metodologia, datos-reales, pensamiento-critico |
 | patron | [`tres-respuestas-no-dos`](../knowledge/tres-respuestas-no-dos.md) | Un indicador construido sobre datos incompletos necesita tres respuestas, no dos | calidad-datos, gobernanza-datos, indicadores, incertidumbre, comunicacion-resultados |
 | patron | [`unidad-de-la-decision`](../knowledge/unidad-de-la-decision.md) | El error de un método se mide en la unidad de la decisión, no en la del cálculo | pensamiento-critico, comunicacion-resultados, calidad-datos, estadistica, indicadores |

@@ -1,0 +1,11 @@
+columna,filas,nulos,distintos,repetidos,es_clave,por_que_no
+direccion,1928,0,1919,9,no,tiene valores repetidos
+norte,1928,0,1837,91,no,tiene valores repetidos
+este,1928,0,1820,108,no,tiene valores repetidos
+codigo,1928,0,1792,136,no,tiene valores repetidos
+comuna,1928,0,46,1882,no,tiene valores repetidos
+fuente,1928,0,5,1923,no,tiene valores repetidos
+tipo_local,1928,0,5,1923,no,tiene valores repetidos
+hoja,1928,0,4,1924,no,tiene valores repetidos
+entidad,1928,0,4,1924,no,tiene valores repetidos
+nombre,1928,36,1794,98,no,tiene nulos y repetidos

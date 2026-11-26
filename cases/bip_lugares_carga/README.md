@@ -156,11 +156,74 @@ tercer componente.
 Quien suponga que una columna llamada «código» es una clave construye un cruce que
 duplica filas en silencio.
 
+### 5.4b · P02 · Entonces, ¿qué identifica un lugar de carga?
+
+La sección anterior contesta la pregunta estrecha. La amplia es: **¿hay alguna
+combinación de columnas que identifique una fila?**
+
+Primero, ninguna columna sola:
+
+```
+   columna  filas  nulos  distintos  repetidos  por_que_no
+ direccion   1928      0       1919          9  tiene valores repetidos
+     norte   1928      0       1837         91  tiene valores repetidos
+      este   1928      0       1820        108  tiene valores repetidos
+    codigo   1928      0       1792        136  tiene valores repetidos
+    nombre   1928     36       1794         98  tiene nulos y repetidos
+```
+
+`nombre` es el caso que conviene mirar: falla por **las dos** causas a la vez, de modo
+que ni completando los 36 nulos serviría.
+
+La búsqueda exhaustiva de `lab.keys.candidate_keys` devuelve tres claves candidatas
+mínimas, y las tres son de dos columnas:
+
+| Clave candidata | ¿Única hoy? | ¿Sirve de identificador? | Por qué |
+| --- | --- | --- | --- |
+| `codigo + direccion` | sí | **no** | `direccion` es texto libre: una tilde corregida cambia la identidad |
+| `codigo + este` | sí | **no** | `este` es una coordenada **medida** |
+| `codigo + norte` | sí | **no** | igual que `este` |
+
+La segunda fila es la lección. Es perfectamente única hoy. Y
+[P10](../correspondencia_metro/README.md) demostró que varias coordenadas de este
+archivo están equivocadas por kilómetros, de modo que el día en que el publicador
+corrija la de Santa Lucía, esa fila **cambiará de identidad** y aparecerá como un lugar
+nuevo.
+
+> Una clave que cambia cuando se corrige un error no es una clave: es un número de
+> serie del error.
+
+**La salida: una clave subrogada.** Un identificador determinista derivado de los campos
+que se **declaran** como identidad —`fuente + codigo + direccion`, en la constante
+`IDENTIDAD`—:
+
+```
+           campos_declarados   codigo + direccion + fuente
+                       filas                          1928
+   identificadores_distintos                          1928
+filas_con_identidad_repetida                             0
+```
+
+Tres cosas que consigue, y una que no:
+
+- es **determinista**: el mismo contenido da el mismo identificador en cualquier máquina
+  y ejecución. Es la diferencia con el número de fila, que es lo que P08, P09 y P10
+  tuvieron que usar por no haber nada mejor;
+- **comprueba sus colisiones** y falla en lugar de devolver una clave con duplicados;
+- **deja la identidad escrita**, que es exactamente lo que el archivo no hace;
+- **hereda la inestabilidad de `direccion`**. No hay forma de evitarlo sin un
+  identificador provisto por la fuente, y pedirlo es lo que corresponde.
+
+---
+
 ### 5.5 Normalizar antes de agrupar
 
 `FULLCARGA` y `Fullcarga` son dos grupos para `groupby` y uno para una persona.
 `lab.textual.normalize_key` quita tildes, pasa a mayúsculas, colapsa espacios y recorta
-los extremos. Resultado: **tres entidades**, no cinco variantes.
+los extremos. Resultado: **tres entidades** donde el texto crudo da cuatro.
+
+Una sola fusión, y no es poco: sin ella el grupo de FULLCARGA se parte en 1 579 y 36.
+Pero conviene no exagerar el mérito, y la sección 5.5b lo mide.
 
 | Entidad | Locales | Comunas | Tipos |
 | --- | --- | --- | --- |
@@ -170,6 +233,69 @@ los extremos. Resultado: **tres entidades**, no cinco variantes.
 
 Y se conserva la etiqueta legible aparte, para que el informe diga `Ñuñoa` y no
 `NUNOA`.
+
+### 5.5b · P04 · ¿Y alguna de esas fusiones estuvo mal?
+
+Normalizar tiene **dos direcciones de error** y solo una se nota:
+
+| Error | Qué produce | ¿Se nota? |
+| --- | --- | --- |
+| Dejar separado lo que es igual | un grupo de más, con el total partido | **sí** |
+| Juntar lo que es distinto | un grupo de menos, con el total sumado | **no** |
+
+La primera salta a la vista. La segunda produce una tabla más limpia, con totales
+mayores, y nada en el resultado sugiere revisarla.
+
+Lo que gana normalizar, columna por columna:
+
+```
+  columna  distintos_crudos  distintos_normalizados  grupos_espurios_evitados
+   comuna                46                      46                         0
+  entidad                 4                       3                         1
+direccion              1919                    1914                         5
+```
+
+**Seis fusiones en todo el archivo**, y `comuna` —que es el ejemplo clásico— no gana
+nada. El riesgo de no normalizar era concreto y pequeño.
+
+Y las seis, a la vista para poder verificarlas:
+
+```
+  columna                          clave_normalizada                              formas
+  entidad                                  FULLCARGA   Fullcarga (1579) | FULLCARGA (36)
+direccion              AVENIDA AMERICO VESPUCIO 1737   AV. AMÉRICO VESPUCIO 1737 | AV. AMERICO VESPUCIO 1737
+direccion              AVENIDA AMERICO VESPUCIO 2500   Av. Américo Vespucio 2500 | AV. AMERICO VESPUCIO 2500
+direccion AVENIDA LIBERTADOR BERNARDO O HIGGINS 1020   Av. ... O`Higgins 1020 | Av. ... O'Higgins 1020
+direccion             AVENIDA NUEVA PROVIDENCIA 2249   Av. Nueva Providencia 2249 | AV. NUEVA PROVIDENCIA 2249
+direccion                             SAN PEDRO 1778   SAN PEDRO 1778 | SAN PEDRO  1778
+```
+
+Mayúsculas, tildes, un apóstrofo escrito como acento grave y un espacio doble. Las seis
+son correctas, y eso **se puede afirmar porque se leyeron**, no porque el recuento
+pareciera razonable. Cada fila es la afirmación de que dos textos distintos nombran la
+misma cosa, y es la única parte de una normalización que una persona tiene que confirmar.
+
+#### La capacidad que no aporta nada aquí
+
+`lab.textual.ABREVIATURAS` declara trece equivalencias —`AV` por `AVENIDA`, `PJE` por
+`PASAJE`— y la expansión está implementada y probada. Sobre las 1 919 direcciones de
+este archivo:
+
+```
+   normalizadas_sin_expandir   1914
+    normalizadas_expandiendo   1914
+fusiones_que_aporta_expandir      0
+```
+
+**Cero.** Las cinco fusiones de `direccion` las produce el resto de la normalización:
+tildes, mayúsculas y espacios. La expansión no sobra —cuesta nada y protege de un
+archivo donde sí haga falta— pero afirmar que hace algo aquí sería falso.
+
+Y es la transformación que **más** hay que vigilar, porque es la única que reemplaza por
+significado y no por forma: `AV` por `AVENIDA` es inofensivo hasta que una entidad se
+llame literalmente `AV`.
+
+---
 
 ### 5.6 La validación cruzada de coordenadas
 
@@ -275,6 +401,10 @@ Registros nuevos en la base de conocimiento:
 - [`clave-que-no-es-clave`](../../knowledge/clave-que-no-es-clave.md)
 - [`normalizar-antes-de-agrupar`](../../knowledge/normalizar-antes-de-agrupar.md)
 - [`dos-coordenadas-un-lugar`](../../knowledge/dos-coordenadas-un-lugar.md)
+- [`clave-candidata-no-es-identificador`](../../knowledge/clave-candidata-no-es-identificador.md)
+  — de P02
+- [`normalizar-tiene-dos-direcciones`](../../knowledge/normalizar-tiene-dos-direcciones.md)
+  — de P04
 
 Capacidades nuevas en el núcleo, reutilizables en cualquier dominio:
 
@@ -285,6 +415,11 @@ Capacidades nuevas en el núcleo, reutilizables en cualquier dominio:
   empresa igual que para comunas.
 - `lab.geo`: haversine, conversión de UTM y búsqueda del punto más cercano. Habilita
   el problema P08 (distancia de cada parada al lugar de carga más próximo).
+- `lab.keys` (de P02): diagnóstico por columna, búsqueda exhaustiva de claves candidatas
+  mínimas y clave subrogada determinista con comprobación de colisiones. Sirve para
+  cualquier tabla cuya clave no esté documentada, que son casi todas.
+- `lab.textual.merge_audit` (de P04): las formas crudas que absorbió cada fusión, para
+  poder revisar la dirección del error que no se nota.
 
 Un defecto corregido en el núcleo: `lab.geo.haversine_km` no aceptaba arreglos de
 NumPy difundidos entre sí, que es justo lo que necesita una búsqueda del punto más
@@ -322,3 +457,4 @@ Los archivos del portal se actualizan: las cifras de este documento corresponden
 versión descargada el 26 de noviembre de 2026, con las huellas registradas en
 `procedencia.json`. Con una versión posterior cambiarán las magnitudes, no los nueve
 defectos.
+
