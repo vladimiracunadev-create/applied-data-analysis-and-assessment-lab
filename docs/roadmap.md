@@ -11,12 +11,13 @@ Los recuentos se obtienen con los comandos indicados, no de memoria.
 
 | Componente | Estado | Cómo comprobarlo |
 | --- | --- | --- |
-| Núcleo (`lab/`): 23 módulos | implementado | `python -m pytest` |
+| Núcleo (`lab/`): 24 módulos | implementado | `python -m pytest` |
 | Casos de estudio (9): 6 con datos públicos reales, 3 sintéticos | implementado | `python -m pytest tests/test_catalog.py` |
 | Cruce espacial por proximidad sin dependencias geoespaciales | implementado | `python -m pytest tests/test_cobertura_de_carga.py` |
 | Intérprete de horarios en texto libre, con lo ilegible como desconocido | implementado | `python -m pytest tests/test_schedules.py` |
 | Conciliación de inventarios con grano distinto y dos criterios | implementado | `python -m pytest tests/test_correspondencia_metro.py` |
 | Análisis de claves: candidatas mínimas y clave subrogada determinista | implementado | `python -m pytest tests/test_keys.py` |
+| Cuadernos de trabajo generados ejecutando el caso (1 de 16) | **parcial** | `python scripts/build_cuadernos.py` |
 | Simulaciones de cuatro horas (3) | implementado | `simulations/0{1,2,3}_enunciado.md` |
 | Solución de referencia en Pandas | implementado | `python solutions/reference.py 1` |
 | Segunda implementación en SQL | implementado | `python solutions/sql_reference.py 1` |
@@ -68,7 +69,31 @@ deja de estar declarada aquí.
   `gtfs_red_movilidad`: adquisición con procedencia, lectura selectiva de un archivo de
   1,1 millones de filas desde un ZIP y expansión vectorizada de ventanas.
 
-### 2.2 Bloque del programa sin clases publicadas
+### 2.2 Quince de los dieciséis cuadernos de trabajo
+
+Un caso resuelto y un caso que se puede estudiar no son lo mismo. Hasta la versión
+0.10.0 los casos documentaban **qué se encontró** —que sirve para auditar un resultado—
+y no **cómo se produce**, que es lo que hace falta para practicar Excel y Pandas.
+
+`lab.cuaderno` y `scripts/build_cuadernos.py` resuelven el mecanismo, y **P01 es el
+único caso con cuaderno**. Faltan quince:
+
+| Problemas | Qué falta |
+| --- | --- |
+| P02, P03, P04, P05, P06, P08, P09, P10, P11 | el cuaderno: el análisis ya está resuelto |
+| P07, P12, P13, P14, P15, P16 | el análisis **y** el cuaderno |
+
+P14 y P15 necesitan además descargar feeds históricos del DTPM, que se publican desde
+2014 y cuya licencia **no está verificada**.
+
+### 2.3 Sin corrección de la práctica propia
+
+Un cuaderno muestra cómo se hace; no dice si quien practica lo hizo bien. No hay ninguna
+pieza que tome el intento de alguien y le diga **qué** difiere del resultado de
+referencia. `lab.assessment` tiene rúbricas y banco de ítems, y no está conectado a los
+casos con datos reales: sus tres simulaciones corren sobre los datos sintéticos.
+
+### 2.4 Bloque del programa sin clases publicadas
 
 - **`60-avanzado` (Temas avanzados).** Declarado en la estructura del programa, sin
   clases publicadas. `python -m lab.learning` lo informa como `proyectado`.
@@ -79,7 +104,7 @@ deja de estar declarada aquí.
   polígonos: cruces con límites administrativos, densidades por superficie y
   cartografía.
 
-### 2.3 Lo que las pruebas no cubren
+### 2.5 Lo que las pruebas no cubren
 
 - **Evaluación numérica de las fórmulas de Excel.** Las pruebas verifican que las
   fórmulas existan, sean fórmulas y apunten a los rangos correctos; **no** calculan su
@@ -91,7 +116,7 @@ deja de estar declarada aquí.
   percentil con interpolación lineal. Se validan contra una implementación en Python
   puro escrita en la propia suite de pruebas.
 
-### 2.4 Dependencias y entornos no implementados
+### 2.6 Dependencias y entornos no implementados
 
 Declarados en el ecosistema objetivo y **no** presentes en el entorno mínimo:
 Polars, DuckDB, R/RStudio, Power BI, Tableau, Metabase, GeoPandas, QGIS, Arrow/Parquet,

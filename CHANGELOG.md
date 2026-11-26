@@ -6,6 +6,70 @@ Este proyecto usa [versionado semántico](https://semver.org/lang/es/).
 La **primera versión oficial es la 0.1.0**. Los prototipos anteriores no se consideran
 releases y no se publican como tales.
 
+## [0.10.0] — 2026-11-26
+
+### Agregado
+
+- **Cuadernos de trabajo: el caso resuelto paso a paso, en Pandas y en Excel.** Los
+  casos documentaban **qué se encontró**, que sirve para auditar un resultado y no para
+  aprender a producirlo. Un cuaderno muestra lo segundo: para cada paso, el objetivo, el
+  código de Pandas, **la salida que devuelve de verdad**, la fórmula de Excel
+  equivalente, y la trampa de hacerlo de la forma obvia.
+
+  Se lee de arriba abajo en un solo archivo, sin saltar a ningún otro.
+
+- **`lab/cuaderno.py` y `scripts/build_cuadernos.py`.** Un caso declara sus pasos y el
+  generador los **ejecuta**: el código que aparece es el que corrió y la salida es la que
+  devolvió. Si el código deja de funcionar, el cuaderno no se genera, de modo que el
+  documento no puede desviarse del comportamiento real. Un apunte con salidas copiadas a
+  mano envejece sin avisar.
+
+- **Primer cuaderno: P01, doce pasos**, diez de ellos con una trampa. El Excel es de
+  verdad y no decorativo: `CONTAR.SI` para medir si una columna es clave, `CONTAR.SI` con
+  `"?*"` en lugar de `"<>"` para la cobertura de un campo —porque `"<>"` cuenta como no
+  vacía una celda con fórmula que devuelve cadena vacía—, `FRECUENCIA` para el
+  histograma, haversine completa en una celda, y Power Query donde no hay fórmula.
+
+### Corregido
+
+- **Dos afirmaciones que la salida no respaldaba**, encontradas al generar el cuaderno de
+  P01. Es lo que el generador existe para encontrar:
+
+  - El primer paso hablaba de la hoja de locales cerrados mostrando el archivo de Metro,
+    que tiene una sola hoja. Ahora lista las hojas de los cinco archivos, y la salida
+    deja visible algo que no se había notado: no se llaman igual en ninguno —`Abiertos`,
+    `Abierto`, `PCMA`—, de modo que tampoco sirve pedir una hoja por nombre.
+
+  - El paso de coordenadas afirmaba que el desvío es **bimodal** mostrando un `describe`
+    cuyos percentiles 50, 90 y 99 caen todos en 61 m: lo contrario de la evidencia. La
+    afirmación era cierta y la salida elegida la desmentía. Ahora muestra el histograma,
+    donde los dos grupos se ven —**109 filas en torno a 0 m y 1 768 en torno a 61 m**—, y
+    la trampa del paso pasó a ser esa: un resumen de cinco números no distingue dos
+    datums de un error de redondeo.
+
+- **`tests/conftest.py` esconde los datos descargados durante toda la sesión de
+  pruebas**, de modo que local e integración continua son el mismo entorno. El defecto
+  que dejó `v0.8.0` y `v0.9.0` en rojo —una función de informe con una lectura de disco
+  dentro— ahora falla en el acto en lugar de dos versiones más tarde. Verificado con una
+  prueba trampa que lee los datos reales y debe fallar aunque los archivos estén
+  descargados.
+
+  Es la corrección de fondo a lo que la versión 0.9.1 había dejado solo documentado en
+  `CONTRIBUTING.md`: pedir que alguien se acuerde de correr un comando extra no es un
+  control.
+
+### Declarado como pendiente
+
+- **Quince de los dieciséis cuadernos.** Nueve corresponden a problemas ya resueltos y
+  necesitan solo el cuaderno; seis —P07, P12 a P16— no están resueltos, de modo que ahí
+  el cuaderno y el análisis son el mismo trabajo. P14 y P15 necesitan además feeds
+  históricos del DTPM, publicados desde 2014, con licencia no verificada.
+
+- **La corrección de la práctica propia no existe.** Un cuaderno muestra cómo se hace; no
+  dice si quien practica lo hizo bien. No hay ninguna pieza que tome un intento y diga
+  **qué** difiere del resultado de referencia. Queda declarado en la hoja de ruta como
+  brecha 2.3 en lugar de insinuarlo resuelto.
+
 ## [0.9.1] — 2026-11-26
 
 ### Corregido

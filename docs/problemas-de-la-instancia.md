@@ -4,6 +4,11 @@ Inventario honesto: qué datos hay, qué pregunta se puede contestar con ellos, 
 tecnología hace falta, qué trampa enseña cada uno, y —la parte que suele faltar— **qué
 no se puede contestar**.
 
+> **Dos documentos por caso.** El `README.md` de un caso cuenta **qué se encontró**;
+> su `CUADERNO.md` muestra **cómo se hace**, paso a paso, con el código de Pandas, la
+> salida real y la fórmula de Excel. Hoy existe el cuaderno de
+> [P01](../cases/bip_lugares_carga/CUADERNO.md); los otros quince están pendientes.
+
 Cada problema indica su estado: **resuelto** (hay código y resultado en el
 repositorio), **resuelto en parte** (una mitad de la pregunta se contestó y la otra no
 se puede, con la medición que lo demuestra), **disponible** (los datos alcanzan, falta
@@ -75,7 +80,9 @@ correspondencia, no adivinándola.
 `Abiertos`. Son 1 de 1 928 filas: no mueve el total, pero el revisor que la busca
 sabe si se mira el nombre de las hojas o no.
 
-**Estado:** **resuelto** — [`cases/bip_lugares_carga`](../cases/bip_lugares_carga/README.md).
+**Estado:** **resuelto** — [`cases/bip_lugares_carga`](../cases/bip_lugares_carga/README.md),
+con [cuaderno de trabajo](../cases/bip_lugares_carga/CUADERNO.md) de doce pasos en
+Pandas y Excel.
 Incluye P02 (la clave), P03 (validación cruzada de coordenadas, que encontró tres
 errores de hasta 10,3 km) y P04 (normalización).
 

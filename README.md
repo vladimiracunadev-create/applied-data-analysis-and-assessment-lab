@@ -3,7 +3,7 @@
 ![Applied Data Analysis and Assessment Lab](assets/banner.svg)
 
 [![Pruebas](https://github.com/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/actions/workflows/ci.yml)
-![Versión 0.9.1](https://img.shields.io/badge/versi%C3%B3n-0.9.1-11253B)
+![Versión 0.10.0](https://img.shields.io/badge/versi%C3%B3n-0.10.0-11253B)
 ![Python 3.11–3.14](https://img.shields.io/badge/Python-3.11%E2%80%933.14-3776AB)
 ![Licencia MIT](https://img.shields.io/badge/licencia-MIT-147D70)
 ![702 pruebas](https://img.shields.io/badge/pruebas-702-147D70)
@@ -24,11 +24,39 @@ públicos reales.** No es un curso ni una colección de ejercicios: es un recorr
 nueve etapas, un núcleo de código reutilizable y nueve casos resueltos que documentan
 qué tecnología se usó, por qué, y qué trampa tenía cada dato.
 
+### Si vienes a aprender a hacerlo: los cuadernos de trabajo
+
+Un caso tiene dos documentos y sirven para cosas distintas:
+
+| Documento | Qué es | Cuándo sirve |
+| --- | --- | --- |
+| **`CUADERNO.md`** | el problema resuelto **paso a paso**: el código de Pandas, **la salida que devuelve de verdad**, la fórmula de Excel equivalente, y la trampa de cada paso | cuando quieres **aprender a producir** el resultado |
+| `README.md` | qué se encontró, con las cifras y lo que no se puede concluir | cuando quieres **auditar** el resultado |
+
+El cuaderno se lee de arriba abajo y no hay que abrir nada más. Y no se escribe a mano:
+se **genera ejecutando el caso**, de modo que el código que aparece es el que corrió y la
+salida es la que devolvió. Si el código deja de funcionar, el cuaderno no se genera.
+
+| Cuaderno | Pasos | Qué se practica en Excel |
+| --- | --- | --- |
+| [P01 · Consolidar cinco Excel heterogéneos](cases/bip_lugares_carga/CUADERNO.md) | 12 | `CONTAR.SI` para medir si una columna es clave, `CONTAR.SI` con `"?*"` para la cobertura de un campo, `FRECUENCIA` para el histograma, haversine en una celda, y Power Query para anexar los cinco archivos |
+
+Los otros quince cuadernos están **pendientes**: nueve corresponden a problemas ya
+resueltos y necesitan solo el cuaderno; seis —P07, P12 a P16— no están resueltos, de modo
+que ahí el cuaderno y el análisis son el mismo trabajo. El estado real de cada uno está en
+el [mapa de problemas](docs/problemas-de-la-instancia.md).
+
+```powershell
+python scripts/build_cuadernos.py          # regenera los cuadernos declarados
+```
+
+---
+
 ### Por dónde entrar
 
 | Si necesitas… | Empieza por |
 | --- | --- |
-| **Prepararte para una evaluación técnica** de datos con Excel y Pandas | [Mapa de problemas](docs/problemas-de-la-instancia.md) — 16 problemas: nueve resueltos paso a paso y uno resuelto en parte |
+| **Prepararte para una evaluación técnica** de datos con Excel y Pandas | [Cuaderno de P01](cases/bip_lugares_carga/CUADERNO.md), y el [mapa de problemas](docs/problemas-de-la-instancia.md) para el resto |
 | **Resolver un problema de datos** de tu trabajo | [El recorrido de nueve etapas](docs/instancias.md) |
 | **Aprender** con material que explica el por qué | [Programa de aprendizaje](docs/programa.md) — 8 clases con 17 secciones cada una |
 | **Reproducir un indicador oficial** | [Indicadores oficiales del transporte](docs/indicadores-oficiales-transporte.md) |

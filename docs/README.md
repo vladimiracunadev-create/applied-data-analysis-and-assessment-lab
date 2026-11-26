@@ -6,6 +6,21 @@ repositorio.
 
 ---
 
+## Vengo a aprender a hacerlo, no a leer qué se encontró
+
+Los **cuadernos de trabajo** son el problema resuelto paso a paso, con el código de
+Pandas, la salida real y la fórmula de Excel equivalente, en un solo archivo.
+
+| Cuaderno | Pasos |
+| --- | --- |
+| [P01 · Consolidar cinco Excel heterogéneos](../cases/bip_lugares_carga/CUADERNO.md) | 12 |
+
+Se generan ejecutando el caso, con `python scripts/build_cuadernos.py`. Los otros quince
+están pendientes; el estado de cada problema está en el
+[mapa de problemas](problemas-de-la-instancia.md).
+
+---
+
 ## Vengo a prepararme para una evaluación técnica
 
 En orden, de lo que más rinde a lo que menos:
