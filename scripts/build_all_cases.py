@@ -57,7 +57,10 @@ def files_to_package(root: Path = ROOT) -> list[Path]:
 
 def _entry(name: str, data: bytes) -> tuple[zipfile.ZipInfo, bytes]:
     info = zipfile.ZipInfo(f"{ARCHIVE_ROOT}/{name}", date_time=FIXED_TIME)
-    info.compress_type = zipfile.ZIP_DEFLATED
+    # ZIP_STORED evita que versiones distintas de zlib produzcan bytes diferentes
+    # para el mismo contenido en Windows y Linux. Los artefactos pesados internos
+    # (XLSX y ZIP por cuaderno) ya vienen comprimidos.
+    info.compress_type = zipfile.ZIP_STORED
     info.external_attr = 0o100644 << 16
     info.create_system = 3
     return info, data
@@ -101,10 +104,10 @@ def build_bytes(root: Path = ROOT) -> bytes:
     payload.append(("MANIFEST.json", manifest))
 
     buffer = io.BytesIO()
-    with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+    with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_STORED) as archive:
         for name, data in sorted(payload):
             info, content = _entry(name, data)
-            archive.writestr(info, content, compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
+            archive.writestr(info, content)
     return buffer.getvalue()
 
 
