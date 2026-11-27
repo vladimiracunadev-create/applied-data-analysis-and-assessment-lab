@@ -85,6 +85,11 @@ jobs:
       - name: Preparar el entorno (dependencias fijadas)
         run: uv sync --locked
 
+      # Se comprueba sobre el checkout inmutable, antes de que cualquier generador
+      # reescriba CSV o binarios con detalles propios del runtime o del sistema.
+      - name: Comprobar el paquete general de casos
+        run: uv run python scripts/build_all_cases.py --check
+
       - name: Generar los datos sintéticos
         run: uv run python scripts/generate_data.py
 
@@ -98,11 +103,6 @@ jobs:
 
       - name: Verificar la base de conocimiento
         run: uv run python -m lab.knowledge
-
-      # Se comprueba antes de los generadores de binarios: sus metadatos internos
-      # pueden variar entre sistemas aunque el contenido lógico sea equivalente.
-      - name: Comprobar el paquete general de casos
-        run: uv run python scripts/build_all_cases.py --check
 
       - name: Construir los libros de Excel resueltos
         run: uv run python scripts/build_excel_solutions.py

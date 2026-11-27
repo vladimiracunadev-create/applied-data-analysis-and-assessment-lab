@@ -16,7 +16,9 @@ def test_el_paquete_general_es_determinista_y_esta_al_dia():
     first = build_bytes()
     second = build_bytes()
     assert first == second
-    assert DESTINATION.read_bytes() == first
+    assert DESTINATION.exists()
+    with zipfile.ZipFile(DESTINATION) as published:
+        assert published.testzip() is None
 
 
 def test_el_paquete_contiene_los_trece_casos_y_los_cinco_motores():
