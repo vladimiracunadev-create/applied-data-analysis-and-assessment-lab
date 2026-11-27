@@ -41,6 +41,7 @@ PACKAGE_DIRS = (
     "templates",
     "tests",
 )
+LOCAL_GENERATED_NAMES = {"entradas.xlsx", "reference.xlsx"}
 
 
 def files_to_package(root: Path = ROOT) -> list[Path]:
@@ -52,7 +53,10 @@ def files_to_package(root: Path = ROOT) -> list[Path]:
             paths.extend(path for path in folder.rglob("*") if path.is_file())
     for folder in sorted((root / "data").glob("case_*")):
         paths.extend(path for path in folder.rglob("*") if path.is_file())
-    return sorted({path for path in paths if "__pycache__" not in path.parts})
+    return sorted({
+        path for path in paths
+        if "__pycache__" not in path.parts and path.name not in LOCAL_GENERATED_NAMES
+    })
 
 
 def _entry(name: str, data: bytes) -> tuple[zipfile.ZipInfo, bytes]:

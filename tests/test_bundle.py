@@ -40,6 +40,7 @@ def test_el_paquete_no_redistribuye_datos_de_terceros():
     with zipfile.ZipFile(io.BytesIO(build_bytes())) as archive:
         names = archive.namelist()
     assert not any("/data/original/" in name for name in names)
+    assert not any(name.endswith(("/entradas.xlsx", "/reference.xlsx")) for name in names)
 
 
 def test_el_paquete_normaliza_texto_para_ser_portable_entre_sistemas():
