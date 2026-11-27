@@ -31,6 +31,8 @@ def test_el_paquete_contiene_los_trece_casos_y_los_cinco_motores():
     assert manifest["notebooks"] == 10
     assert manifest["engines"] == ["Pandas", "Polars", "R base", "SQL", "Excel"]
     assert manifest["third_party_data_included"] is False
+    manifest_paths = [entry["path"] for entry in manifest["files"]]
+    assert manifest_paths == sorted(manifest_paths)
     for case_json in (ROOT / "cases").glob("*/case.json"):
         relative = case_json.relative_to(ROOT).as_posix()
         assert f"{ARCHIVE_ROOT}/{relative}" in names

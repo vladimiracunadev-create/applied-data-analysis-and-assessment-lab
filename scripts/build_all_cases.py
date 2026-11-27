@@ -100,7 +100,10 @@ def build_bytes(root: Path = ROOT) -> bytes:
             "notebooks": len(list((root / "cases").glob("*/CUADERNO.md"))),
             "engines": ["Pandas", "Polars", "R base", "SQL", "Excel"],
             "third_party_data_included": False,
-            "files": manifest_files,
+            # pathlib ordena con reglas del sistema (Windows no distingue
+            # mayúsculas; Linux sí). El manifiesto usa siempre la ruta POSIX para
+            # que su contenido sea idéntico en ambos entornos.
+            "files": sorted(manifest_files, key=lambda item: str(item["path"])),
         },
         ensure_ascii=False,
         indent=2,

@@ -16,7 +16,7 @@ otra en R con ggplot2; los tres casos canónicos confrontan sus métricas entre 
 ![Versión 0.11.0](https://img.shields.io/badge/versi%C3%B3n-0.11.0-11253B)
 ![Python 3.11–3.14](https://img.shields.io/badge/Python-3.11%E2%80%933.14-3776AB)
 ![Licencia MIT](https://img.shields.io/badge/licencia-MIT-147D70)
-![749 pruebas](https://img.shields.io/badge/pruebas-749-147D70)
+![750 pruebas](https://img.shields.io/badge/pruebas-750-147D70)
 [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/bip_lugares_carga/cuaderno/colab.ipynb)
 
 ---
@@ -167,7 +167,7 @@ uv run --extra polars python solutions/polars_reference.py transport 1
 Rscript solutions/r_reference.R transport 1 reference_outputs/r/transport
 ```
 
-Tres comandos y 749 pruebas en verde. Después, el caso que mejor muestra de qué va
+Tres comandos y 750 pruebas en verde. Después, el caso que mejor muestra de qué va
 esto:
 
 ```powershell
@@ -296,7 +296,7 @@ fórmula que se puede abrir, sí.
 
 ## Qué comprueban las pruebas, y qué no
 
-749 pruebas en 37 archivos. Además de los cálculos:
+750 pruebas en 37 archivos. Además de los cálculos:
 
 - **Validación cruzada entre tecnologías**: Pandas contra Polars, R y SQL, indicador por
   indicador, con tolerancia 10⁻⁹; Excel conserva su control al abrir el libro.
