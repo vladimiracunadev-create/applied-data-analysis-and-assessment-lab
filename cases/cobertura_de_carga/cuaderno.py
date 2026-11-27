@@ -177,6 +177,9 @@ def construir() -> Cuaderno:
         siguiente=("P09 · Cobertura nocturna", "../carga_nocturna/CUADERNO.md"),
         reproducir="python -m cases.cobertura_de_carga.solution",
         importes="from cases.cobertura_de_carga import solution as p08\nimport pandas as pd",
-        fuentes_datos="gtfs-red-movilidad bip-lugares-carga",
+        fuentes_datos=(
+            "gtfs-red-movilidad bip-metro bip-puntos bip-centros-alto-estandar "
+            "bip-centros-estandar bip-retail"
+        ),
         columnas_excel=("stop_id", "distancia_m", "cubierta"),
     )

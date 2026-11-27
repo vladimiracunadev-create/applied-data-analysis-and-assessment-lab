@@ -44,9 +44,9 @@ SPECS: dict[str, CaseSpec] = {
         "por_comuna.csv", "comuna", "total", "barh",
         "Lugares de carga en las diez comunas con mayor oferta",
         "Lugares de carga (recuento)", "Comuna", "corte publicado",
-        "Resultados reproducibles del caso P01", "ranking comunal y total por comuna",
+        "Resultados reproducibles de P01/P02/P04", "ranking comunal y total por comuna",
         '.sort("total", descending=True).head(10).select(["comuna", "total"])',
-        'head(datos[order(-datos$total), c("comuna", "total")], 10)', 11,
+        'datos |> dplyr::arrange(dplyr::desc(.data$total)) |> dplyr::slice_head(n = 10) |> dplyr::select(.data$comuna, .data$total)', 13,
     ),
     "correspondencia_metro": CaseSpec(
         "detectores.csv", "detector", "hallazgos", "barh",
@@ -54,7 +54,7 @@ SPECS: dict[str, CaseSpec] = {
         "Hallazgos (recuento)", "Detector", "corte publicado",
         "Resultados reproducibles del caso P03/P10", "hallazgos por detector independiente",
         '.sort("hallazgos", descending=True).select(["detector", "hallazgos"])',
-        'datos[order(-datos$hallazgos), c("detector", "hallazgos")]', 4,
+        'datos |> dplyr::arrange(dplyr::desc(.data$hallazgos)) |> dplyr::select(.data$detector, .data$hallazgos)', 4,
     ),
     "carga_nocturna": CaseSpec(
         "respuesta.csv", "situacion", "porcentaje", "barh",
@@ -62,7 +62,7 @@ SPECS: dict[str, CaseSpec] = {
         "Paradas con servicio nocturno (%)", "Situación", "corte publicado",
         "Resultados reproducibles del caso P05/P09", "distribución de la respuesta nocturna",
         '.filter(pl.col("situacion") != "TOTAL con servicio nocturno").sort("porcentaje", descending=True).select(["situacion", "porcentaje"])',
-        'subset(datos, situacion != "TOTAL con servicio nocturno", select = c("situacion", "porcentaje"))[order(-subset(datos, situacion != "TOTAL con servicio nocturno")$porcentaje), ]', 6,
+        'datos |> dplyr::filter(.data$situacion != "TOTAL con servicio nocturno") |> dplyr::arrange(dplyr::desc(.data$porcentaje)) |> dplyr::select(.data$situacion, .data$porcentaje)', 6,
     ),
     "gtfs_red_movilidad": CaseSpec(
         "salidas_por_hora.csv", "hora_reloj", "salidas", "line",
@@ -70,7 +70,7 @@ SPECS: dict[str, CaseSpec] = {
         "Hora del reloj", "Salidas programadas (recuento)", "publicación GTFS analizada",
         "Resultados reproducibles del caso P06", "perfil horario agregado de salidas",
         '.group_by("hora_reloj").agg(pl.col("salidas").sum()).sort("hora_reloj")',
-        'aggregate(salidas ~ hora_reloj, datos, sum)', 9,
+        'datos |> dplyr::group_by(.data$hora_reloj) |> dplyr::summarise(salidas = sum(.data$salidas), .groups = "drop") |> dplyr::arrange(.data$hora_reloj)', 9,
     ),
     "rendimiento_gtfs": CaseSpec(
         "benchmark.csv", "metodo", "segundos", "barh",
@@ -78,7 +78,7 @@ SPECS: dict[str, CaseSpec] = {
         "Tiempo (segundos; menor es mejor)", "Método", "ejecución de referencia",
         "Benchmark P07; tiempos dependientes del equipo", "tiempo por implementación ejecutada",
         '.filter(pl.col("segundos").is_not_null()).sort("segundos").select(["metodo", "segundos"])',
-        'subset(datos, !is.na(segundos), select = c("metodo", "segundos"))[order(subset(datos, !is.na(segundos))$segundos), ]', 7,
+        'datos |> dplyr::filter(!is.na(.data$segundos)) |> dplyr::arrange(.data$segundos) |> dplyr::select(.data$metodo, .data$segundos)', 7,
     ),
     "cobertura_de_carga": CaseSpec(
         "cobertura_por_umbral.csv", "umbral_m", "cobertura_pct", "line",
@@ -86,7 +86,7 @@ SPECS: dict[str, CaseSpec] = {
         "Umbral de cercanía (m)", "Paradas cubiertas (%)", "corte publicado",
         "Resultados reproducibles del caso P08", "curva de sensibilidad al umbral",
         '.sort("umbral_m").select(["umbral_m", "cobertura_pct"])',
-        'datos[order(datos$umbral_m), c("umbral_m", "cobertura_pct")]', 5,
+        'datos |> dplyr::arrange(.data$umbral_m) |> dplyr::select(.data$umbral_m, .data$cobertura_pct)', 5,
     ),
     "calendario_medicion": CaseSpec(
         "comparacion_anios.csv", "anio", "dias_medibles", "line",
@@ -94,15 +94,15 @@ SPECS: dict[str, CaseSpec] = {
         "Año", "Días medibles (recuento)", "2024–2027",
         "Resultados reproducibles del caso P11", "días medibles por año",
         '.sort("anio").select(["anio", "dias_medibles"])',
-        'datos[order(datos$anio), c("anio", "dias_medibles")]', 7,
+        'datos |> dplyr::arrange(.data$anio) |> dplyr::select(.data$anio, .data$dias_medibles)', 7,
     ),
     "frecuencia_programada": CaseSpec(
         "distribucion.csv", "estadistico", "intervalo_min", "bar",
         "La distribución revela más que un promedio",
         "Estadístico", "Intervalo entre salidas (minutos)", "publicación GTFS analizada",
         "Resultados reproducibles del caso P12/P13", "percentiles del intervalo programado",
-        '.select(["estadistico", "intervalo_min"])',
-        'datos[, c("estadistico", "intervalo_min")]', 3,
+        '.with_columns(pl.col("estadistico").replace_strict({"mínimo": 0, "P10": 1, "P25": 2, "P50": 3, "media": 4, "P75": 5, "P90": 6, "P95": 7, "máximo": 8}).alias("_orden")).sort("_orden").select(["estadistico", "intervalo_min"])',
+        'datos |> dplyr::mutate(.orden = match(.data$estadistico, c("mínimo", "P10", "P25", "P50", "media", "P75", "P90", "P95", "máximo"))) |> dplyr::arrange(.data$.orden) |> dplyr::select(.data$estadistico, .data$intervalo_min)', 3,
     ),
     "evolucion_gtfs": CaseSpec(
         "oferta_total.csv", "publicacion", "salidas", "line",
@@ -110,7 +110,7 @@ SPECS: dict[str, CaseSpec] = {
         "Publicación GTFS", "Salidas laborales (recuento)", "2024–2026",
         "Resultados reproducibles del caso P14/P15", "evolución de salidas comparables",
         '.sort("publicacion").select(["publicacion", "salidas"])',
-        'datos[order(datos$publicacion), c("publicacion", "salidas")]', 6,
+        'datos |> dplyr::arrange(.data$publicacion) |> dplyr::select(.data$publicacion, .data$salidas)', 6,
     ),
     "informe_decision_carga": CaseSpec(
         "resumen.csv", "indicador", "valor", "barh",
@@ -118,7 +118,7 @@ SPECS: dict[str, CaseSpec] = {
         "Cobertura de paradas (%)", "Indicador", "corte publicado",
         "Resultados reproducibles del caso P16", "indicadores porcentuales de cobertura",
         '.filter(pl.col("unidad") == "%").select(["indicador", "valor"])',
-        'subset(datos, unidad == "%", select = c("indicador", "valor"))', 1,
+        'datos |> dplyr::filter(.data$unidad == "%") |> dplyr::select(.data$indicador, .data$valor)', 1,
     ),
 }
 
@@ -137,7 +137,88 @@ NAVIGATION: tuple[tuple[str, str], ...] = (
 )
 
 
-def _polars_code(slug: str, spec: CaseSpec) -> str:
+# Objetivo, fórmula, interpretación y error frecuente del indicador comparable. Esta
+# prosa es deliberadamente específica: explica el razonamiento que el código materializa
+# y no vuelve a narrar cada instrucción con otras palabras.
+PEDAGOGY: dict[str, tuple[str, str, str, str]] = {
+    "bip_lugares_carga": (
+        "Ordenar la oferta comunal y conservar las diez comunas con mayor número de lugares.",
+        "Para cada comuna c: n_c = Σ 1(fila pertenece a c). El ranking usa n_c descendente; no suma códigos porque el código no es una clave (P02).",
+        "Una barra representa lugares publicados, no demanda ni cobertura territorial. La normalización previa evita partir una comuna en dos etiquetas (P04).",
+        "Contar códigos distintos subestima filas repetidas; agrupar el texto crudo puede separar variantes ortográficas.",
+    ),
+    "correspondencia_metro": (
+        "Comparar cuántos hallazgos aporta cada detector independiente de coordenadas.",
+        "hallazgos_d = Σ 1(detector d marca la fila). Los detectores no son mutuamente excluyentes, por lo que sus barras no deben sumarse como un total.",
+        "La diferencia entre barras muestra puntos ciegos del control, no una competencia entre algoritmos.",
+        "Sumar detectores duplica estaciones marcadas por más de una regla; use el identificador de estación para una unión.",
+    ),
+    "carga_nocturna": (
+        "Mostrar la distribución de respuestas verificables e indeterminadas sobre servicio nocturno.",
+        "porcentaje_s = 100 × n_s / N. Se excluye la fila TOTAL porque es un resumen, no una categoría adicional.",
+        "La categoría indeterminada es evidencia de falta de datos; no equivale a ausencia de servicio.",
+        "Convertir los faltantes en 'no' produce una cobertura falsamente baja y borra la incertidumbre.",
+    ),
+    "gtfs_red_movilidad": (
+        "Agregar salidas programadas por hora de reloj para observar el perfil diario.",
+        "salidas_h = Σ salidas_i para toda fila cuya hora_reloj = h. Las horas GTFS mayores que 24 se normalizan según día de servicio antes de este agregado.",
+        "La curva representa oferta programada, no viajes efectivamente realizados ni pasajeros.",
+        "Truncar 25:30 como hora inválida elimina servicio posterior a medianoche; GTFS permite horas mayores que 24.",
+    ),
+    "rendimiento_gtfs": (
+        "Comparar el tiempo observado de métodos que resuelven la misma agregación.",
+        "t = fin - inicio en segundos. Sólo se comparan filas con medición; menor es mejor bajo el mismo archivo y equipo.",
+        "Una diferencia observada describe esta ejecución de referencia y no una ley universal de rendimiento.",
+        "Comparar ejecuciones con caché, hardware o resultados distintos invalida el benchmark.",
+    ),
+    "cobertura_de_carga": (
+        "Medir cómo cambia la cobertura al variar el umbral de cercanía.",
+        "cobertura(u) = 100 × #{paradas con distancia ≤ u} / #{paradas evaluables}. El denominador se mantiene fijo entre umbrales.",
+        "La pendiente revela sensibilidad a una decisión metodológica; no demuestra demanda de nuevos puntos.",
+        "Cambiar simultáneamente umbral y denominador hace incomparables los puntos de la curva.",
+    ),
+    "calendario_medicion": (
+        "Comparar el denominador de días medibles entre años bajo las mismas reglas.",
+        "días_medibles_a = Σ 1(día laboral y no excluido por ninguna regla) para el año a.",
+        "Las diferencias anuales pueden venir del calendario, aunque la metodología no cambie.",
+        "Reutilizar la lista de feriados de un año en otro altera el denominador silenciosamente.",
+    ),
+    "frecuencia_programada": (
+        "Contrastar estadísticos de la distribución de intervalos programados.",
+        "El percentil p con interpolación lineal se ubica en h=(n−1)p; se interpola entre floor(h) y ceil(h). La convención debe declararse.",
+        "La mediana y el P90 muestran asimetría que el promedio puede ocultar.",
+        "Comparar percentiles calculados con métodos de interpolación distintos puede producir discrepancias legítimas.",
+    ),
+    "evolucion_gtfs": (
+        "Comparar salidas laborales entre publicaciones GTFS equivalentes.",
+        "oferta_p = Σ salidas_i de la publicación p después de aplicar el mismo filtro de día comparable.",
+        "Una caída en oferta programada es una diferencia de programación, no evidencia directa de ejecución o demanda.",
+        "Comparar archivos con ventanas temporales o reglas de servicio distintas confunde versión con estacionalidad.",
+    ),
+    "informe_decision_carga": (
+        "Contrastar los indicadores porcentuales que sostienen la recomendación final.",
+        "cobertura = 100 × paradas cubiertas / paradas evaluables. Se filtra unidad='%' para no mezclar magnitudes incompatibles.",
+        "La brecha entre supuestos espaciales cuantifica sensibilidad y debe acompañar cualquier decisión.",
+        "Poner porcentajes y recuentos en el mismo eje produce una comparación visual sin unidad común.",
+    ),
+}
+
+PANDAS_QUERIES: dict[str, str] = {
+    "bip_lugares_carga": 'datos.nlargest(10, "total")[["comuna", "total"]]',
+    "correspondencia_metro": 'datos.sort_values("hallazgos", ascending=False)[["detector", "hallazgos"]]',
+    "carga_nocturna": 'datos.loc[datos["situacion"] != "TOTAL con servicio nocturno", ["situacion", "porcentaje"]].sort_values("porcentaje", ascending=False)',
+    "gtfs_red_movilidad": 'datos.groupby("hora_reloj", as_index=False)["salidas"].sum().sort_values("hora_reloj")',
+    "rendimiento_gtfs": 'datos.dropna(subset=["segundos"]).sort_values("segundos")[["metodo", "segundos"]]',
+    "cobertura_de_carga": 'datos.sort_values("umbral_m")[["umbral_m", "cobertura_pct"]]',
+    "calendario_medicion": 'datos.sort_values("anio")[["anio", "dias_medibles"]]',
+    "frecuencia_programada": 'datos.assign(_orden=datos["estadistico"].map({"mínimo": 0, "P10": 1, "P25": 2, "P50": 3, "media": 4, "P75": 5, "P90": 6, "P95": 7, "máximo": 8})).sort_values("_orden")[["estadistico", "intervalo_min"]]',
+    "evolucion_gtfs": 'datos.sort_values("publicacion")[["publicacion", "salidas"]]',
+    "informe_decision_carga": 'datos.loc[datos["unidad"] == "%", ["indicador", "valor"]]',
+}
+
+
+def _pandas_code(slug: str, spec: CaseSpec) -> str:
+    """Implementación Pandas explícita del mismo contrato usado por Polars y R."""
     if spec.chart == "line":
         plot_body = f'''ax.plot(x, y, marker="o", linewidth=2, color="#11253B")
     ax.set_xlabel("{spec.xlabel}")
@@ -145,6 +226,7 @@ def _polars_code(slug: str, spec: CaseSpec) -> str:
     ax.set_ylim(bottom=0)'''
     elif spec.chart == "barh":
         plot_body = f'''ax.barh([str(value) for value in x], y, color="#11253B")
+    ax.invert_yaxis()  # el primer puesto del ranking queda arriba, como se lee una tabla
     ax.set_xlabel("{spec.xlabel}")
     ax.set_ylabel("{spec.ylabel}")
     ax.set_xlim(left=0)'''
@@ -153,7 +235,99 @@ def _polars_code(slug: str, spec: CaseSpec) -> str:
     ax.set_xlabel("{spec.xlabel}")
     ax.set_ylabel("{spec.ylabel}")
     ax.set_ylim(bottom=0)'''
-    return f'''"""Contraste Polars y visualización Matplotlib del caso {slug}."""
+    return f'''"""Laboratorio comparable Pandas + Matplotlib del caso {slug}.
+
+Lee el mismo contrato CSV que las versiones Polars y R. La resolución completa del
+caso permanece en ``solution.py`` y en los pasos del cuaderno; este archivo aísla el
+indicador central para que la comparación entre motores sea controlada.
+"""
+from __future__ import annotations
+
+import argparse
+import sys
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
+# Buscar la raíz desde el propio archivo evita rutas C:\\... específicas del autor y
+# funciona igual después de clonar el repositorio en Linux, Windows o Google Colab.
+ROOT = Path(__file__).resolve().parents[3] if "__file__" in globals() else Path.cwd()
+SOURCE = ROOT / "cases" / "{slug}" / "resultados" / "{spec.csv}"
+REQUIRED = {{"{spec.x}", "{spec.y}"}}
+
+
+def analizar() -> pd.DataFrame:
+    """Carga, valida y transforma el indicador; no modifica el archivo de entrada."""
+    datos = pd.read_csv(SOURCE)
+    faltantes = REQUIRED.difference(datos.columns)
+    if faltantes:
+        raise ValueError(f"Faltan columnas requeridas en {{SOURCE}}: {{sorted(faltantes)}}")
+    # La expresión conserva explícitos filtro, agrupación, orden y selección para que
+    # el estudiante pueda alinearlos con las expresiones de Polars y dplyr.
+    resultado = {PANDAS_QUERIES[slug]}
+    return resultado.reset_index(drop=True)
+
+
+def graficar(resultado: pd.DataFrame, destino: Path) -> Path:
+    """Representa exactamente las columnas comparadas y explicita sus unidades."""
+    x = resultado["{spec.x}"].tolist()
+    y = resultado["{spec.y}"].tolist()
+    fig, ax = plt.subplots(figsize=(9, 5))
+    {plot_body}
+    ax.set_title("{spec.title}")
+    ax.grid(axis="y", alpha=0.25)
+    fig.text(0.01, 0.01, "Fuente: {spec.source} · Período: {spec.period}", fontsize=8, color="#58677A")
+    fig.tight_layout(rect=(0, 0.05, 1, 1))
+    fig.savefig(destino, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    return destino
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--salida", type=Path, help="CSV normalizado para comparar motores")
+    parser.add_argument("--grafico", type=Path, help="PNG de la visualización comparable")
+    args = parser.parse_args()
+    resultado = analizar()
+    print(resultado.to_string(index=False))
+    if args.salida:
+        resultado.to_csv(args.salida, index=False)
+    if args.grafico:
+        print(graficar(resultado, args.grafico))
+
+
+if __name__ == "__main__":
+    main()
+'''
+
+
+def _polars_code(slug: str, spec: CaseSpec) -> str:
+    if spec.chart == "line":
+        plot_body = f'''ax.plot(x, y, marker="o", linewidth=2, color="#11253B")
+    ax.set_xlabel("{spec.xlabel}")
+    ax.set_ylabel("{spec.ylabel}")
+    ax.set_ylim(bottom=0)'''
+    elif spec.chart == "barh":
+        plot_body = f'''ax.barh([str(value) for value in x], y, color="#11253B")
+    ax.invert_yaxis()  # el primer puesto del ranking queda arriba, como se lee una tabla
+    ax.set_xlabel("{spec.xlabel}")
+    ax.set_ylabel("{spec.ylabel}")
+    ax.set_xlim(left=0)'''
+    else:
+        plot_body = f'''ax.bar([str(value) for value in x], y, color="#11253B")
+    ax.set_xlabel("{spec.xlabel}")
+    ax.set_ylabel("{spec.ylabel}")
+    ax.set_ylim(bottom=0)'''
+    return f'''"""Laboratorio comparable Polars + Matplotlib del caso {slug}.
+
+Usa el mismo CSV, columnas, reglas y escala que Pandas y R. Polars expresa las
+transformaciones como un plan de expresiones columnares; esa diferencia de método es
+el objeto de aprendizaje, no una razón para cambiar la pregunta.
+"""
 from __future__ import annotations
 
 import argparse
@@ -168,14 +342,21 @@ if hasattr(sys.stdout, "reconfigure"):
 
 ROOT = Path(__file__).resolve().parents[3] if "__file__" in globals() else Path.cwd()
 SOURCE = ROOT / "cases" / "{slug}" / "resultados" / "{spec.csv}"
+REQUIRED = {{"{spec.x}", "{spec.y}"}}
 
 
 def analizar() -> pl.DataFrame:
+    """Carga y valida antes de transformar para producir un error explicativo."""
     datos = pl.read_csv(SOURCE)
+    faltantes = REQUIRED.difference(datos.columns)
+    if faltantes:
+        raise ValueError(f"Faltan columnas requeridas en {{SOURCE}}: {{sorted(faltantes)}}")
+    # select al final fija el contrato de salida y evita comparar columnas auxiliares.
     return datos{spec.polars_query}
 
 
 def graficar(resultado: pl.DataFrame, destino: Path) -> Path:
+    """Convierte sólo las series del gráfico; el análisis permanece en Polars."""
     x = resultado["{spec.x}"].to_list()
     y = resultado["{spec.y}"].to_list()
     fig, ax = plt.subplots(figsize=(9, 5))
@@ -196,11 +377,14 @@ def graficar(resultado: pl.DataFrame, destino: Path) -> Path:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--grafico", type=Path)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--salida", type=Path, help="CSV normalizado para comparar motores")
+    parser.add_argument("--grafico", type=Path, help="PNG de la visualización comparable")
     args = parser.parse_args()
     resultado = analizar()
     print(resultado)
+    if args.salida:
+        resultado.write_csv(args.salida)
     if args.grafico:
         print(graficar(resultado, args.grafico))
 
@@ -216,30 +400,69 @@ def _r_code(slug: str, spec: CaseSpec) -> str:
         '    ggplot2::geom_point(size = 2.5, colour = "#55D6BE")'
         if spec.chart == "line"
         else (
-            'ggplot2::geom_col(fill = "#11253B") +\n    ggplot2::coord_flip()'
+            'ggplot2::geom_col(fill = "#11253B") +\n    ggplot2::scale_x_discrete(limits = rev) +\n    ggplot2::coord_flip()'
             if spec.chart == "barh"
             else 'ggplot2::geom_col(fill = "#11253B")'
         )
     )
     return f'''#!/usr/bin/env Rscript
-# Contraste R + ggplot2 del caso {slug}.
-script_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
-script_path <- if (length(script_arg)) sub("^--file=", "", script_arg[1]) else "cuaderno/solucion.R"
-root <- normalizePath(file.path(dirname(script_path), "../../.."), mustWork = TRUE)
+# Laboratorio comparable R + dplyr/readr + ggplot2 del caso {slug}.
+#
+# La resolución completa sigue en solution.py y en los pasos Pandas. Este script
+# cambia el motor sobre el mismo contrato CSV para estudiar sintaxis y semántica sin
+# cambiar datos, indicador ni escala gráfica.
+
+required <- c("readr", "dplyr")
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing)) {{
+  stop(
+    "Faltan paquetes: ", paste(missing, collapse = ", "),
+    ". Instálelos con install.packages(c('readr', 'dplyr', 'ggplot2'))."
+  )
+}}
+
+# Buscar pyproject.toml hacia arriba hace portable el script entre terminal, RStudio,
+# Posit Cloud, IRkernel y un clon en Colab. LAB_ROOT permite una ruta explícita sin
+# codificar la unidad o el directorio del desarrollador.
+find_root <- function(start = getwd()) {{
+  current <- normalizePath(start, mustWork = TRUE)
+  repeat {{
+    if (file.exists(file.path(current, "pyproject.toml"))) return(current)
+    parent <- dirname(current)
+    if (identical(parent, current)) stop("No se encontró la raíz del repositorio.")
+    current <- parent
+  }}
+}}
+root <- Sys.getenv("LAB_ROOT", unset = find_root())
 source_csv <- file.path(root, "cases", "{slug}", "resultados", "{spec.csv}")
 
-datos <- read.csv(source_csv, check.names = FALSE, fileEncoding = "UTF-8")
+# readr conserva nombres y tipos previsibles. La validación temprana produce un error
+# que explica el contrato roto, en vez de fallar más tarde dentro de una gráfica.
+datos <- readr::read_csv(source_csv, show_col_types = FALSE, progress = FALSE)
+required_columns <- c("{spec.x}", "{spec.y}")
+missing_columns <- setdiff(required_columns, names(datos))
+if (length(missing_columns)) stop("Faltan columnas: ", paste(missing_columns, collapse = ", "))
+
+# dplyr expresa la misma selección, filtro, agrupación y orden que las otras vías.
 resultado <- {spec.r_query}
-print(resultado, row.names = FALSE)
+print(resultado)
 
 args <- commandArgs(trailingOnly = TRUE)
-plot_pos <- match("--grafico", args)
-if (!is.na(plot_pos)) {{
-  if (plot_pos == length(args)) stop("--grafico necesita una ruta de salida")
+value_after <- function(flag) {{
+  pos <- match(flag, args)
+  if (is.na(pos)) return(NULL)
+  if (pos == length(args)) stop(flag, " necesita una ruta de salida")
+  args[pos + 1]
+}}
+
+csv_output <- value_after("--salida")
+if (!is.null(csv_output)) readr::write_csv(resultado, csv_output)
+
+plot_output <- value_after("--grafico")
+if (!is.null(plot_output)) {{
   if (!requireNamespace("ggplot2", quietly = TRUE)) {{
     stop("Instale ggplot2 para generar el gráfico: install.packages('ggplot2')")
   }}
-  destino <- args[plot_pos + 1]
   grafico <- ggplot2::ggplot(
     resultado,
     ggplot2::aes(x = .data[["{spec.x}"]], y = .data[["{spec.y}"]])
@@ -251,14 +474,71 @@ if (!is.na(plot_pos)) {{
       caption = "Fuente: {spec.source} · Período: {spec.period}"
     ) +
     ggplot2::theme_minimal(base_size = 11)
-  ggplot2::ggsave(destino, grafico, width = 9, height = 5, dpi = 150)
-  cat(destino, "\\n")
+  ggplot2::ggsave(plot_output, grafico, width = 9, height = 5, dpi = 150)
+  cat(plot_output, "\\n")
 }}
 '''
 
 
+def _data_dictionary(slug: str, spec: CaseSpec) -> str:
+    """Diccionario compacto del contrato realmente leído por los tres motores."""
+    source = ROOT / "cases" / slug / "resultados" / spec.csv
+    frame = pd.read_csv(source, nrows=50)
+    rows = ["| Campo | Tipo observado | Función en el ejercicio |", "| --- | --- | --- |"]
+    for column, dtype in frame.dtypes.items():
+        role = "categoría/eje X" if column == spec.x else (
+            "medida/eje Y" if column == spec.y else "campo auxiliar del contrato"
+        )
+        rows.append(f"| `{column}` | `{dtype}` | {role} |")
+    return "\n".join(rows)
+
+
+def _guide(slug: str, spec: CaseSpec) -> str:
+    objective, formula, interpretation, pitfall = PEDAGOGY[slug]
+    return f'''#### Contrato común del ejercicio
+
+- **Objetivo.** {objective}
+- **Fuente que leen las tres implementaciones.**
+  [`resultados/{spec.csv}`](resultados/{spec.csv}), CSV UTF-8 versionado y producido
+  por la resolución completa del caso. Los datos originales, su publicador, fecha,
+  licencia, URL y huella se documentan en [`case.json`](case.json) y, cuando existe,
+  `procedencia.json`. Este CSV es un **resultado reproducible**, no se presenta como
+  una nueva fuente oficial.
+- **Alcance.** {spec.scope}. Los tres scripts comparables no sustituyen la adquisición,
+  limpieza ni controles completos de los pasos Pandas: aíslan el indicador para que
+  una diferencia observada sea atribuible al motor.
+- **Fórmula o regla.** {formula}
+- **Interpretación.** {interpretation}
+- **Error frecuente.** {pitfall}
+
+{_data_dictionary(slug, spec)}
+
+#### Qué cambia entre motores
+
+| Dimensión | Pandas | Polars | R (`dplyr`/`readr`) |
+| --- | --- | --- | --- |
+| Modelo | DataFrame mutable por operaciones | expresiones columnares y plan optimizable | tubería declarativa sobre `tibble` |
+| Nulos | `NaN`/`NA`; `groupby` exige decidir `dropna` | `null` separado de `NaN` | `NA`; muchas funciones exigen `na.rm` explícito |
+| Orden | varias operaciones lo conservan, pero se ordena explícitamente | no se presupone tras agrupar | se fija con `arrange` |
+| Gráfico | Matplotlib | Matplotlib tras extraer sólo X/Y | ggplot2 y su gramática de capas |
+| Ventaja típica | ecosistema amplio y aprendizaje gradual | paralelismo, tipos y consultas grandes | estadística, comunicación y análisis reproducible |
+| Límite aquí | el índice puede introducir alineaciones implícitas | añade una dependencia y otra semántica de tipos | requiere runtime y paquetes R independientes |
+
+La equivalencia se valida sobre CSV normalizados con tolerancia numérica `1e-9`; no
+se exige que la sintaxis ni los píxeles sean idénticos. Para ejecutar en un entorno
+limpio consulte [`docs/ejecucion-portable.md`](../../docs/ejecucion-portable.md).'''
+
+
 def _implementaciones(slug: str, spec: CaseSpec) -> tuple[Implementacion, ...]:
     return (
+        Implementacion(
+            motor="Pandas + Matplotlib",
+            lenguaje="python",
+            archivo="solucion_pandas.py",
+            comando=f"python cases/{slug}/cuaderno/solucion_pandas.py",
+            alcance=spec.scope,
+            codigo=_pandas_code(slug, spec),
+        ),
         Implementacion(
             motor="Polars + Matplotlib",
             lenguaje="python",
@@ -298,6 +578,7 @@ def enriquecer_cuaderno(slug: str, cuaderno: Cuaderno) -> Cuaderno:
     cuaderno.anterior = previous
     cuaderno.siguiente = following
     cuaderno.implementaciones = _implementaciones(slug, spec)
+    cuaderno.guia_multimotor = _guide(slug, spec)
     cuaderno.contexto["render_case_chart"] = render_case_chart
 
     # Los dos primeros cuadernos que ya tenían gráficos conservan sus figuras y
@@ -332,7 +613,11 @@ def _prepare_frame(slug: str, frame: pd.DataFrame) -> pd.DataFrame:
     if slug == "calendario_medicion":
         return frame.sort_values("anio")[["anio", "dias_medibles"]]
     if slug == "frecuencia_programada":
-        return frame[["estadistico", "intervalo_min"]]
+        order = {"mínimo": 0, "P10": 1, "P25": 2, "P50": 3, "media": 4,
+                 "P75": 5, "P90": 6, "P95": 7, "máximo": 8}
+        return frame.assign(_orden=frame["estadistico"].map(order)).sort_values(
+            "_orden"
+        )[["estadistico", "intervalo_min"]]
     if slug == "evolucion_gtfs":
         return frame.sort_values("publicacion")[["publicacion", "salidas"]]
     if slug == "informe_decision_carga":

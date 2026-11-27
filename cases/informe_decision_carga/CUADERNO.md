@@ -28,17 +28,137 @@ exportar el informe.
 
 ### El mismo resultado en Pandas, Polars y R
 
-La ruta principal de los pasos usa Pandas y Excel. Las implementaciones siguientes recalculan el indicador que sostiene la conclusión con otro motor y producen el mismo gráfico estadístico. El alcance queda declarado para no confundir validación independiente con una traducción cosmética.
+Los pasos anteriores y siguientes conservan la resolución completa en Pandas. Este laboratorio adicional aísla el indicador central para resolverlo tres veces sobre **la misma tabla, las mismas reglas y la misma escala gráfica**. Así la comparación cambia el motor, no el problema.
+
+#### Contrato común del ejercicio
+
+- **Objetivo.** Contrastar los indicadores porcentuales que sostienen la recomendación final.
+- **Fuente que leen las tres implementaciones.**
+  [`resultados/resumen.csv`](resultados/resumen.csv), CSV UTF-8 versionado y producido
+  por la resolución completa del caso. Los datos originales, su publicador, fecha,
+  licencia, URL y huella se documentan en [`case.json`](case.json) y, cuando existe,
+  `procedencia.json`. Este CSV es un **resultado reproducible**, no se presenta como
+  una nueva fuente oficial.
+- **Alcance.** indicadores porcentuales de cobertura. Los tres scripts comparables no sustituyen la adquisición,
+  limpieza ni controles completos de los pasos Pandas: aíslan el indicador para que
+  una diferencia observada sea atribuible al motor.
+- **Fórmula o regla.** cobertura = 100 × paradas cubiertas / paradas evaluables. Se filtra unidad='%' para no mezclar magnitudes incompatibles.
+- **Interpretación.** La brecha entre supuestos espaciales cuantifica sensibilidad y debe acompañar cualquier decisión.
+- **Error frecuente.** Poner porcentajes y recuentos en el mismo eje produce una comparación visual sin unidad común.
+
+| Campo | Tipo observado | Función en el ejercicio |
+| --- | --- | --- |
+| `indicador` | `str` | categoría/eje X |
+| `valor` | `float64` | medida/eje Y |
+| `unidad` | `str` | campo auxiliar del contrato |
+| `lectura` | `str` | campo auxiliar del contrato |
+
+#### Qué cambia entre motores
+
+| Dimensión | Pandas | Polars | R (`dplyr`/`readr`) |
+| --- | --- | --- | --- |
+| Modelo | DataFrame mutable por operaciones | expresiones columnares y plan optimizable | tubería declarativa sobre `tibble` |
+| Nulos | `NaN`/`NA`; `groupby` exige decidir `dropna` | `null` separado de `NaN` | `NA`; muchas funciones exigen `na.rm` explícito |
+| Orden | varias operaciones lo conservan, pero se ordena explícitamente | no se presupone tras agrupar | se fija con `arrange` |
+| Gráfico | Matplotlib | Matplotlib tras extraer sólo X/Y | ggplot2 y su gramática de capas |
+| Ventaja típica | ecosistema amplio y aprendizaje gradual | paralelismo, tipos y consultas grandes | estadística, comunicación y análisis reproducible |
+| Límite aquí | el índice puede introducir alineaciones implícitas | añade una dependencia y otra semántica de tipos | requiere runtime y paquetes R independientes |
+
+La equivalencia se valida sobre CSV normalizados con tolerancia numérica `1e-9`; no
+se exige que la sintaxis ni los píxeles sean idénticos. Para ejecutar en un entorno
+limpio consulte [`docs/ejecucion-portable.md`](../../docs/ejecucion-portable.md).
 
 | Motor | Alcance verificado | Archivo | Ejecutar |
 | --- | --- | --- | --- |
+| Pandas + Matplotlib | indicadores porcentuales de cobertura | [`solucion_pandas.py`](cuaderno/solucion_pandas.py) | `python cases/informe_decision_carga/cuaderno/solucion_pandas.py` |
 | Polars + Matplotlib | indicadores porcentuales de cobertura | [`solucion_polars.py`](cuaderno/solucion_polars.py) | `uv run --extra polars python cases/informe_decision_carga/cuaderno/solucion_polars.py` |
 | R + ggplot2 | indicadores porcentuales de cobertura | [`solucion.R`](cuaderno/solucion.R) | `Rscript cases/informe_decision_carga/cuaderno/solucion.R` |
+
+#### Pandas + Matplotlib
+
+```python
+"""Laboratorio comparable Pandas + Matplotlib del caso informe_decision_carga.
+
+Lee el mismo contrato CSV que las versiones Polars y R. La resolución completa del
+caso permanece en ``solution.py`` y en los pasos del cuaderno; este archivo aísla el
+indicador central para que la comparación entre motores sea controlada.
+"""
+from __future__ import annotations
+
+import argparse
+import sys
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
+# Buscar la raíz desde el propio archivo evita rutas C:\... específicas del autor y
+# funciona igual después de clonar el repositorio en Linux, Windows o Google Colab.
+ROOT = Path(__file__).resolve().parents[3] if "__file__" in globals() else Path.cwd()
+SOURCE = ROOT / "cases" / "informe_decision_carga" / "resultados" / "resumen.csv"
+REQUIRED = {"indicador", "valor"}
+
+
+def analizar() -> pd.DataFrame:
+    """Carga, valida y transforma el indicador; no modifica el archivo de entrada."""
+    datos = pd.read_csv(SOURCE)
+    faltantes = REQUIRED.difference(datos.columns)
+    if faltantes:
+        raise ValueError(f"Faltan columnas requeridas en {SOURCE}: {sorted(faltantes)}")
+    # La expresión conserva explícitos filtro, agrupación, orden y selección para que
+    # el estudiante pueda alinearlos con las expresiones de Polars y dplyr.
+    resultado = datos.loc[datos["unidad"] == "%", ["indicador", "valor"]]
+    return resultado.reset_index(drop=True)
+
+
+def graficar(resultado: pd.DataFrame, destino: Path) -> Path:
+    """Representa exactamente las columnas comparadas y explicita sus unidades."""
+    x = resultado["indicador"].tolist()
+    y = resultado["valor"].tolist()
+    fig, ax = plt.subplots(figsize=(9, 5))
+    ax.barh([str(value) for value in x], y, color="#11253B")
+    ax.invert_yaxis()  # el primer puesto del ranking queda arriba, como se lee una tabla
+    ax.set_xlabel("Cobertura de paradas (%)")
+    ax.set_ylabel("Indicador")
+    ax.set_xlim(left=0)
+    ax.set_title("Dos supuestos espaciales producen coberturas distintas")
+    ax.grid(axis="y", alpha=0.25)
+    fig.text(0.01, 0.01, "Fuente: Resultados reproducibles del caso P16 · Período: corte publicado", fontsize=8, color="#58677A")
+    fig.tight_layout(rect=(0, 0.05, 1, 1))
+    fig.savefig(destino, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    return destino
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--salida", type=Path, help="CSV normalizado para comparar motores")
+    parser.add_argument("--grafico", type=Path, help="PNG de la visualización comparable")
+    args = parser.parse_args()
+    resultado = analizar()
+    print(resultado.to_string(index=False))
+    if args.salida:
+        resultado.to_csv(args.salida, index=False)
+    if args.grafico:
+        print(graficar(resultado, args.grafico))
+
+
+if __name__ == "__main__":
+    main()
+```
 
 #### Polars + Matplotlib
 
 ```python
-"""Contraste Polars y visualización Matplotlib del caso informe_decision_carga."""
+"""Laboratorio comparable Polars + Matplotlib del caso informe_decision_carga.
+
+Usa el mismo CSV, columnas, reglas y escala que Pandas y R. Polars expresa las
+transformaciones como un plan de expresiones columnares; esa diferencia de método es
+el objeto de aprendizaje, no una razón para cambiar la pregunta.
+"""
 from __future__ import annotations
 
 import argparse
@@ -53,18 +173,26 @@ if hasattr(sys.stdout, "reconfigure"):
 
 ROOT = Path(__file__).resolve().parents[3] if "__file__" in globals() else Path.cwd()
 SOURCE = ROOT / "cases" / "informe_decision_carga" / "resultados" / "resumen.csv"
+REQUIRED = {"indicador", "valor"}
 
 
 def analizar() -> pl.DataFrame:
+    """Carga y valida antes de transformar para producir un error explicativo."""
     datos = pl.read_csv(SOURCE)
+    faltantes = REQUIRED.difference(datos.columns)
+    if faltantes:
+        raise ValueError(f"Faltan columnas requeridas en {SOURCE}: {sorted(faltantes)}")
+    # select al final fija el contrato de salida y evita comparar columnas auxiliares.
     return datos.filter(pl.col("unidad") == "%").select(["indicador", "valor"])
 
 
 def graficar(resultado: pl.DataFrame, destino: Path) -> Path:
+    """Convierte sólo las series del gráfico; el análisis permanece en Polars."""
     x = resultado["indicador"].to_list()
     y = resultado["valor"].to_list()
     fig, ax = plt.subplots(figsize=(9, 5))
     ax.barh([str(value) for value in x], y, color="#11253B")
+    ax.invert_yaxis()  # el primer puesto del ranking queda arriba, como se lee una tabla
     ax.set_xlabel("Cobertura de paradas (%)")
     ax.set_ylabel("Indicador")
     ax.set_xlim(left=0)
@@ -84,11 +212,14 @@ def graficar(resultado: pl.DataFrame, destino: Path) -> Path:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--grafico", type=Path)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--salida", type=Path, help="CSV normalizado para comparar motores")
+    parser.add_argument("--grafico", type=Path, help="PNG de la visualización comparable")
     args = parser.parse_args()
     resultado = analizar()
     print(resultado)
+    if args.salida:
+        resultado.write_csv(args.salida)
     if args.grafico:
         print(graficar(resultado, args.grafico))
 
@@ -101,29 +232,69 @@ if __name__ == "__main__":
 
 ```r
 #!/usr/bin/env Rscript
-# Contraste R + ggplot2 del caso informe_decision_carga.
-script_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
-script_path <- if (length(script_arg)) sub("^--file=", "", script_arg[1]) else "cuaderno/solucion.R"
-root <- normalizePath(file.path(dirname(script_path), "../../.."), mustWork = TRUE)
+# Laboratorio comparable R + dplyr/readr + ggplot2 del caso informe_decision_carga.
+#
+# La resolución completa sigue en solution.py y en los pasos Pandas. Este script
+# cambia el motor sobre el mismo contrato CSV para estudiar sintaxis y semántica sin
+# cambiar datos, indicador ni escala gráfica.
+
+required <- c("readr", "dplyr")
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing)) {
+  stop(
+    "Faltan paquetes: ", paste(missing, collapse = ", "),
+    ". Instálelos con install.packages(c('readr', 'dplyr', 'ggplot2'))."
+  )
+}
+
+# Buscar pyproject.toml hacia arriba hace portable el script entre terminal, RStudio,
+# Posit Cloud, IRkernel y un clon en Colab. LAB_ROOT permite una ruta explícita sin
+# codificar la unidad o el directorio del desarrollador.
+find_root <- function(start = getwd()) {
+  current <- normalizePath(start, mustWork = TRUE)
+  repeat {
+    if (file.exists(file.path(current, "pyproject.toml"))) return(current)
+    parent <- dirname(current)
+    if (identical(parent, current)) stop("No se encontró la raíz del repositorio.")
+    current <- parent
+  }
+}
+root <- Sys.getenv("LAB_ROOT", unset = find_root())
 source_csv <- file.path(root, "cases", "informe_decision_carga", "resultados", "resumen.csv")
 
-datos <- read.csv(source_csv, check.names = FALSE, fileEncoding = "UTF-8")
-resultado <- subset(datos, unidad == "%", select = c("indicador", "valor"))
-print(resultado, row.names = FALSE)
+# readr conserva nombres y tipos previsibles. La validación temprana produce un error
+# que explica el contrato roto, en vez de fallar más tarde dentro de una gráfica.
+datos <- readr::read_csv(source_csv, show_col_types = FALSE, progress = FALSE)
+required_columns <- c("indicador", "valor")
+missing_columns <- setdiff(required_columns, names(datos))
+if (length(missing_columns)) stop("Faltan columnas: ", paste(missing_columns, collapse = ", "))
+
+# dplyr expresa la misma selección, filtro, agrupación y orden que las otras vías.
+resultado <- datos |> dplyr::filter(.data$unidad == "%") |> dplyr::select(.data$indicador, .data$valor)
+print(resultado)
 
 args <- commandArgs(trailingOnly = TRUE)
-plot_pos <- match("--grafico", args)
-if (!is.na(plot_pos)) {
-  if (plot_pos == length(args)) stop("--grafico necesita una ruta de salida")
+value_after <- function(flag) {
+  pos <- match(flag, args)
+  if (is.na(pos)) return(NULL)
+  if (pos == length(args)) stop(flag, " necesita una ruta de salida")
+  args[pos + 1]
+}
+
+csv_output <- value_after("--salida")
+if (!is.null(csv_output)) readr::write_csv(resultado, csv_output)
+
+plot_output <- value_after("--grafico")
+if (!is.null(plot_output)) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
     stop("Instale ggplot2 para generar el gráfico: install.packages('ggplot2')")
   }
-  destino <- args[plot_pos + 1]
   grafico <- ggplot2::ggplot(
     resultado,
     ggplot2::aes(x = .data[["indicador"]], y = .data[["valor"]])
   ) +
     ggplot2::geom_col(fill = "#11253B") +
+    ggplot2::scale_x_discrete(limits = rev) +
     ggplot2::coord_flip() +
     ggplot2::labs(
       title = "Dos supuestos espaciales producen coberturas distintas",
@@ -131,8 +302,8 @@ if (!is.na(plot_pos)) {
       caption = "Fuente: Resultados reproducibles del caso P16 · Período: corte publicado"
     ) +
     ggplot2::theme_minimal(base_size = 11)
-  ggplot2::ggsave(destino, grafico, width = 9, height = 5, dpi = 150)
-  cat(destino, "\n")
+  ggplot2::ggsave(plot_output, grafico, width = 9, height = 5, dpi = 150)
+  cat(plot_output, "\n")
 }
 ```
 
@@ -157,8 +328,10 @@ if (!is.na(plot_pos)) {
 | [`pasos.py`](cuaderno/pasos.py) | los 8 pasos seguidos. Se corre y muestra cada salida |
 | [`practica.xlsx`](cuaderno/practica.xlsx) | las fórmulas y **el resultado que deben dar**, para corregirse solo. Se abre igual en Google Sheets |
 | [`colab.ipynb`](cuaderno/colab.ipynb) | el cuaderno **ejecutable en Colab**: clona, descarga los datos del portal y corre los 8 pasos |
+| [`solucion_pandas.py`](cuaderno/solucion_pandas.py) | solución ejecutable en Pandas + Matplotlib; incluye el contraste numérico y el gráfico del caso |
 | [`solucion_polars.py`](cuaderno/solucion_polars.py) | solución ejecutable en Polars + Matplotlib; incluye el contraste numérico y el gráfico del caso |
 | [`solucion.R`](cuaderno/solucion.R) | solución ejecutable en R + ggplot2; incluye el contraste numérico y el gráfico del caso |
+| [`solucion.Rmd`](cuaderno/solucion.Rmd) | documento R Markdown para RStudio, Posit Cloud y render reproducible; reutiliza `solucion.R` sin duplicar la lógica |
 
 ---
 

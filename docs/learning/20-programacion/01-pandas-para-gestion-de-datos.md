@@ -253,6 +253,29 @@ bad_pax = t.pasajeros.isna() | t.pasajeros.lt(0)
 demand = valid.loc[~bad_pax.loc[valid.index]].groupby("operador").agg(...)
 ```
 
+El aprendizaje no termina en una sola sintaxis. Los cuadernos aíslan un indicador y
+lo vuelven a calcular sobre el mismo CSV para que el cambio observable sea el motor:
+
+```python
+# Pandas: DataFrame e índice; se declara dropna para no perder grupos silenciosamente.
+pandas_result = datos.groupby("comuna", dropna=False).size().rename("total")
+
+# Polars: expresiones columnares; el agregado devuelve un nuevo DataFrame.
+polars_result = datos_pl.group_by("comuna").agg(pl.len().alias("total"))
+```
+
+```r
+# R/dplyr: la tubería hace visible la secuencia agrupar → resumir → ordenar.
+r_result <- datos |>
+  dplyr::count(.data$comuna, name = "total") |>
+  dplyr::arrange(dplyr::desc(.data$total))
+```
+
+La equivalencia es funcional: mismas filas, columnas y valores dentro de tolerancia;
+no implica sintaxis ni representación idénticas. Las implementaciones completas y sus
+gráficos están en cada `cases/<caso>/cuaderno/`, y la preparación de Colab/RStudio se
+documenta en `docs/ejecucion-portable.md`.
+
 ## Ejercicios prácticos
 
 1. Lea `data/case_2/viajes.csv` y perfile la tabla. Informe `dtype`, nulos y
@@ -346,6 +369,8 @@ demand = valid.loc[~bad_pax.loc[valid.index]].groupby("operador").agg(...)
   <https://pandas.pydata.org/docs/user_guide/merging.html>
 - McKinney, W. *Python for Data Analysis*, 3.ª edición, O'Reilly, 2022.
   <https://wesmckinney.com/book/>
+- Guía portable y contrato Pandas/Polars/R del laboratorio.
+  <../../ejecucion-portable.md>
 
 ## Glosario técnico
 

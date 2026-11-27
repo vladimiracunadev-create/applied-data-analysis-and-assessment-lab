@@ -170,7 +170,7 @@ applied-data-analysis-and-assessment-lab/
 ├── data/                   datos sintéticos, inmutables, con semilla fija
 ├── solutions/              referencias en Pandas, Polars, R, SQL y Excel
 │   └── excel/              libros resueltos con fórmulas vivas
-├── cases/*/cuaderno/       pasos, Polars + Matplotlib, R + ggplot2, Colab y figuras
+├── cases/*/cuaderno/       pasos, Pandas/Polars + Matplotlib, R + ggplot2/Rmd, Colab y figuras
 ├── reference_outputs/      resultados generados (no versionados)
 ├── docs/                   documentación, programa de aprendizaje y derivados
 │   └── learning/           clases por bloque

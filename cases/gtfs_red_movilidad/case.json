@@ -57,8 +57,10 @@
     "cases/gtfs_red_movilidad/solution.py — resolución completa.",
     "lab/sources.py — adquisición con procedencia y lectura desde el ZIP.",
     "lab/dates.py — parse_hms_seconds, seconds_to_hms y service_day_hour.",
+    "cases/gtfs_red_movilidad/cuaderno/solucion_pandas.py — referencia comparable con Pandas y Matplotlib.",
     "cases/gtfs_red_movilidad/cuaderno/solucion_polars.py — oferta horaria con Polars y Matplotlib.",
-    "cases/gtfs_red_movilidad/cuaderno/solucion.R — oferta horaria con R y ggplot2."
+    "cases/gtfs_red_movilidad/cuaderno/solucion.R — oferta con readr, dplyr y ggplot2.",
+    "cases/gtfs_red_movilidad/cuaderno/solucion.Rmd — distribución para RStudio y Posit Cloud."
   ],
   "soluciones": "cases/gtfs_red_movilidad/solution.py, documentada paso a paso en el README del caso.",
   "resultados": "cases/gtfs_red_movilidad/resultados/ con el inventario del ZIP, el diagnóstico de horas, la integridad referencial, las paradas por tipo, la comparación de formas de contar y las salidas por hora y modo. Total del día laboral: 64 011 salidas.",

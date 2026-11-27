@@ -3,15 +3,17 @@
 Un cuaderno es el caso resuelto **paso a paso**: el problema explicado como problema, el
 plan de la solución antes de ejecutarla, y para cada paso el código de Python, la salida
 que devuelve de verdad, la fórmula de Excel dibujada en su hoja y una visualización
-estadística. Cada caso incluye además soluciones ejecutables en Polars y R. Se lee de
+estadística. Cada caso incluye además un trío comparable en Pandas, Polars y R. Se lee de
 arriba abajo sin abrir ningún otro archivo.
 
 Qué escribe por cada caso
 
     CUADERNO.md                      el documento
     cuaderno/pasos.py                el código seguido, que corre y muestra sus salidas
+    cuaderno/solucion_pandas.py      referencia comparable y gráfico Matplotlib
     cuaderno/solucion_polars.py      contraste columnar y gráfico Matplotlib
-    cuaderno/solucion.R              contraste en R y gráfico ggplot2
+    cuaderno/solucion.R              contraste dplyr/readr y gráfico ggplot2
+    cuaderno/solucion.Rmd            distribución para RStudio y Posit Cloud
     cuaderno/practica.xlsx           las fórmulas y el resultado que deben dar
     cuaderno/svg/flujo.svg           el diagrama del problema
     cuaderno/svg/mapa.svg            el mapa mental de la solución
@@ -61,6 +63,7 @@ from lab.cuaderno import (  # noqa: E402
     escribir_zip,
     nombre_zip,
     render,
+    url_colab,
 )
 
 NOMBRE_SALIDA = "CUADERNO.md"
@@ -76,9 +79,9 @@ INDICE_SALIDA = ROOT / "docs" / "cuadernos.md"
 #: uno propio: decir «abrir» sin más haría creer que hay un cuaderno dedicado.
 PROBLEMAS: tuple[tuple[str, str, str, str], ...] = (
     ("P01", "Consolidar los cinco Excel de lugares de carga", "bip_lugares_carga", ""),
-    ("P02", "¿El código es una clave?", "bip_lugares_carga", "pasos 7 y 8"),
+    ("P02", "¿El código es una clave?", "bip_lugares_carga", "pasos 7 a 9"),
     ("P03", "Validación cruzada de coordenadas", "correspondencia_metro", ""),
-    ("P04", "Normalizar comuna y entidad para agrupar", "bip_lugares_carga", "paso 8"),
+    ("P04", "Normalizar comuna y entidad para agrupar", "bip_lugares_carga", "pasos 10 a 12"),
     ("P05", "Interpretar horarios escritos en texto libre", "carga_nocturna", ""),
     ("P06", "Expediciones por hora en un día laboral", "gtfs_red_movilidad", ""),
     ("P07", "¿Cuándo conviene dejar Pandas?", "rendimiento_gtfs", ""),
@@ -179,7 +182,10 @@ def escribir_indice(con_cuaderno: set[str]) -> Path:
     ]
     from lab.notebook_enrichment import NAVIGATION
     for position, (slug, label) in enumerate(NAVIGATION, start=1):
-        lineas.append(f"{position}. [{label}](../cases/{slug}/{NOMBRE_SALIDA})")
+        lineas.append(
+            f"{position}. [{label}](../cases/{slug}/{NOMBRE_SALIDA}) · "
+            f"[Abrir en Colab]({url_colab(slug)})"
+        )
     lineas += [
         "",
         "## Los dieciséis problemas de la instancia DTPM",

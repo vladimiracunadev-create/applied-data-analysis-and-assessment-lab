@@ -35,6 +35,8 @@ ejecutadas.
 ## Cuaderno, motores y gráfico
 
 - [Resolución profesional paso a paso](CUADERNO.md).
+- [Abrir en Google Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/rendimiento_gtfs/cuaderno/colab.ipynb).
+- [Pandas + Matplotlib](cuaderno/solucion_pandas.py): referencia comparable del benchmark.
 - [Polars + Matplotlib](cuaderno/solucion_polars.py): tiempo observado por implementación.
-- [R + ggplot2](cuaderno/solucion.R): lectura y visualización independiente del benchmark.
+- [R + dplyr/readr + ggplot2](cuaderno/solucion.R) y [R Markdown](cuaderno/solucion.Rmd): lectura y distribución portable.
 - [Figura publicada](cuaderno/svg/paso-07.svg).

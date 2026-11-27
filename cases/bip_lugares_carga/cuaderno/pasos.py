@@ -1,4 +1,4 @@
-"""P01 · Consolidar cinco Excel públicos que describen lo mismo y no se parecen
+"""P01 · P02/P04 · Consolidar, validar la identidad y normalizar cinco Excel
 
 ¿Cuántos lugares de carga de la tarjeta bip! hay, dónde están, y qué identifica a cada uno?
 
@@ -95,28 +95,60 @@ print(
 )
 
 # ----------------------------------------------------------------------------
-# Paso 8 · Normalizar antes de agrupar
+# Paso 8 · P02 · Buscar claves candidatas mínimas
+# Trampa: Confundir unicidad observada con identidad. codigo + este puede
+# ser única y cambiar cuando el publicador corrige una coordenada.
+# ----------------------------------------------------------------------------
+print("\n=== Paso 8 · P02 · Buscar claves candidatas mínimas ===")
+print(p01.claves_candidatas(consolidado))
+
+# ----------------------------------------------------------------------------
+# Paso 9 · P02 · Declarar y comprobar una clave subrogada
+# Trampa: El hash no vuelve estable una dirección de texto libre: si la
+# fuente corrige la dirección, cambia el identificador.
+# ----------------------------------------------------------------------------
+print("\n=== Paso 9 · P02 · Declarar y comprobar una clave subrogada ===")
+print(p01.informe_de_clave_subrogada(consolidado))
+
+# ----------------------------------------------------------------------------
+# Paso 10 · Normalizar antes de agrupar
 # En Excel: =MAYUSC(ESPACIOS(B2))
 # Trampa: Guardar las dos formas: la clave para agrupar y la etiqueta para
 # mostrar. Con solo la clave, el informe dice NUNOA en vez de Ñuñoa.
 # ----------------------------------------------------------------------------
-print("\n=== Paso 8 · Normalizar antes de agrupar ===")
+print("\n=== Paso 10 · Normalizar antes de agrupar ===")
 print(
     {'crudas': consolidado['entidad'].nunique(),
      'normalizadas': consolidado['entidad'].map(normalize_key).nunique()}
 )
 
 # ----------------------------------------------------------------------------
-# Paso 9 · Contar por comuna
+# Paso 11 · P04 · Auditar cada fusión de la normalización
+# Trampa: Contar solamente cuántos valores desaparecieron no dice cuáles se
+# fusionaron ni si la fusión era correcta.
+# ----------------------------------------------------------------------------
+print("\n=== Paso 11 · P04 · Auditar cada fusión de la normalización ===")
+print(p01.auditoria_de_fusiones(consolidado))
+
+# ----------------------------------------------------------------------------
+# Paso 12 · P04 · Medir el aporte real de expandir abreviaturas
+# Trampa: Que una transformación esté implementada no prueba que aporte
+# algo: en esta descarga la expansión de abreviaturas fusiona cero valores.
+# ----------------------------------------------------------------------------
+print("\n=== Paso 12 · P04 · Medir el aporte real de expandir abreviaturas ===")
+print(p01.aporte_de_las_abreviaturas(consolidado))
+
+# ----------------------------------------------------------------------------
+# Paso 13 · Contar por comuna
 # En Excel: =CONTAR.SI.CONJUNTO($E$2:$E$1929;$N2;$M$2:$M$1929;O$1)
 # Trampa: groupby descarta los nulos de la clave sin avisar, y el total deja
 # de sumar las filas. Con dropna=False aparecen como grupo propio.
 # ----------------------------------------------------------------------------
-print("\n=== Paso 9 · Contar por comuna ===")
+print("\n=== Paso 13 · Contar por comuna ===")
 print(p01.por_comuna(consolidado))
 
 # ----------------------------------------------------------------------------
-# Paso 10 · Cuánto del campo «horario» existe
+# Paso 14 · Cuánto del campo «horario» existe
 # En Excel: =CONTAR.SI(F2:F1929;"?*")/FILAS(F2:F1929)
 # Trampa: Dos trampas en el mismo paso. Una: CONTARA y CONTAR.SI(...;"<>")
 # cuentan como no vacía una celda con fórmula que devuelve cadena vacía, de
@@ -129,14 +161,14 @@ def cobertura(tabla):
     lleno = tabla['horario'].notna() & (
         tabla['horario'].astype('string').str.strip() != '')
     return round(float(lleno.mean() * 100), 2)
-print("\n=== Paso 10 · Cuánto del campo «horario» existe ===")
+print("\n=== Paso 14 · Cuánto del campo «horario» existe ===")
 print(
     {'todas las filas': cobertura(consolidado),
      'solo abiertas': cobertura(consolidado[consolidado['abierto']])}
 )
 
 # ----------------------------------------------------------------------------
-# Paso 11 · Las dos coordenadas de cada fila
+# Paso 15 · Las dos coordenadas de cada fila
 # En Excel: =FRECUENCIA(N2:N1929;P1:P6)
 # Trampa: La media y los percentiles 50, 90 y 99 esconden el hallazgo: los
 # tres caen en 61 m y parece un desvío único con tres atípicos. El
@@ -148,17 +180,17 @@ lat_utm, lon_utm = utm_to_latlon(
 desvio_m = haversine_km(
     lat_utm, lon_utm,
     consolidado['latitud'], consolidado['longitud']) * 1000
-print("\n=== Paso 11 · Las dos coordenadas de cada fila ===")
+print("\n=== Paso 15 · Las dos coordenadas de cada fila ===")
 print(pd.cut(desvio_m, [0, 10, 50, 58, 62, 100, 1e9]).value_counts().sort_index())
 
 # ----------------------------------------------------------------------------
-# Paso 12 · Las filas donde las dos coordenadas se contradicen
+# Paso 16 · Las filas donde las dos coordenadas se contradicen
 # En Excel: =CONTAR.SI(N2:N1929;">200")
 # Trampa: El umbral es una decisión y se escribe con su motivo. Elegirlo
 # después de ver los datos, para que el número de hallazgos quede cómodo, es
 # el resultado disfrazado de criterio.
 # ----------------------------------------------------------------------------
-print("\n=== Paso 12 · Las filas donde las dos coordenadas se contradicen ===")
+print("\n=== Paso 16 · Las filas donde las dos coordenadas se contradicen ===")
 print(
     p01.coordenadas_sospechosas(consolidado)[
         ['fuente', 'codigo', 'comuna', 'desvio_m']]

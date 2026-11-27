@@ -70,8 +70,10 @@
     "cases/bip_lugares_carga/solution.py — la consolidación de los cinco Excel, por vía de cobertura_de_carga.",
     "lab/geo.py — haversine por bloques para el radio de 300 m.",
     "lab/dates.py — parse_hms_seconds, que admite horas de 24 o más y relleno de ceros irregular.",
+    "cases/carga_nocturna/cuaderno/solucion_pandas.py — referencia comparable con Pandas y Matplotlib.",
     "cases/carga_nocturna/cuaderno/solucion_polars.py — distribución de resultados con Polars y Matplotlib.",
-    "cases/carga_nocturna/cuaderno/solucion.R — distribución de resultados con R y ggplot2."
+    "cases/carga_nocturna/cuaderno/solucion.R — distribución con readr, dplyr y ggplot2.",
+    "cases/carga_nocturna/cuaderno/solucion.Rmd — distribución para RStudio y Posit Cloud."
   ],
   "soluciones": "cases/carga_nocturna/solution.py, documentada paso a paso en el README del caso. Se ejecuta con: python -m cases.carga_nocturna.solution",
   "resultados": "cases/carga_nocturna/resultados/ con once tablas. Resultado central: de las 10 520 paradas con servicio nocturno, CERO tienen un lugar de carga a 300 m que declare estar abierto en la ventana. 4 225 (40,2 %) no tienen ningún local cerca; 759 (7,2 %) tienen locales cerca, todos con horario conocido y ninguno abierto; y 5 536 (52,6 %) quedan INDETERMINADAS porque hay locales cerca que no declaran horario. La cobertura nocturna está por tanto entre 0,0 % y 52,6 %, un intervalo de 52,6 puntos. Ninguno de los 1 927 locales abiertos declara abrir de madrugada.",

@@ -57,7 +57,9 @@ def _extension(fuente) -> str:
 def main() -> None:
     enable_utf8()
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("fuente", nargs="?", help="nombre de la fuente del catálogo")
+    parser.add_argument(
+        "fuente", nargs="*", help="uno o más nombres de fuentes del catálogo"
+    )
     parser.add_argument("--sha256", default="",
                         help="huella esperada; si no coincide, no se conserva el archivo")
     parser.add_argument("--forzar", action="store_true",
@@ -84,24 +86,31 @@ def main() -> None:
             print(inventario.to_string(index=False))
         return
 
-    fuente = get(args.fuente)
-    destino = DESTINO / f"{fuente.name}{_extension(fuente)}"
-    print(f"Fuente:   {fuente.name}")
-    print(f"Publica:  {fuente.publisher}")
-    print(f"Licencia: {fuente.licence}")
-    if not fuente.licence_verified:
-        print("          Revise los términos de uso antes de redistribuir estos datos.")
-    print(f"Página:   {fuente.url}\n")
+    if args.sha256 and len(args.fuente) != 1:
+        parser.error("--sha256 sólo se puede usar al descargar una fuente")
 
-    ruta, procedencia = fetch(fuente, destino, expected_sha256=args.sha256, force=args.forzar)
-    print(f"Archivo:  {ruta.relative_to(ROOT)}")
-    print(f"Cita:     {procedencia.summary()}")
-    for nota in procedencia.notes:
-        print(f"Nota:     {nota}")
+    for nombre in args.fuente:
+        fuente = get(nombre)
+        destino = DESTINO / f"{fuente.name}{_extension(fuente)}"
+        print(f"Fuente:   {fuente.name}")
+        print(f"Publica:  {fuente.publisher}")
+        print(f"Licencia: {fuente.licence}")
+        if not fuente.licence_verified:
+            print("          Revise los términos de uso antes de redistribuir estos datos.")
+        print(f"Página:   {fuente.url}\n")
 
-    if ruta.suffix.lower() == ".zip":
-        print("\nContenido:")
-        print(zip_members(ruta).to_string(index=False))
+        ruta, procedencia = fetch(
+            fuente, destino, expected_sha256=args.sha256, force=args.forzar
+        )
+        print(f"Archivo:  {ruta.relative_to(ROOT)}")
+        print(f"Cita:     {procedencia.summary()}")
+        for nota in procedencia.notes:
+            print(f"Nota:     {nota}")
+
+        if ruta.suffix.lower() == ".zip":
+            print("\nContenido:")
+            print(zip_members(ruta).to_string(index=False))
+        print()
 
 
 if __name__ == "__main__":

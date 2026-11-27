@@ -68,8 +68,10 @@
     "lab/geo.py — utm_to_latlon, haversine_km, nearest_point.",
     "lab/keys.py — diagnóstico de columnas, claves candidatas mínimas y clave subrogada determinista.",
     "lab/textual.py — merge_audit, que expone cada fusión con sus formas crudas.",
+    "cases/bip_lugares_carga/cuaderno/solucion_pandas.py — referencia comparable con Pandas y Matplotlib.",
     "cases/bip_lugares_carga/cuaderno/solucion_polars.py — análisis alternativo con Polars y gráfico Matplotlib.",
-    "cases/bip_lugares_carga/cuaderno/solucion.R — análisis alternativo con R y gráfico ggplot2."
+    "cases/bip_lugares_carga/cuaderno/solucion.R — análisis alternativo con readr, dplyr y ggplot2.",
+    "cases/bip_lugares_carga/cuaderno/solucion.Rmd — distribución para RStudio y Posit Cloud."
   ],
   "soluciones": "cases/bip_lugares_carga/solution.py, documentada paso a paso en el README del caso.",
   "resultados": "cases/bip_lugares_carga/resultados/ con nueve tablas: informe de lectura, correspondencia de esquemas, cobertura de campos, validación de clave, validación de coordenadas, filas sospechosas, resumen, agregado por comuna y agregado por entidad. Total: 1 928 lugares, 1 927 abiertos, 46 comunas, 3 entidades, 18,06 % con horario publicado. Para P02: ninguna columna identifica una fila, hay tres claves candidatas mínimas de dos columnas y ninguna sirve de identificador; la clave subrogada sobre `fuente + codigo + direccion` da 1 928 identificadores distintos sin colisiones. Para P04: la normalización fusiona seis veces en todo el archivo —cero en `comuna`, una en `entidad`, cinco en `direccion`—, las seis verificadas correctas, y la expansión de abreviaturas no aporta ninguna.",

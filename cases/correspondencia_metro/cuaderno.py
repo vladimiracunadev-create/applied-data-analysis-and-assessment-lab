@@ -146,6 +146,9 @@ def construir() -> Cuaderno:
         siguiente=("P11 · Calendario de medición", "../calendario_medicion/CUADERNO.md"),
         reproducir="python -m cases.correspondencia_metro.solution",
         importes="from cases.correspondencia_metro import solution as p10",
-        fuentes_datos="gtfs-red-movilidad bip-lugares-carga",
+        fuentes_datos=(
+            "gtfs-red-movilidad bip-metro bip-puntos bip-centros-alto-estandar "
+            "bip-centros-estandar bip-retail"
+        ),
         columnas_excel=("estacion", "paradas", "servicios"),
     )

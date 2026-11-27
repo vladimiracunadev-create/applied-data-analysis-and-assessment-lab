@@ -93,8 +93,10 @@ ARCHIVO_XLSX = "practica.xlsx"
 ARCHIVO_IPYNB = "colab.ipynb"
 
 #: Implementaciones comparables completas que acompañan a cada cuaderno.
+ARCHIVO_PANDAS = "solucion_pandas.py"
 ARCHIVO_POLARS = "solucion_polars.py"
 ARCHIVO_R = "solucion.R"
+ARCHIVO_RMD = "solucion.Rmd"
 
 #: Repositorio público, para el botón de Colab y el clonado del cuaderno ejecutable.
 REPO = "vladimiracunadev-create/applied-data-analysis-and-assessment-lab"
@@ -214,6 +216,9 @@ class Cuaderno:
     #: Implementaciones ejecutables que resuelven el indicador principal con otro
     #: motor. Se publican como archivos y también se muestran dentro del cuaderno.
     implementaciones: tuple[Implementacion, ...] = ()
+    #: Contrato pedagógico del laboratorio comparable: fuente, diccionario, fórmula,
+    #: interpretación, errores esperables y diferencias entre motores.
+    guia_multimotor: str = ""
 
 
 def _recortar(valor: object) -> str:
@@ -414,11 +419,14 @@ def render(cuaderno: Cuaderno, carpeta: Path | None = None,
     if cuaderno.implementaciones:
         escribir("### El mismo resultado en Pandas, Polars y R\n\n")
         escribir(
-            "La ruta principal de los pasos usa Pandas y Excel. Las implementaciones "
-            "siguientes recalculan el indicador que sostiene la conclusión con otro "
-            "motor y producen el mismo gráfico estadístico. El alcance queda declarado "
-            "para no confundir validación independiente con una traducción cosmética.\n\n"
+            "Los pasos anteriores y siguientes conservan la resolución completa en "
+            "Pandas. Este laboratorio adicional aísla el indicador central para "
+            "resolverlo tres veces sobre **la misma tabla, las mismas reglas y la "
+            "misma escala gráfica**. Así la comparación cambia el motor, no el "
+            "problema.\n\n"
         )
+        if cuaderno.guia_multimotor:
+            escribir(cuaderno.guia_multimotor.strip() + "\n\n")
         escribir("| Motor | Alcance verificado | Archivo | Ejecutar |\n")
         escribir("| --- | --- | --- | --- |\n")
         for implementacion in cuaderno.implementaciones:
@@ -475,6 +483,12 @@ def render(cuaderno: Cuaderno, carpeta: Path | None = None,
             f"| [`{implementacion.archivo}`]({CARPETA}/{implementacion.archivo}) "
             f"| solución ejecutable en {implementacion.motor}; incluye el contraste "
             "numérico y el gráfico del caso |\n"
+        )
+    if any(item.archivo == ARCHIVO_R for item in cuaderno.implementaciones):
+        escribir(
+            f"| [`{ARCHIVO_RMD}`]({CARPETA}/{ARCHIVO_RMD}) "
+            "| documento R Markdown para RStudio, Posit Cloud y render reproducible; "
+            "reutiliza `solucion.R` sin duplicar la lógica |\n"
         )
     escribir("\n---\n\n")
 
@@ -616,6 +630,31 @@ def escribir_implementaciones(cuaderno: Cuaderno, carpeta: Path) -> list[Path]:
         destino = carpeta / implementacion.archivo
         destino.write_text(implementacion.codigo.strip() + "\n", encoding="utf-8")
         escritos.append(destino)
+    if any(item.archivo == ARCHIVO_R for item in cuaderno.implementaciones):
+        destino_rmd = carpeta / ARCHIVO_RMD
+        destino_rmd.write_text(
+            "---\n"
+            f"title: \"{cuaderno.caso} · {cuaderno.titulo}\"\n"
+            "output:\n  html_document:\n    toc: true\n    toc_float: true\n"
+            "---\n\n"
+            "Este documento ejecuta la misma implementación de `solucion.R`; no "
+            "mantiene una segunda copia de las transformaciones. Antes de renderizar, "
+            "abra el repositorio como proyecto o clone sus archivos en Posit Cloud.\n\n"
+            "```{r preparar, message=FALSE}\n"
+            "necesarios <- c(\"readr\", \"dplyr\", \"ggplot2\")\n"
+            "faltantes <- necesarios[!vapply(necesarios, requireNamespace, logical(1), quietly = TRUE)]\n"
+            "if (length(faltantes)) install.packages(faltantes, repos = \"https://cloud.r-project.org\")\n"
+            "```\n\n"
+            "```{r ejecutar}\n"
+            "source(\"solucion.R\", chdir = TRUE)\n"
+            "```\n\n"
+            "Para producir el PNG desde una terminal use "
+            "`Rscript solucion.R --grafico comparacion-r.png`. La guía completa de "
+            "RStudio, Posit Cloud, IRkernel y Colab está en "
+            "[`docs/ejecucion-portable.md`](../../../docs/ejecucion-portable.md).\n",
+            encoding="utf-8",
+        )
+        escritos.append(destino_rmd)
     return escritos
 
 
@@ -808,23 +847,64 @@ def escribir_colab(cuaderno: Cuaderno, salidas: list[Salida], slug: str,
         f"pierden al regenerar.*\n"
     )
 
-    dependencias_extra = (
-        f" {cuaderno.dependencias_colab.strip()}" if cuaderno.dependencias_colab.strip() else ""
-    )
+    paquetes = [
+        "pandas>=2.2", "numpy>=1.26", "openpyxl", "XlsxWriter", "matplotlib",
+        "polars>=1.0",
+    ]
+    paquetes.extend(cuaderno.dependencias_colab.split())
     preparacion = (
-        "# Preparación: clona el repositorio y descarga los datos públicos.\n"
-        "# Los datos NO vienen del repositorio: se descargan del portal de datos\n"
-        "# abiertos, porque el laboratorio no redistribuye datos de terceros.\n"
-        f"!git clone --depth 1 https://github.com/{REPO}.git lab-dtpm\n"
-        "%cd lab-dtpm\n"
-        "!pip install --quiet 'pandas>=2.2' 'numpy>=1.26' openpyxl XlsxWriter matplotlib"
-        f"{dependencias_extra}\n"
-        f"!python scripts/fetch_data.py {cuaderno.fuentes_datos or ''}\n"
+        "# 1. Detectar el entorno y obtener una copia limpia del repositorio.\n"
+        "# Esta celda también funciona localmente si se abre el notebook dentro del repo.\n"
+        "import os\nimport platform\nimport subprocess\nimport sys\nfrom pathlib import Path\n\n"
+        "EN_COLAB = 'google.colab' in sys.modules\n"
+        "if not Path('pyproject.toml').exists():\n"
+        "    destino_repo = Path('lab-dtpm')\n"
+        "    if not destino_repo.exists():\n"
+        f"        subprocess.run(['git', 'clone', '--depth', '1', 'https://github.com/{REPO}.git', str(destino_repo)], check=True)\n"
+        "    os.chdir(destino_repo)\n\n"
+        "ROOT = Path.cwd().resolve()\n"
+        f"PAQUETES = {paquetes!r}\n"
+        "subprocess.run([sys.executable, '-m', 'pip', 'install', '--quiet', *PAQUETES], check=True)\n"
+        "print('Entorno:', 'Google Colab' if EN_COLAB else 'Python local/Jupyter')\n"
+        "print('Python:', platform.python_version())\n"
+        "print('Repositorio:', ROOT)\n"
+    )
+    versiones = (
+        "# 2. Importar y registrar versiones: evita resultados imposibles de auditar.\n"
+        "import matplotlib\nimport numpy as np\nimport pandas as pd\nimport polars as pl\n\n"
+        "print({'pandas': pd.__version__, 'polars': pl.__version__, "
+        "'numpy': np.__version__, 'matplotlib': matplotlib.__version__})\n"
+    )
+    obtener_datos = (
+        "# 3. Obtener las fuentes originales declaradas por el caso.\n"
+        "# Si la fuente externa falla, el error se conserva: no se sustituyen datos\n"
+        "# reales por sintéticos. Los CSV versionados permiten ejecutar el laboratorio\n"
+        "# comparativo, pero no reemplazan la adquisición del caso completo.\n"
+        f"fuentes = {cuaderno.fuentes_datos.split()!r}\n"
+        "for fuente in fuentes:\n"
+        "    try:\n"
+        "        subprocess.run([sys.executable, 'scripts/fetch_data.py', fuente], check=True)\n"
+        "    except subprocess.CalledProcessError as exc:\n"
+        "        raise RuntimeError(\n"
+        "            f'No se pudo obtener {fuente}. Revise la URL, la red y las alternativas de carga descritas arriba.'\n"
+        "        ) from exc\n"
     )
 
     celdas = [
         _celda("markdown", cabecera),
         _celda("code", preparacion),
+        _celda("code", versiones),
+        _celda(
+            "markdown",
+            "## Alternativas para integrar los datos\n\n"
+            "La vía reproducible es clonar GitHub y ejecutar `scripts/fetch_data.py`, "
+            "como hace la siguiente celda. Si la red institucional lo impide, consulte "
+            "la [guía portable](https://github.com/" + REPO + "/blob/main/docs/ejecucion-portable.md): "
+            "explica carga desde el equipo, montaje de Google Drive, descarga directa "
+            "y validación SHA-256. No cambie la fuente por datos simulados sin "
+            "declararlo.\n",
+        ),
+        _celda("code", obtener_datos),
     ]
     if cuaderno.problema:
         celdas.append(_celda("markdown", "## 1 · El problema\n\n"
@@ -836,8 +916,10 @@ def escribir_colab(cuaderno: Cuaderno, salidas: list[Salida], slug: str,
         celdas.append(_celda(
             "markdown",
             "## Implementaciones comparables\n\n"
-            "La ruta principal usa Pandas. Polars y R recalculan el indicador central "
-            "desde el contrato de salida versionado y generan el mismo gráfico.\n",
+            "La ruta principal conserva el caso completo en Pandas. El laboratorio "
+            "comparable ejecuta Pandas y Polars en este runtime sobre el mismo CSV. "
+            "R usa el mismo contrato y se valida en CI; el runtime Python estándar de "
+            "Colab no ejecuta R de forma nativa.\n\n" + cuaderno.guia_multimotor,
         ))
         for implementacion in cuaderno.implementaciones:
             celdas.append(_celda(
@@ -846,6 +928,23 @@ def escribir_colab(cuaderno: Cuaderno, salidas: list[Salida], slug: str,
                 f"```{implementacion.lenguaje}\n{implementacion.codigo.strip()}\n```\n\n"
                 f"Ejecutar con `{implementacion.comando}`.\n",
             ))
+            if implementacion.lenguaje == "python":
+                grafico = implementacion.archivo.replace(".py", "-colab.png")
+                celdas.append(_celda(
+                    "code",
+                    "# Ejecutar la implementación publicada, no una copia pegada.\n"
+                    f"subprocess.run([sys.executable, 'cases/{slug}/cuaderno/{implementacion.archivo}', "
+                    f"'--grafico', '{grafico}'], check=True)\n"
+                    f"from IPython.display import Image, display\ndisplay(Image('{grafico}'))\n",
+                ))
+        celdas.append(_celda(
+            "markdown",
+            "### Ejecutar R\n\n"
+            "Use `solucion.R` desde R/RStudio, Posit Cloud o Jupyter con IRkernel. "
+            "También se incluye `solucion.Rmd`. En Colab, seleccione un runtime R "
+            "compatible o use la instalación experimental documentada; se marca como "
+            "compatibilidad documentada, no como ejecución validada.\n",
+        ))
 
     importes = cuaderno.importes.strip()
     if importes:

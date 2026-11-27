@@ -17,7 +17,7 @@
   "diccionario": "Especificación GTFS; route_id, stop_id y shape_id son identificadores publicados, no identidades históricas garantizadas.",
   "supuestos": ["Se usa la última publicación de 2025", "service_id L representa día laboral", "end_time es exclusivo", "las geometrías se comparan por secuencia de puntos"],
   "metodologias_alternativas": ["Comparación por nombres normalizados", "Asignación espacial de rutas", "Serie con una publicación fija por año"],
-  "implementaciones": ["cases/evolucion_gtfs/solution.py", "cases/evolucion_gtfs/cuaderno.py", "cases/evolucion_gtfs/cuaderno/solucion_polars.py — Polars y Matplotlib", "cases/evolucion_gtfs/cuaderno/solucion.R — R y ggplot2"],
+  "implementaciones": ["cases/evolucion_gtfs/solution.py", "cases/evolucion_gtfs/cuaderno.py", "cases/evolucion_gtfs/cuaderno/solucion_pandas.py — Pandas y Matplotlib", "cases/evolucion_gtfs/cuaderno/solucion_polars.py — Polars y Matplotlib", "cases/evolucion_gtfs/cuaderno/solucion.R — readr, dplyr y ggplot2", "cases/evolucion_gtfs/cuaderno/solucion.Rmd — RStudio y Posit Cloud"],
   "soluciones": "Comparación ejecutable de ZIP directo y ZIP anidado, con tablas versionables.",
   "resultados": "La oferta laboral pasa de 68 533 a 68 011 y 64 011 salidas en las tres publicaciones.",
   "validaciones": ["Misma función calcula ambas publicaciones", "La geometría se firma por puntos, no solo por shape_id", "La suma horaria coincide con el total", "tests/test_multiengine.py ejecuta Polars y R y comprueba la gráfica de evolución"],

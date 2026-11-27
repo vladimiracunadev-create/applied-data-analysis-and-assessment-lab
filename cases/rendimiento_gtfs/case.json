@@ -17,7 +17,7 @@
   "diccionario": "stop_times.stop_id identifica la parada asociada a cada fila de horario.",
   "supuestos": ["La agregación incremental es asociativa", "El caché del sistema no se controla", "La extracción para DuckDB y Polars se mide aparte"],
   "metodologias_alternativas": ["PyArrow dataset", "DuckDB leyendo un CSV ya extraído", "Polars scan_csv sobre almacenamiento descomprimido persistente"],
-  "implementaciones": ["cases/rendimiento_gtfs/solution.py", "cases/rendimiento_gtfs/cuaderno.py", "cases/rendimiento_gtfs/cuaderno/solucion_polars.py — Polars y Matplotlib", "cases/rendimiento_gtfs/cuaderno/solucion.R — R y ggplot2"],
+  "implementaciones": ["cases/rendimiento_gtfs/solution.py", "cases/rendimiento_gtfs/cuaderno.py", "cases/rendimiento_gtfs/cuaderno/solucion_pandas.py — Pandas y Matplotlib", "cases/rendimiento_gtfs/cuaderno/solucion_polars.py — Polars y Matplotlib", "cases/rendimiento_gtfs/cuaderno/solucion.R — readr, dplyr y ggplot2", "cases/rendimiento_gtfs/cuaderno/solucion.Rmd — RStudio y Posit Cloud"],
   "soluciones": "Cuatro implementaciones con una tabla común de métricas y validación.",
   "resultados": "Los cuatro métodos coinciden; bloques usa cerca de una quinta parte de la memoria visible de datos.",
   "validaciones": ["Cero diferencias por stop_id", "Mismo número de filas de entrada", "Tiempos de preparación separados", "tests/test_multiengine.py ejecuta Polars y R y comprueba el gráfico comparativo de tiempos"],

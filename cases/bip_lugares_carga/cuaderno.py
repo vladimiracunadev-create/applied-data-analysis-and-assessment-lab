@@ -1,4 +1,4 @@
-"""Cuaderno de trabajo de P01: los pasos, en Pandas y en Excel.
+"""Cuaderno de trabajo de P01/P02/P04: los pasos, en Pandas y en Excel.
 
 Declara los pasos y el espacio de nombres sobre el que corren. Se genera con
 `python scripts/build_cuadernos.py` y produce, junto a este archivo:
@@ -110,22 +110,26 @@ cada archivo y el campo del esquema común se **declara** en una tabla, no se ad
 parecido: un acierto por casualidad hoy es un error mañana. Y al apilar se agrega el tipo
 de local, que vive en el nombre del archivo y se perdería para siempre.
 
-**Comprobar lo que se supone** (pasos 7 y 8). Dos suposiciones que todo el mundo hace y
-nadie mide: que la columna llamada «código» es una clave, y que los textos que nombran lo
-mismo están escritos igual. Las dos son falsas en este archivo, y medirlo cuesta una
-línea cada una.
+**P02 · Resolver la identidad** (pasos 7 a 9). Primero se demuestra que `codigo` no es
+clave; después se enumeran las combinaciones mínimas observadas y se explica por qué
+ninguna es un identificador estable. La salida es una clave subrogada determinista cuyo
+límite —depender de una dirección de texto libre— queda declarado.
 
-**Responder, y declarar el límite** (pasos 9 y 10). Recién aquí se cuenta por comuna. Y
+**P04 · Normalizar sin fusionar a ciegas** (pasos 10 a 12). Se conserva texto crudo y
+clave normalizada, se inspecciona cada fusión y se mide por separado el aporte de
+expandir abreviaturas. Que una regla exista no demuestra que aporte algo.
+
+**Responder, y declarar el límite** (pasos 13 y 14). Recién aquí se cuenta por comuna. Y
 se mide cuánto del campo de horario existe de verdad, porque de eso depende qué se puede
 concluir después.
 
-**Validar sin fuente externa** (pasos 11 y 12). El archivo trae la ubicación dos veces.
+**Validar sin fuente externa** (pasos 15 y 16). El archivo trae la ubicación dos veces.
 Convertir una y compararla con la otra es una validación que no necesita pedirle nada a
 nadie, y es la que encuentra los tres errores de kilómetros que ninguna de las
 comprobaciones anteriores podía ver.
 
-Cada paso trae el Pandas, su salida real, y la fórmula de Excel dibujada en su hoja. Diez
-de los doce traen además **la trampa**: lo que sale mal si el paso se hace de la forma
+Cada paso trae el Pandas, su salida real y su equivalente de Excel. Catorce de los
+dieciséis traen además **la trampa**: lo que sale mal si el paso se hace de la forma
 obvia, que es la parte que no está en ningún tutorial y la que se pregunta en una prueba.
 """
 
@@ -153,8 +157,8 @@ FLUJO = Flujo(
 )
 
 MAPA = Mapa(
-    centro="P01 · Consolidar cinco Excel",
-    subtitulo="12 pasos · 10 trampas",
+    centro="P01/P02/P04 · Datos utilizables",
+    subtitulo="16 pasos · P01, P02 y P04",
     ramas=[
         Rama("Leer lo que no está ordenado",
              ["1 · Mirar las hojas antes de leer",
@@ -164,15 +168,20 @@ MAPA = Mapa(
              ["4 · Los esquemas no coinciden",
               "5 · Apilar al esquema común",
               "6 · El tipo no está en los datos"], color=AZUL),
-        Rama("Comprobar lo que se supone",
+        Rama("P02 · Resolver la identidad",
              ["7 · El código no es una clave",
-              "8 · Normalizar antes de agrupar"], color=OCRE),
+              "8 · Claves candidatas mínimas",
+              "9 · Clave subrogada declarada"], color=OCRE),
+        Rama("P04 · Normalizar con auditoría",
+             ["10 · Normalizar sin perder etiqueta",
+              "11 · Revisar cada fusión",
+              "12 · Medir las abreviaturas"], color=OCRE),
         Rama("Responder, y declarar el límite",
-             ["9 · Contar por comuna",
-              "10 · Cuánto del horario existe"], color=ACENTO),
+             ["13 · Contar por comuna",
+              "14 · Cuánto del horario existe"], color=ACENTO),
         Rama("Validar sin fuente externa",
-             ["11 · Las dos coordenadas de cada fila",
-              "12 · Dónde se contradicen"], color=OCRE),
+             ["15 · Las dos coordenadas de cada fila",
+              "16 · Dónde se contradicen"], color=OCRE),
     ],
 )
 
@@ -185,8 +194,12 @@ APRENDIZAJES = (
     "no se agrega a propósito. Y la tabla resultante queda completa y sumable.",
     "Una columna llamada «código» **no es una clave hasta que se mide**, y en este "
     "archivo no lo es ni junto al nombre del archivo de origen.",
+    "Una clave candidata única en la descarga actual no es necesariamente un "
+    "identificador estable; la clave subrogada hereda la estabilidad de sus campos.",
     "Normalizar es decidir qué cosas son la misma, y hay que guardar **las dos** formas: "
     "la clave para agrupar y la etiqueta para mostrar.",
+    "Cada fusión de una normalización se audita con sus formas crudas, y el aporte de "
+    "una regla adicional se mide por separado en vez de atribuirle mérito por existir.",
     "El **denominador es una decisión**: la cobertura del horario es 18,10 % o 18,06 % "
     "según se cuenten todas las filas o solo las abiertas, y hay que decir cuál se "
     "publica.",
@@ -214,7 +227,7 @@ RELACIONADOS = (
 
 
 def construir() -> Cuaderno:
-    """El cuaderno de P01."""
+    """El cuaderno compartido y explícito de P01, P02 y P04."""
     contexto = {
         "p01": p01,
         "ORIGINAL": p01.ORIGINAL,
@@ -603,9 +616,88 @@ def construir() -> Cuaderno:
         ),
     ]
 
+    # P02 y P04 comparten el mismo consolidado de P01, pero no son notas al margen:
+    # tienen preguntas, resultados y decisiones propios. Se insertan junto al concepto
+    # que extienden para mantener la progresión pedagógica del cuaderno.
+    pasos[7:7] = [
+        Paso(
+            titulo="P02 · Buscar claves candidatas mínimas",
+            objetivo=(
+                "Medir todas las combinaciones mínimas que identifican las filas; una "
+                "combinación única hoy todavía no es un identificador estable."
+            ),
+            pandas="p01.claves_candidatas(consolidado)",
+            excel=(
+                "En Excel esta búsqueda exhaustiva no es práctica: se puede comprobar "
+                "una combinación con `CONTAR.SI.CONJUNTO`, pero Python enumera todas y "
+                "descarta automáticamente las que contienen otra clave ya suficiente."
+            ),
+            trampa=(
+                "Confundir unicidad observada con identidad. `codigo + este` puede ser "
+                "única y cambiar cuando el publicador corrige una coordenada."
+            ),
+            filas=6,
+        ),
+        Paso(
+            titulo="P02 · Declarar y comprobar una clave subrogada",
+            objetivo=(
+                "Construir un identificador determinista sobre los campos declarados "
+                "como identidad y fallar si se produce una colisión."
+            ),
+            pandas="p01.informe_de_clave_subrogada(consolidado)",
+            excel=(
+                "Una concatenación de número de fila no es equivalente porque cambia "
+                "al ordenar. Para una entrega pequeña puede usarse `fuente&codigo&direccion`, "
+                "pero debe comprobarse duplicidad y documentar su inestabilidad."
+            ),
+            trampa=(
+                "El hash no vuelve estable una dirección de texto libre: si la fuente "
+                "corrige la dirección, cambia el identificador."
+            ),
+            filas=4,
+        ),
+    ]
+    pasos[10:10] = [
+        Paso(
+            titulo="P04 · Auditar cada fusión de la normalización",
+            objetivo=(
+                "Ver qué formas crudas quedaron unidas, porque juntar entidades "
+                "distintas es un error más difícil de notar que dejarlas separadas."
+            ),
+            pandas="p01.auditoria_de_fusiones(consolidado)",
+            excel=(
+                "Conserve texto crudo y normalizado en columnas distintas; una tabla "
+                "dinámica por clave normalizada permite inspeccionar las etiquetas que "
+                "absorbió cada grupo."
+            ),
+            trampa=(
+                "Contar solamente cuántos valores desaparecieron no dice cuáles se "
+                "fusionaron ni si la fusión era correcta."
+            ),
+            filas=8,
+        ),
+        Paso(
+            titulo="P04 · Medir el aporte real de expandir abreviaturas",
+            objetivo=(
+                "Separar el efecto de mayúsculas/tildes/espacios del efecto adicional "
+                "de expandir abreviaturas como AV. → AVENIDA."
+            ),
+            pandas="p01.aporte_de_las_abreviaturas(consolidado)",
+            excel=(
+                "Compare el recuento de claves únicas antes de normalizar, después de "
+                "la normalización básica y después de la tabla de sustituciones."
+            ),
+            trampa=(
+                "Que una transformación esté implementada no prueba que aporte algo: "
+                "en esta descarga la expansión de abreviaturas fusiona cero valores."
+            ),
+            filas=5,
+        ),
+    ]
+
     return Cuaderno(
         caso="P01",
-        titulo="Consolidar cinco Excel públicos que describen lo mismo y no se parecen",
+        titulo="P02/P04 · Consolidar, validar la identidad y normalizar cinco Excel",
         pregunta=(
             "¿Cuántos lugares de carga de la tarjeta bip! hay, dónde están, y qué "
             "identifica a cada uno?"
@@ -639,8 +731,10 @@ def construir() -> Cuaderno:
         siguiente=("P08 · El cruce que no tiene clave",
                    "../cobertura_de_carga/README.md"),
         cierre=(
-            "1 928 filas, 1 927 abiertas, 46 comunas, 3 entidades. El `codigo` no "
-            "identifica una fila, ni junto al archivo de origen. La validación cruzada de "
+            "1 928 filas, 1 927 abiertas, 46 comunas, 3 entidades. En P02, el `codigo` no "
+            "identifica una fila; se evalúan las claves candidatas y una clave subrogada "
+            "determinista. En P04, las seis fusiones de normalización quedan auditadas y "
+            "la expansión de abreviaturas aporta cero fusiones. La validación cruzada de "
             "las dos coordenadas encontró 3 errores de hasta 10,3 km y un desplazamiento "
             "sistemático de 61 m con distribución bimodal.\n\n"
             "**No** se puede concluir cuánta gente usa cada local —no hay transacciones— "

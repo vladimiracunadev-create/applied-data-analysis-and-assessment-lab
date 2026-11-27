@@ -1,4 +1,4 @@
-"""Validación cruzada de Pandas frente a Polars y R base.
+"""Validación cruzada de Pandas frente a Polars y R.
 
 Polars es una dependencia opcional y R es un runtime externo. Las pruebas se omiten
 cuando la tecnología no está instalada en la máquina local; el trabajo multitecnología
@@ -167,30 +167,62 @@ def test_r_reproduce_los_casos_de_negocio(case_name, tmp_path):
 @pytest.mark.skipif(not POLARS_AVAILABLE, reason="instale el extra polars")
 @pytest.mark.parametrize("slug", NOTEBOOK_CASES)
 def test_cada_cuaderno_ejecuta_polars_y_matplotlib(slug, tmp_path):
+    pandas_script = ROOT / "cases" / slug / "cuaderno" / "solucion_pandas.py"
     script = ROOT / "cases" / slug / "cuaderno" / "solucion_polars.py"
+    pandas_csv = tmp_path / f"{slug}-pandas.csv"
+    polars_csv = tmp_path / f"{slug}-polars.csv"
+    pandas_chart = tmp_path / f"{slug}-pandas.png"
     chart = tmp_path / f"{slug}-polars.png"
     subprocess.run(
-        [sys.executable, str(script), "--grafico", str(chart)],
+        [sys.executable, str(pandas_script), "--salida", str(pandas_csv),
+         "--grafico", str(pandas_chart)],
         cwd=ROOT,
         check=True,
         capture_output=True,
         text=True,
         encoding="utf-8",
     )
+    subprocess.run(
+        [sys.executable, str(script), "--salida", str(polars_csv),
+         "--grafico", str(chart)],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+    expected = pd.read_csv(pandas_csv)
+    actual = pd.read_csv(polars_csv)
+    _assert_same(expected, actual, [expected.columns[0]])
+    assert pandas_chart.stat().st_size > 1_000
     assert chart.stat().st_size > 1_000
 
 
 @pytest.mark.skipif(RSCRIPT is None, reason="Rscript no está instalado")
 @pytest.mark.parametrize("slug", NOTEBOOK_CASES)
 def test_cada_cuaderno_ejecuta_r_y_ggplot2(slug, tmp_path):
+    pandas_script = ROOT / "cases" / slug / "cuaderno" / "solucion_pandas.py"
     script = ROOT / "cases" / slug / "cuaderno" / "solucion.R"
+    pandas_csv = tmp_path / f"{slug}-pandas.csv"
+    r_csv = tmp_path / f"{slug}-r.csv"
     chart = tmp_path / f"{slug}-r.png"
     subprocess.run(
-        [RSCRIPT, str(script), "--grafico", str(chart)],
+        [sys.executable, str(pandas_script), "--salida", str(pandas_csv)],
         cwd=ROOT,
         check=True,
         capture_output=True,
         text=True,
         encoding="utf-8",
     )
+    subprocess.run(
+        [RSCRIPT, str(script), "--salida", str(r_csv), "--grafico", str(chart)],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+    expected = pd.read_csv(pandas_csv)
+    actual = pd.read_csv(r_csv)
+    _assert_same(expected, actual, [expected.columns[0]])
     assert chart.stat().st_size > 1_000

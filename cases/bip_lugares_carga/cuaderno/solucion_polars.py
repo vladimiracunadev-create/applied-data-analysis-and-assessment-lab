@@ -1,4 +1,9 @@
-"""Contraste Polars y visualización Matplotlib del caso bip_lugares_carga."""
+"""Laboratorio comparable Polars + Matplotlib del caso bip_lugares_carga.
+
+Usa el mismo CSV, columnas, reglas y escala que Pandas y R. Polars expresa las
+transformaciones como un plan de expresiones columnares; esa diferencia de método es
+el objeto de aprendizaje, no una razón para cambiar la pregunta.
+"""
 from __future__ import annotations
 
 import argparse
@@ -13,18 +18,26 @@ if hasattr(sys.stdout, "reconfigure"):
 
 ROOT = Path(__file__).resolve().parents[3] if "__file__" in globals() else Path.cwd()
 SOURCE = ROOT / "cases" / "bip_lugares_carga" / "resultados" / "por_comuna.csv"
+REQUIRED = {"comuna", "total"}
 
 
 def analizar() -> pl.DataFrame:
+    """Carga y valida antes de transformar para producir un error explicativo."""
     datos = pl.read_csv(SOURCE)
+    faltantes = REQUIRED.difference(datos.columns)
+    if faltantes:
+        raise ValueError(f"Faltan columnas requeridas en {SOURCE}: {sorted(faltantes)}")
+    # select al final fija el contrato de salida y evita comparar columnas auxiliares.
     return datos.sort("total", descending=True).head(10).select(["comuna", "total"])
 
 
 def graficar(resultado: pl.DataFrame, destino: Path) -> Path:
+    """Convierte sólo las series del gráfico; el análisis permanece en Polars."""
     x = resultado["comuna"].to_list()
     y = resultado["total"].to_list()
     fig, ax = plt.subplots(figsize=(9, 5))
     ax.barh([str(value) for value in x], y, color="#11253B")
+    ax.invert_yaxis()  # el primer puesto del ranking queda arriba, como se lee una tabla
     ax.set_xlabel("Lugares de carga (recuento)")
     ax.set_ylabel("Comuna")
     ax.set_xlim(left=0)
@@ -33,7 +46,7 @@ def graficar(resultado: pl.DataFrame, destino: Path) -> Path:
     fig.text(
         0.01,
         0.01,
-        "Fuente: Resultados reproducibles del caso P01 · Período: corte publicado",
+        "Fuente: Resultados reproducibles de P01/P02/P04 · Período: corte publicado",
         fontsize=8,
         color="#58677A",
     )
@@ -44,11 +57,14 @@ def graficar(resultado: pl.DataFrame, destino: Path) -> Path:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--grafico", type=Path)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--salida", type=Path, help="CSV normalizado para comparar motores")
+    parser.add_argument("--grafico", type=Path, help="PNG de la visualización comparable")
     args = parser.parse_args()
     resultado = analizar()
     print(resultado)
+    if args.salida:
+        resultado.write_csv(args.salida)
     if args.grafico:
         print(graficar(resultado, args.grafico))
 

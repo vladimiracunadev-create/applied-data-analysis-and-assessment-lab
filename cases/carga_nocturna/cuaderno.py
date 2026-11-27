@@ -150,6 +150,9 @@ def construir() -> Cuaderno:
         siguiente=("P10 · Correspondencia buses–Metro", "../correspondencia_metro/CUADERNO.md"),
         reproducir="python -m cases.carga_nocturna.solution",
         importes="from cases.carga_nocturna import solution as p09",
-        fuentes_datos="gtfs-red-movilidad bip-lugares-carga",
+        fuentes_datos=(
+            "gtfs-red-movilidad bip-metro bip-puntos bip-centros-alto-estandar "
+            "bip-centros-estandar bip-retail"
+        ),
         columnas_excel=("tipo_local", "horario", "estado"),
     )

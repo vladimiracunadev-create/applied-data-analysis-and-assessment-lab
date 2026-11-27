@@ -82,7 +82,7 @@ correspondencia, no adivinándola.
 sabe si se mira el nombre de las hojas o no.
 
 **Estado:** **resuelto** — [`cases/bip_lugares_carga`](../cases/bip_lugares_carga/README.md),
-con [cuaderno de trabajo](../cases/bip_lugares_carga/CUADERNO.md) de doce pasos en
+con [cuaderno de trabajo](../cases/bip_lugares_carga/CUADERNO.md) de dieciséis pasos en
 Pandas y Excel.
 Incluye P02 (la clave), P03 (validación cruzada de coordenadas, que encontró tres
 errores de hasta 10,3 km) y P04 (normalización).

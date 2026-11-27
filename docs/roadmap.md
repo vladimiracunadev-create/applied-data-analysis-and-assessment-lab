@@ -77,7 +77,8 @@ deja de estar declarada aquí.
 
 Diez cuadernos generados y ejecutables cubren los dieciséis problemas. P02 y P04 están
 integrados en P01; P09 en P05; P10 en P03; P13 en P12; y P15 en P14. Cada uno trae
-Markdown con salidas reales, script Pandas, soluciones Polars y R, Colab, libro de
+Markdown con salidas reales, pasos Pandas y laboratorio comparable Pandas/Polars/R,
+Colab, R Markdown, libro de
 práctica, al menos un gráfico estadístico, diagramas SVG y ZIP. La navegación recorre
 los diez cuadernos en orden y ya no salta de P01 a P08.
 

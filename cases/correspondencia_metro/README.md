@@ -292,6 +292,8 @@ python -m pytest tests/test_correspondencia_metro.py -v
 ## Cuaderno, motores y gráfico
 
 - [Resolución profesional paso a paso](CUADERNO.md), ahora en una navegación lineal.
+- [Abrir en Google Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/correspondencia_metro/cuaderno/colab.ipynb).
+- [Pandas + Matplotlib](cuaderno/solucion_pandas.py): referencia comparable de hallazgos por detector.
 - [Polars + Matplotlib](cuaderno/solucion_polars.py): hallazgos por detector.
-- [R + ggplot2](cuaderno/solucion.R): contraste y gráfico equivalente.
+- [R + dplyr/readr + ggplot2](cuaderno/solucion.R) y [R Markdown](cuaderno/solucion.Rmd): contraste y distribución portable.
 - [Figura publicada](cuaderno/svg/paso-04.svg).

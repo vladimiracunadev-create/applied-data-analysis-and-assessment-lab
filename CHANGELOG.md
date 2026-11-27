@@ -10,14 +10,23 @@ releases y no se publican como tales.
 
 ### Agregado
 
-- **Polars, R y gráficos dentro de los diez cuadernos reales.** Cada caso publica
-  `cuaderno/solucion_polars.py` con Matplotlib y `cuaderno/solucion.R` con ggplot2,
-  muestra el código completo en `CUADERNO.md` y genera una visualización estadística
-  con unidad, período y fuente.
-- **Ruta lineal de aprendizaje.** La navegación enlaza P01 → P03 → P05 → P06 → P07 →
-  P08 → P11 → P12 → P14 → P16, sin el salto anterior de P01 a P08.
-- **Prueba multiengine por cuaderno.** La suite ejecuta los diez scripts Polars y, en CI,
-  los diez scripts R; cada uno debe generar un PNG estadístico no vacío.
+- **Pandas, Polars, R y gráficos dentro de los diez cuadernos reales.** Cada caso
+  conserva sus pasos Pandas y publica `solucion_pandas.py`, `solucion_polars.py`,
+  `solucion.R` y `solucion.Rmd`; los tres motores leen el mismo contrato, exportan un
+  CSV comparable y generan visualizaciones con unidad, período y fuente.
+- **Ruta lineal de aprendizaje.** La navegación enlaza P01/P02/P04 → P03/P10 →
+  P05/P09 → P06 → P07 → P08 → P11 → P12/P13 → P14/P15 → P16, sin ocultar los
+  problemas integrados ni saltar del caso 01 al 08.
+- **Prueba multiengine por cuaderno.** La suite ejecuta los diez pares Python, compara
+  Pandas ↔ Polars con tolerancia 10⁻⁹ y, en CI, confronta además R; cada motor debe
+  generar un PNG estadístico no vacío.
+- **Portabilidad explícita.** Los Colab detectan el entorno, instalan dependencias,
+  obtienen las fuentes declaradas y ejecutan Pandas/Polars; R dispone de scripts y R
+  Markdown para RStudio, Posit Cloud e IRkernel. Una matriz separa ejecución real, CI
+  y compatibilidad sólo documentada.
+- **P02 y P04 como contenido pedagógico propio.** El cuaderno compartido pasa de 12 a
+  16 pasos: claves candidatas, clave subrogada, auditoría de fusiones y aporte medido
+  de abreviaturas, sin retirar los pasos de P01.
 - **Cobertura completa de P01–P16.** Diez cuadernos ejecutables reúnen los dieciséis
   problemas: Markdown con salidas reales, script seguido, Colab, libro de práctica,
   diagramas SVG y un paquete ZIP por cuaderno. P02/P04, P09, P10, P13 y P15 se integran

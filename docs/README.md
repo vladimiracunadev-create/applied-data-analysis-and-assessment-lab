@@ -12,8 +12,13 @@ repositorio.
 dieciséis problemas.
 
 Los **cuadernos de trabajo** son el problema resuelto paso a paso, con Pandas y su
-salida real, la fórmula de Excel equivalente, soluciones ejecutables en Polars y R, y
-un gráfico estadístico del caso en un solo archivo.
+salida real, la fórmula de Excel equivalente y un laboratorio ejecutable equivalente
+en Pandas, Polars y R con visualizaciones comparables.
+
+Antes de ejecutar en otra plataforma consulte la [guía portable](ejecucion-portable.md)
+y la [matriz de validación](matriz-validacion-cuadernos.md). El
+[informe de auditoría](informe-auditoria-cuadernos.md) registra los defectos corregidos
+y los límites que permanecen.
 
 El [`paquete general`](paquete-general.md) permite descargar juntos los trece casos,
 los diez cuadernos y las implementaciones comparables en Pandas, Polars, R, SQL y
@@ -21,7 +26,7 @@ Excel, sin redistribuir datos de terceros.
 
 | Cuaderno | Problemas | Pasos |
 | --- | --- | ---: |
-| [Consolidar cinco Excel](../cases/bip_lugares_carga/CUADERNO.md) | P01, P02, P04 | 12 |
+| [Consolidar cinco Excel](../cases/bip_lugares_carga/CUADERNO.md) | P01, P02, P04 | 16 |
 | [Conciliar Metro y buses](../cases/correspondencia_metro/CUADERNO.md) | P03, P10 | 9 |
 | [Horarios y cobertura nocturna](../cases/carga_nocturna/CUADERNO.md) | P05, P09 | 9 |
 | [Expediciones por hora](../cases/gtfs_red_movilidad/CUADERNO.md) | P06 | 10 |
@@ -106,6 +111,10 @@ uv run python -m lab.learning
 | [Contratos de agentes](agentes.md) | 20 capacidades especializadas con sus entradas, salidas y criterios de aceptación |
 | [Registro de cambios](../CHANGELOG.md) | Qué cambió en cada versión, incluidos los defectos corregidos y cómo se encontraron |
 | [Estándar visual](visual-standard.md) | Paleta, tipografía y reglas para gráficos y planillas |
+| [Ejecución portable](ejecucion-portable.md) | Python local, Colab, RStudio, Posit Cloud e IRkernel sin rutas del autor |
+| [Matriz de validación](matriz-validacion-cuadernos.md) | Estado por caso y entorno: ejecución real, CI o compatibilidad documentada |
+| [Auditoría de cuadernos](informe-auditoria-cuadernos.md) | Hallazgos, correcciones, decisiones y pendientes verificables |
+| [Fuentes de los cuadernos](fuentes-cuadernos.md) | Origen, formato, licencia, descarga, contrato comparable y recuperación |
 
 ---
 

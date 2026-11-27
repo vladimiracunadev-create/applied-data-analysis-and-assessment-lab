@@ -63,7 +63,7 @@ BLOCKS: tuple[tuple[str, str, str], ...] = (
     ("10-matematicas", "Matemáticas y estadística aplicadas",
      "Aritmética de indicadores, probabilidad, estadística descriptiva e inferencia básica."),
     ("20-programacion", "Programación aplicada a datos",
-     "Python, Pandas y hojas de cálculo como herramientas equivalentes para el mismo problema."),
+     "Pandas, Polars, R y hojas de cálculo como herramientas comparables para el mismo problema."),
     ("30-ingenieria", "Ingeniería y calidad de datos",
      "Contratos, validación, cruces, ETL, trazabilidad y gobernanza."),
     ("40-analisis", "Análisis y comunicación",

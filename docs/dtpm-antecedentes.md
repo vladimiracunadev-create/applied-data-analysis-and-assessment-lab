@@ -143,9 +143,9 @@ con una duración máxima de cuatro horas. El laboratorio cubre cada tema así:
 | --- | --- | --- |
 | Local con `uv` | Entorno principal | `uv sync`; comprobar que `uv run pytest` pasa |
 | JupyterLab | Exploración y entrega en notebook | `uv run jupyter lab`; abrir `notebooks/01_inicio.ipynb` |
-| Google Colab | Respaldo si falla el equipo local | Subir los CSV a la sesión; `pip install pandas openpyxl xlsxwriter` ya viene incluido |
+| Google Colab | Respaldo si falla el equipo local | Abrir el enlace del cuaderno: clona el repo, instala Pandas/Polars y obtiene las fuentes; ver `docs/ejecucion-portable.md` |
 | Google Sheets | Respaldo de Excel | Importar los CSV con **Archivo → Importar**, separador coma, UTF-8. `BUSCARX` y `SUMAR.SI.CONJUNTO` existen; las tablas dinámicas se llaman «tablas dinámicas» y están en **Insertar** |
-| RStudio | Alternativa declarada en el perfil del cargo | No está implementada en este repositorio; ver la hoja de ruta |
+| RStudio | Alternativa declarada en el perfil del cargo | Abrir `cuaderno/solucion.Rmd` o ejecutar `solucion.R`; requiere `readr`, `dplyr` y `ggplot2` |
 
 **Advertencia práctica sobre Google Sheets.** El separador decimal y el de argumentos
 dependen de la configuración regional del documento, no del equipo. Conviene verificarlo

@@ -15,6 +15,7 @@ from pathlib import Path
 from openpyxl import load_workbook
 
 from lab.notebook_enrichment import NAVIGATION, enriquecer_cuaderno
+from lab.sources import CATALOG
 from scripts.build_cuadernos import PROBLEMAS, casos_con_cuaderno
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -47,6 +48,10 @@ def test_cada_cuaderno_tiene_estructura_profesional():
         modulo = importlib.import_module(f"cases.{slug}.cuaderno")
         cuaderno = modulo.construir
         assert callable(cuaderno)
+        construido = cuaderno()
+        assert set(construido.fuentes_datos.split()) <= set(CATALOG), (
+            f"{slug} declara una fuente que scripts/fetch_data.py no conoce"
+        )
 
         fuente = (ROOT / "cases" / slug / "cuaderno.py").read_text(encoding="utf-8")
         for campo in ("problema=", "solucion=", "flujo=", "mapa=", "aprendizajes="):
@@ -54,14 +59,18 @@ def test_cada_cuaderno_tiene_estructura_profesional():
         assert fuente.count("Paso(") >= 8, f"{slug} necesita al menos ocho pasos"
 
 
-def test_cada_cuaderno_publica_polars_r_y_un_grafico_estadistico():
+def test_cada_cuaderno_publica_los_tres_motores_y_un_grafico_estadistico():
     for slug in sorted(CASOS_ESPERADOS):
         modulo = importlib.import_module(f"cases.{slug}.cuaderno")
         cuaderno = enriquecer_cuaderno(slug, modulo.construir())
         assert {item.motor for item in cuaderno.implementaciones} == {
+            "Pandas + Matplotlib",
             "Polars + Matplotlib",
             "R + ggplot2",
         }
+        assert "Contrato común" in cuaderno.guia_multimotor
+        assert "Fórmula o regla" in cuaderno.guia_multimotor
+        assert "Error frecuente" in cuaderno.guia_multimotor
         assert any(paso.figura for paso in cuaderno.pasos), slug
 
 
@@ -82,8 +91,10 @@ def test_cada_cuaderno_publicado_tiene_sus_descargables():
         assert (base / "cuaderno" / "pasos.py").is_file()
         assert (base / "cuaderno" / "practica.xlsx").is_file()
         assert (base / "cuaderno" / "colab.ipynb").is_file()
+        assert (base / "cuaderno" / "solucion_pandas.py").is_file()
         assert (base / "cuaderno" / "solucion_polars.py").is_file()
         assert (base / "cuaderno" / "solucion.R").is_file()
+        assert (base / "cuaderno" / "solucion.Rmd").is_file()
         assert (base / "cuaderno" / "svg" / "flujo.svg").is_file()
         assert (base / "cuaderno" / "svg" / "mapa.svg").is_file()
         assert list((base / "cuaderno").glob("*-caso-completo.zip"))
@@ -96,6 +107,11 @@ def test_colab_excel_y_zip_publicados_se_pueden_abrir():
         notebook = json.loads((base / "colab.ipynb").read_text(encoding="utf-8"))
         assert notebook["nbformat"] == 4
         assert sum(cell["cell_type"] == "code" for cell in notebook["cells"]) >= 2
+        notebook_text = json.dumps(notebook, ensure_ascii=False)
+        assert "polars>=1.0" in notebook_text
+        assert "solucion_pandas.py" in notebook_text
+        assert "solucion_polars.py" in notebook_text
+        assert "scripts/fetch_data.py" in notebook_text
 
         book = load_workbook(base / "practica.xlsx", read_only=True, data_only=False)
         try:
@@ -114,5 +130,7 @@ def test_colab_excel_y_zip_publicados_se_pueden_abrir():
             nombres = set(archive.namelist())
             assert any(nombre.endswith("CUADERNO.md") for nombre in nombres)
             assert any(nombre.endswith("pasos.py") for nombre in nombres)
+            assert any(nombre.endswith("solucion_pandas.py") for nombre in nombres)
             assert any(nombre.endswith("solucion_polars.py") for nombre in nombres)
             assert any(nombre.endswith("solucion.R") for nombre in nombres)
+            assert any(nombre.endswith("solucion.Rmd") for nombre in nombres)

@@ -8,7 +8,7 @@ Matplotlib, script R con ggplot2 y gráfico estadístico.
 
 ## Qué contiene
 
-- `cases/`: metadatos, README, cuadernos, scripts Pandas/Polars/R, libros, SVG y
+- `cases/`: metadatos, README, cuadernos, scripts Pandas/Polars/R, R Markdown, Colab, libros, SVG y
   resultados de los trece casos;
 - `solutions/`: referencias independientes en Pandas, Polars, R base y SQL, además de
   los libros de Excel resueltos;

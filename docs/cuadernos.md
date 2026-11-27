@@ -16,25 +16,25 @@ sirve para auditar el resultado.
 
 La navegación anterior/siguiente sigue este orden, sin saltar del P01 al P08:
 
-1. [P01/P02/P04 · Consolidación y calidad](../cases/bip_lugares_carga/CUADERNO.md)
-2. [P03/P10 · Coordenadas y correspondencia](../cases/correspondencia_metro/CUADERNO.md)
-3. [P05/P09 · Horarios y cobertura nocturna](../cases/carga_nocturna/CUADERNO.md)
-4. [P06 · Expediciones por hora](../cases/gtfs_red_movilidad/CUADERNO.md)
-5. [P07 · Rendimiento GTFS](../cases/rendimiento_gtfs/CUADERNO.md)
-6. [P08 · Cobertura espacial](../cases/cobertura_de_carga/CUADERNO.md)
-7. [P11 · Calendario de medición](../cases/calendario_medicion/CUADERNO.md)
-8. [P12/P13 · Frecuencia programada](../cases/frecuencia_programada/CUADERNO.md)
-9. [P14/P15 · Evolución GTFS](../cases/evolucion_gtfs/CUADERNO.md)
-10. [P16 · Informe de decisión](../cases/informe_decision_carga/CUADERNO.md)
+1. [P01/P02/P04 · Consolidación y calidad](../cases/bip_lugares_carga/CUADERNO.md) · [Abrir en Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/bip_lugares_carga/cuaderno/colab.ipynb)
+2. [P03/P10 · Coordenadas y correspondencia](../cases/correspondencia_metro/CUADERNO.md) · [Abrir en Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/correspondencia_metro/cuaderno/colab.ipynb)
+3. [P05/P09 · Horarios y cobertura nocturna](../cases/carga_nocturna/CUADERNO.md) · [Abrir en Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/carga_nocturna/cuaderno/colab.ipynb)
+4. [P06 · Expediciones por hora](../cases/gtfs_red_movilidad/CUADERNO.md) · [Abrir en Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/gtfs_red_movilidad/cuaderno/colab.ipynb)
+5. [P07 · Rendimiento GTFS](../cases/rendimiento_gtfs/CUADERNO.md) · [Abrir en Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/rendimiento_gtfs/cuaderno/colab.ipynb)
+6. [P08 · Cobertura espacial](../cases/cobertura_de_carga/CUADERNO.md) · [Abrir en Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/cobertura_de_carga/cuaderno/colab.ipynb)
+7. [P11 · Calendario de medición](../cases/calendario_medicion/CUADERNO.md) · [Abrir en Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/calendario_medicion/cuaderno/colab.ipynb)
+8. [P12/P13 · Frecuencia programada](../cases/frecuencia_programada/CUADERNO.md) · [Abrir en Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/frecuencia_programada/cuaderno/colab.ipynb)
+9. [P14/P15 · Evolución GTFS](../cases/evolucion_gtfs/CUADERNO.md) · [Abrir en Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/evolucion_gtfs/cuaderno/colab.ipynb)
+10. [P16 · Informe de decisión](../cases/informe_decision_carga/CUADERNO.md) · [Abrir en Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/informe_decision_carga/cuaderno/colab.ipynb)
 
 ## Los dieciséis problemas de la instancia DTPM
 
 | Problema | Cuaderno | Caso |
 | --- | --- | --- |
 | P01 · Consolidar los cinco Excel de lugares de carga | [**abrir**](../cases/bip_lugares_carga/CUADERNO.md) | [`bip_lugares_carga`](../cases/bip_lugares_carga/README.md) |
-| P02 · ¿El código es una clave? | [dentro del de P01, pasos 7 y 8](../cases/bip_lugares_carga/CUADERNO.md) | [`bip_lugares_carga`](../cases/bip_lugares_carga/README.md) |
+| P02 · ¿El código es una clave? | [dentro del de P01, pasos 7 a 9](../cases/bip_lugares_carga/CUADERNO.md) | [`bip_lugares_carga`](../cases/bip_lugares_carga/README.md) |
 | P03 · Validación cruzada de coordenadas | [**abrir**](../cases/correspondencia_metro/CUADERNO.md) | [`correspondencia_metro`](../cases/correspondencia_metro/README.md) |
-| P04 · Normalizar comuna y entidad para agrupar | [dentro del de P01, paso 8](../cases/bip_lugares_carga/CUADERNO.md) | [`bip_lugares_carga`](../cases/bip_lugares_carga/README.md) |
+| P04 · Normalizar comuna y entidad para agrupar | [dentro del de P01, pasos 10 a 12](../cases/bip_lugares_carga/CUADERNO.md) | [`bip_lugares_carga`](../cases/bip_lugares_carga/README.md) |
 | P05 · Interpretar horarios escritos en texto libre | [**abrir**](../cases/carga_nocturna/CUADERNO.md) | [`carga_nocturna`](../cases/carga_nocturna/README.md) |
 | P06 · Expediciones por hora en un día laboral | [**abrir**](../cases/gtfs_red_movilidad/CUADERNO.md) | [`gtfs_red_movilidad`](../cases/gtfs_red_movilidad/README.md) |
 | P07 · ¿Cuándo conviene dejar Pandas? | [**abrir**](../cases/rendimiento_gtfs/CUADERNO.md) | [`rendimiento_gtfs`](../cases/rendimiento_gtfs/README.md) |

@@ -1,4 +1,4 @@
-# P01 · Consolidar cinco Excel públicos heterogéneos
+# P01/P02/P04 · Consolidar, validar claves y normalizar cinco Excel públicos
 
 **Datos públicos reales con licencia verificada.** Es el ejercicio más parecido a lo
 que se pide en una evaluación técnica de cuatro horas con Excel y Pandas: cinco
@@ -10,7 +10,7 @@ los archivos de verdad.
 > sí se versionan el registro de procedencia y las tablas de resultado.
 
 > **¿Vienes a aprender a hacerlo?** Empieza por el
-> **[cuaderno de trabajo](CUADERNO.md)**: los doce pasos con el código de Pandas, la
+> **[cuaderno de trabajo](CUADERNO.md)**: los dieciséis pasos de P01/P02/P04 con el código de Pandas, la
 > salida que devuelve de verdad, y la fórmula de Excel equivalente. Se lee de arriba
 > abajo sin abrir nada más.
 >
@@ -469,7 +469,9 @@ defectos.
 ## Cuaderno, motores y gráfico
 
 - [Resolución profesional paso a paso](CUADERNO.md), con el gráfico de distribución y el ranking comunal.
+- [Abrir en Google Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/bip_lugares_carga/cuaderno/colab.ipynb).
+- [Pandas + Matplotlib](cuaderno/solucion_pandas.py): referencia comparable del ranking por comuna.
 - [Polars + Matplotlib](cuaderno/solucion_polars.py): recalcula y grafica el ranking por comuna.
-- [R + ggplot2](cuaderno/solucion.R): contraste independiente del mismo indicador y visualización.
-- [Figura publicada](cuaderno/svg/paso-11.svg).
+- [R + dplyr/readr + ggplot2](cuaderno/solucion.R) y [R Markdown](cuaderno/solucion.Rmd): contraste y distribución portable.
+- [Figura publicada](cuaderno/svg/paso-13.svg).
 

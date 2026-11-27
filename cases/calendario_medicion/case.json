@@ -58,8 +58,10 @@
     "cases/calendario_medicion/solution.py — resolución completa.",
     "lab/calendars.py — reglas, calendario, exclusión exclusiva, solapamiento y cálculo de Pascua.",
     "lab/sources.py — la fuente de feriados, declarada como tercero no oficial.",
+    "cases/calendario_medicion/cuaderno/solucion_pandas.py — referencia comparable con Pandas y Matplotlib.",
     "cases/calendario_medicion/cuaderno/solucion_polars.py — evolución del denominador con Polars y Matplotlib.",
-    "cases/calendario_medicion/cuaderno/solucion.R — evolución del denominador con R y ggplot2."
+    "cases/calendario_medicion/cuaderno/solucion.R — evolución del denominador con readr, dplyr y ggplot2.",
+    "cases/calendario_medicion/cuaderno/solucion.Rmd — distribución para RStudio y Posit Cloud."
   ],
   "soluciones": "cases/calendario_medicion/solution.py, documentada paso a paso en el README del caso.",
   "resultados": "cases/calendario_medicion/resultados/ con doce tablas. Resultado central para 2026: de 261 días laborales quedan 164 elegibles (62,84 %) y 78 medibles tras cruzar con los meses de medición. Cuatro de las ocho reglas no cambian el denominador ese año, y tres de ellas no lo cambian en ningún año analizado.",

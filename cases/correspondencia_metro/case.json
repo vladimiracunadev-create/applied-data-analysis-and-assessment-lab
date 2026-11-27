@@ -66,8 +66,10 @@
     "lab/textual.py — normalize_key para construir la llave de conciliación.",
     "lab/geo.py — haversine por bloques y búsqueda del punto más cercano.",
     "lab/metrics.py — indicator_table, que obliga a declarar unidad y definición de cada cifra.",
+    "cases/correspondencia_metro/cuaderno/solucion_pandas.py — referencia comparable con Pandas y Matplotlib.",
     "cases/correspondencia_metro/cuaderno/solucion_polars.py — conciliación resumida con Polars y Matplotlib.",
-    "cases/correspondencia_metro/cuaderno/solucion.R — conciliación resumida con R y ggplot2."
+    "cases/correspondencia_metro/cuaderno/solucion.R — conciliación con readr, dplyr y ggplot2.",
+    "cases/correspondencia_metro/cuaderno/solucion.Rmd — distribución para RStudio y Posit Cloud."
   ],
   "soluciones": "cases/correspondencia_metro/solution.py, documentada paso a paso en el README del caso. Se ejecuta con: python -m cases.correspondencia_metro.solution",
   "resultados": "cases/correspondencia_metro/resultados/ con catorce tablas. La respuesta: las 126 estaciones de Metro tienen al menos una parada de bus a 200 m —el 100 %—, con una mediana de 13 servicios distintos por estación, P90 de 34 y máximo de 55 en Santa Lucía. El hallazgo colateral, que vale más: 11 estaciones están a más de 500 m de donde el GTFS las pone, hasta 13,1 km, y NINGUNA fue detectada por la validación interna de coordenadas de P01. Calculada con las coordenadas de bip! en lugar de las del GTFS, la respuesta cambia en 48 de 125 estaciones —el 38,4 %— y tres estaciones aparecerían sin ninguna parada de bus cerca.",

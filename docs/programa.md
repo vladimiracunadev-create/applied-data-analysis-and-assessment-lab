@@ -54,7 +54,7 @@ Aritmética de indicadores, probabilidad, estadística descriptiva e inferencia 
 
 ### Programación aplicada a datos
 
-Python, Pandas y hojas de cálculo como herramientas equivalentes para el mismo problema.
+Pandas, Polars, R y hojas de cálculo como herramientas comparables para el mismo problema.
 
 - [01. Pandas para gestión de datos](learning/20-programacion/01-pandas-para-gestion-de-datos.md)
 - [02. Excel: fórmulas verificables y tablas dinámicas](learning/20-programacion/02-excel-formulas-y-tablas-dinamicas.md)

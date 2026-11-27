@@ -444,6 +444,8 @@ python -m pytest tests/test_cobertura_de_carga.py -v
 ## Cuaderno, motores y gráfico
 
 - [Resolución profesional paso a paso](CUADERNO.md).
+- [Abrir en Google Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/cobertura_de_carga/cuaderno/colab.ipynb).
+- [Pandas + Matplotlib](cuaderno/solucion_pandas.py): referencia comparable de sensibilidad al umbral.
 - [Polars + Matplotlib](cuaderno/solucion_polars.py): curva de sensibilidad al umbral.
-- [R + ggplot2](cuaderno/solucion.R): contraste y gráfico equivalente.
+- [R + dplyr/readr + ggplot2](cuaderno/solucion.R) y [R Markdown](cuaderno/solucion.Rmd): contraste y distribución portable.
 - [Figura publicada](cuaderno/svg/paso-05.svg).

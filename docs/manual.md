@@ -12,16 +12,19 @@ canónica de R usa solo la biblioteca base: `Rscript solutions/r_reference.R tra
 reference_outputs/r/transport`. Ambos parten de los CSV crudos; no convierten la salida
 de Pandas.
 
-Los diez casos reales agregan dentro de `cases/<caso>/cuaderno/` una
-`solucion_polars.py` con Matplotlib y una `solucion.R` con ggplot2. Por ejemplo:
+Los diez casos reales agregan dentro de `cases/<caso>/cuaderno/` un trío controlado:
+`solucion_pandas.py`, `solucion_polars.py` y `solucion.R`, además de `solucion.Rmd`
+para RStudio/Posit Cloud. Por ejemplo:
 
 ```powershell
-python cases/cobertura_de_carga/cuaderno/solucion_polars.py --grafico cobertura.png
-Rscript cases/cobertura_de_carga/cuaderno/solucion.R --grafico cobertura-r.png
+python cases/cobertura_de_carga/cuaderno/solucion_pandas.py --salida pandas.csv --grafico pandas.png
+python cases/cobertura_de_carga/cuaderno/solucion_polars.py --salida polars.csv --grafico polars.png
+Rscript cases/cobertura_de_carga/cuaderno/solucion.R --salida r.csv --grafico r.png
 ```
 
-Ambas leen el mismo contrato de resultados del caso, muestran el resumen estadístico y
-generan una figura comparable. Los enlaces están también dentro de cada `CUADERNO.md`.
+Las tres leen el mismo contrato, muestran el resumen y generan una figura comparable.
+Consulte [ejecución portable](ejecucion-portable.md) para Colab, RStudio, Posit Cloud e
+IRkernel.
 
 ## 5. Excel
 Importe CSV como tabla; use filtros, tablas dinámicas, CONTAR.SI.CONJUNTO, SUMAR.SI.CONJUNTO, BUSCARX, SI.ERROR. Ejemplo con tablas nombradas Viajes y Recorridos: `=BUSCARX([@recorrido_id];Recorridos[recorrido_id];Recorridos[operador_id];"SIN CLAVE")`. Duración en minutos: `=SI(O([@inicio]="";[@fin]="");"";([@fin]-[@inicio])*1440)`. Convierta fechas de texto a fecha/hora primero. Los separadores dependen de la configuración regional.

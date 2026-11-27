@@ -1,4 +1,4 @@
-# P01 · Consolidar cinco Excel públicos que describen lo mismo y no se parecen
+# P01 · P02/P04 · Consolidar, validar la identidad y normalizar cinco Excel
 
 [Todos los cuadernos](../../docs/cuadernos.md) · [P03/P10 · Coordenadas y correspondencia](../correspondencia_metro/CUADERNO.md) ▶
 
@@ -57,39 +57,167 @@ cada archivo y el campo del esquema común se **declara** en una tabla, no se ad
 parecido: un acierto por casualidad hoy es un error mañana. Y al apilar se agrega el tipo
 de local, que vive en el nombre del archivo y se perdería para siempre.
 
-**Comprobar lo que se supone** (pasos 7 y 8). Dos suposiciones que todo el mundo hace y
-nadie mide: que la columna llamada «código» es una clave, y que los textos que nombran lo
-mismo están escritos igual. Las dos son falsas en este archivo, y medirlo cuesta una
-línea cada una.
+**P02 · Resolver la identidad** (pasos 7 a 9). Primero se demuestra que `codigo` no es
+clave; después se enumeran las combinaciones mínimas observadas y se explica por qué
+ninguna es un identificador estable. La salida es una clave subrogada determinista cuyo
+límite —depender de una dirección de texto libre— queda declarado.
 
-**Responder, y declarar el límite** (pasos 9 y 10). Recién aquí se cuenta por comuna. Y
+**P04 · Normalizar sin fusionar a ciegas** (pasos 10 a 12). Se conserva texto crudo y
+clave normalizada, se inspecciona cada fusión y se mide por separado el aporte de
+expandir abreviaturas. Que una regla exista no demuestra que aporte algo.
+
+**Responder, y declarar el límite** (pasos 13 y 14). Recién aquí se cuenta por comuna. Y
 se mide cuánto del campo de horario existe de verdad, porque de eso depende qué se puede
 concluir después.
 
-**Validar sin fuente externa** (pasos 11 y 12). El archivo trae la ubicación dos veces.
+**Validar sin fuente externa** (pasos 15 y 16). El archivo trae la ubicación dos veces.
 Convertir una y compararla con la otra es una validación que no necesita pedirle nada a
 nadie, y es la que encuentra los tres errores de kilómetros que ninguna de las
 comprobaciones anteriores podía ver.
 
-Cada paso trae el Pandas, su salida real, y la fórmula de Excel dibujada en su hoja. Diez
-de los doce traen además **la trampa**: lo que sale mal si el paso se hace de la forma
+Cada paso trae el Pandas, su salida real y su equivalente de Excel. Catorce de los
+dieciséis traen además **la trampa**: lo que sale mal si el paso se hace de la forma
 obvia, que es la parte que no está en ningún tutorial y la que se pregunta en una prueba.
 
 ![El recorrido](cuaderno/svg/mapa.svg)
 
 ### El mismo resultado en Pandas, Polars y R
 
-La ruta principal de los pasos usa Pandas y Excel. Las implementaciones siguientes recalculan el indicador que sostiene la conclusión con otro motor y producen el mismo gráfico estadístico. El alcance queda declarado para no confundir validación independiente con una traducción cosmética.
+Los pasos anteriores y siguientes conservan la resolución completa en Pandas. Este laboratorio adicional aísla el indicador central para resolverlo tres veces sobre **la misma tabla, las mismas reglas y la misma escala gráfica**. Así la comparación cambia el motor, no el problema.
+
+#### Contrato común del ejercicio
+
+- **Objetivo.** Ordenar la oferta comunal y conservar las diez comunas con mayor número de lugares.
+- **Fuente que leen las tres implementaciones.**
+  [`resultados/por_comuna.csv`](resultados/por_comuna.csv), CSV UTF-8 versionado y producido
+  por la resolución completa del caso. Los datos originales, su publicador, fecha,
+  licencia, URL y huella se documentan en [`case.json`](case.json) y, cuando existe,
+  `procedencia.json`. Este CSV es un **resultado reproducible**, no se presenta como
+  una nueva fuente oficial.
+- **Alcance.** ranking comunal y total por comuna. Los tres scripts comparables no sustituyen la adquisición,
+  limpieza ni controles completos de los pasos Pandas: aíslan el indicador para que
+  una diferencia observada sea atribuible al motor.
+- **Fórmula o regla.** Para cada comuna c: n_c = Σ 1(fila pertenece a c). El ranking usa n_c descendente; no suma códigos porque el código no es una clave (P02).
+- **Interpretación.** Una barra representa lugares publicados, no demanda ni cobertura territorial. La normalización previa evita partir una comuna en dos etiquetas (P04).
+- **Error frecuente.** Contar códigos distintos subestima filas repetidas; agrupar el texto crudo puede separar variantes ortográficas.
+
+| Campo | Tipo observado | Función en el ejercicio |
+| --- | --- | --- |
+| `comuna_clave` | `str` | campo auxiliar del contrato |
+| `comuna` | `str` | categoría/eje X |
+| `Centro bip! alto estándar` | `int64` | campo auxiliar del contrato |
+| `Centro bip! estándar` | `int64` | campo auxiliar del contrato |
+| `Estación de Metro` | `int64` | campo auxiliar del contrato |
+| `Punto bip!` | `int64` | campo auxiliar del contrato |
+| `Retail` | `int64` | campo auxiliar del contrato |
+| `total` | `int64` | medida/eje Y |
+
+#### Qué cambia entre motores
+
+| Dimensión | Pandas | Polars | R (`dplyr`/`readr`) |
+| --- | --- | --- | --- |
+| Modelo | DataFrame mutable por operaciones | expresiones columnares y plan optimizable | tubería declarativa sobre `tibble` |
+| Nulos | `NaN`/`NA`; `groupby` exige decidir `dropna` | `null` separado de `NaN` | `NA`; muchas funciones exigen `na.rm` explícito |
+| Orden | varias operaciones lo conservan, pero se ordena explícitamente | no se presupone tras agrupar | se fija con `arrange` |
+| Gráfico | Matplotlib | Matplotlib tras extraer sólo X/Y | ggplot2 y su gramática de capas |
+| Ventaja típica | ecosistema amplio y aprendizaje gradual | paralelismo, tipos y consultas grandes | estadística, comunicación y análisis reproducible |
+| Límite aquí | el índice puede introducir alineaciones implícitas | añade una dependencia y otra semántica de tipos | requiere runtime y paquetes R independientes |
+
+La equivalencia se valida sobre CSV normalizados con tolerancia numérica `1e-9`; no
+se exige que la sintaxis ni los píxeles sean idénticos. Para ejecutar en un entorno
+limpio consulte [`docs/ejecucion-portable.md`](../../docs/ejecucion-portable.md).
 
 | Motor | Alcance verificado | Archivo | Ejecutar |
 | --- | --- | --- | --- |
+| Pandas + Matplotlib | ranking comunal y total por comuna | [`solucion_pandas.py`](cuaderno/solucion_pandas.py) | `python cases/bip_lugares_carga/cuaderno/solucion_pandas.py` |
 | Polars + Matplotlib | ranking comunal y total por comuna | [`solucion_polars.py`](cuaderno/solucion_polars.py) | `uv run --extra polars python cases/bip_lugares_carga/cuaderno/solucion_polars.py` |
 | R + ggplot2 | ranking comunal y total por comuna | [`solucion.R`](cuaderno/solucion.R) | `Rscript cases/bip_lugares_carga/cuaderno/solucion.R` |
+
+#### Pandas + Matplotlib
+
+```python
+"""Laboratorio comparable Pandas + Matplotlib del caso bip_lugares_carga.
+
+Lee el mismo contrato CSV que las versiones Polars y R. La resolución completa del
+caso permanece en ``solution.py`` y en los pasos del cuaderno; este archivo aísla el
+indicador central para que la comparación entre motores sea controlada.
+"""
+from __future__ import annotations
+
+import argparse
+import sys
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
+# Buscar la raíz desde el propio archivo evita rutas C:\... específicas del autor y
+# funciona igual después de clonar el repositorio en Linux, Windows o Google Colab.
+ROOT = Path(__file__).resolve().parents[3] if "__file__" in globals() else Path.cwd()
+SOURCE = ROOT / "cases" / "bip_lugares_carga" / "resultados" / "por_comuna.csv"
+REQUIRED = {"comuna", "total"}
+
+
+def analizar() -> pd.DataFrame:
+    """Carga, valida y transforma el indicador; no modifica el archivo de entrada."""
+    datos = pd.read_csv(SOURCE)
+    faltantes = REQUIRED.difference(datos.columns)
+    if faltantes:
+        raise ValueError(f"Faltan columnas requeridas en {SOURCE}: {sorted(faltantes)}")
+    # La expresión conserva explícitos filtro, agrupación, orden y selección para que
+    # el estudiante pueda alinearlos con las expresiones de Polars y dplyr.
+    resultado = datos.nlargest(10, "total")[["comuna", "total"]]
+    return resultado.reset_index(drop=True)
+
+
+def graficar(resultado: pd.DataFrame, destino: Path) -> Path:
+    """Representa exactamente las columnas comparadas y explicita sus unidades."""
+    x = resultado["comuna"].tolist()
+    y = resultado["total"].tolist()
+    fig, ax = plt.subplots(figsize=(9, 5))
+    ax.barh([str(value) for value in x], y, color="#11253B")
+    ax.invert_yaxis()  # el primer puesto del ranking queda arriba, como se lee una tabla
+    ax.set_xlabel("Lugares de carga (recuento)")
+    ax.set_ylabel("Comuna")
+    ax.set_xlim(left=0)
+    ax.set_title("Lugares de carga en las diez comunas con mayor oferta")
+    ax.grid(axis="y", alpha=0.25)
+    fig.text(0.01, 0.01, "Fuente: Resultados reproducibles de P01/P02/P04 · Período: corte publicado", fontsize=8, color="#58677A")
+    fig.tight_layout(rect=(0, 0.05, 1, 1))
+    fig.savefig(destino, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    return destino
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--salida", type=Path, help="CSV normalizado para comparar motores")
+    parser.add_argument("--grafico", type=Path, help="PNG de la visualización comparable")
+    args = parser.parse_args()
+    resultado = analizar()
+    print(resultado.to_string(index=False))
+    if args.salida:
+        resultado.to_csv(args.salida, index=False)
+    if args.grafico:
+        print(graficar(resultado, args.grafico))
+
+
+if __name__ == "__main__":
+    main()
+```
 
 #### Polars + Matplotlib
 
 ```python
-"""Contraste Polars y visualización Matplotlib del caso bip_lugares_carga."""
+"""Laboratorio comparable Polars + Matplotlib del caso bip_lugares_carga.
+
+Usa el mismo CSV, columnas, reglas y escala que Pandas y R. Polars expresa las
+transformaciones como un plan de expresiones columnares; esa diferencia de método es
+el objeto de aprendizaje, no una razón para cambiar la pregunta.
+"""
 from __future__ import annotations
 
 import argparse
@@ -104,18 +232,26 @@ if hasattr(sys.stdout, "reconfigure"):
 
 ROOT = Path(__file__).resolve().parents[3] if "__file__" in globals() else Path.cwd()
 SOURCE = ROOT / "cases" / "bip_lugares_carga" / "resultados" / "por_comuna.csv"
+REQUIRED = {"comuna", "total"}
 
 
 def analizar() -> pl.DataFrame:
+    """Carga y valida antes de transformar para producir un error explicativo."""
     datos = pl.read_csv(SOURCE)
+    faltantes = REQUIRED.difference(datos.columns)
+    if faltantes:
+        raise ValueError(f"Faltan columnas requeridas en {SOURCE}: {sorted(faltantes)}")
+    # select al final fija el contrato de salida y evita comparar columnas auxiliares.
     return datos.sort("total", descending=True).head(10).select(["comuna", "total"])
 
 
 def graficar(resultado: pl.DataFrame, destino: Path) -> Path:
+    """Convierte sólo las series del gráfico; el análisis permanece en Polars."""
     x = resultado["comuna"].to_list()
     y = resultado["total"].to_list()
     fig, ax = plt.subplots(figsize=(9, 5))
     ax.barh([str(value) for value in x], y, color="#11253B")
+    ax.invert_yaxis()  # el primer puesto del ranking queda arriba, como se lee una tabla
     ax.set_xlabel("Lugares de carga (recuento)")
     ax.set_ylabel("Comuna")
     ax.set_xlim(left=0)
@@ -124,7 +260,7 @@ def graficar(resultado: pl.DataFrame, destino: Path) -> Path:
     fig.text(
         0.01,
         0.01,
-        "Fuente: Resultados reproducibles del caso P01 · Período: corte publicado",
+        "Fuente: Resultados reproducibles de P01/P02/P04 · Período: corte publicado",
         fontsize=8,
         color="#58677A",
     )
@@ -135,11 +271,14 @@ def graficar(resultado: pl.DataFrame, destino: Path) -> Path:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--grafico", type=Path)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--salida", type=Path, help="CSV normalizado para comparar motores")
+    parser.add_argument("--grafico", type=Path, help="PNG de la visualización comparable")
     args = parser.parse_args()
     resultado = analizar()
     print(resultado)
+    if args.salida:
+        resultado.write_csv(args.salida)
     if args.grafico:
         print(graficar(resultado, args.grafico))
 
@@ -152,42 +291,82 @@ if __name__ == "__main__":
 
 ```r
 #!/usr/bin/env Rscript
-# Contraste R + ggplot2 del caso bip_lugares_carga.
-script_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
-script_path <- if (length(script_arg)) sub("^--file=", "", script_arg[1]) else "cuaderno/solucion.R"
-root <- normalizePath(file.path(dirname(script_path), "../../.."), mustWork = TRUE)
+# Laboratorio comparable R + dplyr/readr + ggplot2 del caso bip_lugares_carga.
+#
+# La resolución completa sigue en solution.py y en los pasos Pandas. Este script
+# cambia el motor sobre el mismo contrato CSV para estudiar sintaxis y semántica sin
+# cambiar datos, indicador ni escala gráfica.
+
+required <- c("readr", "dplyr")
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing)) {
+  stop(
+    "Faltan paquetes: ", paste(missing, collapse = ", "),
+    ". Instálelos con install.packages(c('readr', 'dplyr', 'ggplot2'))."
+  )
+}
+
+# Buscar pyproject.toml hacia arriba hace portable el script entre terminal, RStudio,
+# Posit Cloud, IRkernel y un clon en Colab. LAB_ROOT permite una ruta explícita sin
+# codificar la unidad o el directorio del desarrollador.
+find_root <- function(start = getwd()) {
+  current <- normalizePath(start, mustWork = TRUE)
+  repeat {
+    if (file.exists(file.path(current, "pyproject.toml"))) return(current)
+    parent <- dirname(current)
+    if (identical(parent, current)) stop("No se encontró la raíz del repositorio.")
+    current <- parent
+  }
+}
+root <- Sys.getenv("LAB_ROOT", unset = find_root())
 source_csv <- file.path(root, "cases", "bip_lugares_carga", "resultados", "por_comuna.csv")
 
-datos <- read.csv(source_csv, check.names = FALSE, fileEncoding = "UTF-8")
-resultado <- head(datos[order(-datos$total), c("comuna", "total")], 10)
-print(resultado, row.names = FALSE)
+# readr conserva nombres y tipos previsibles. La validación temprana produce un error
+# que explica el contrato roto, en vez de fallar más tarde dentro de una gráfica.
+datos <- readr::read_csv(source_csv, show_col_types = FALSE, progress = FALSE)
+required_columns <- c("comuna", "total")
+missing_columns <- setdiff(required_columns, names(datos))
+if (length(missing_columns)) stop("Faltan columnas: ", paste(missing_columns, collapse = ", "))
+
+# dplyr expresa la misma selección, filtro, agrupación y orden que las otras vías.
+resultado <- datos |> dplyr::arrange(dplyr::desc(.data$total)) |> dplyr::slice_head(n = 10) |> dplyr::select(.data$comuna, .data$total)
+print(resultado)
 
 args <- commandArgs(trailingOnly = TRUE)
-plot_pos <- match("--grafico", args)
-if (!is.na(plot_pos)) {
-  if (plot_pos == length(args)) stop("--grafico necesita una ruta de salida")
+value_after <- function(flag) {
+  pos <- match(flag, args)
+  if (is.na(pos)) return(NULL)
+  if (pos == length(args)) stop(flag, " necesita una ruta de salida")
+  args[pos + 1]
+}
+
+csv_output <- value_after("--salida")
+if (!is.null(csv_output)) readr::write_csv(resultado, csv_output)
+
+plot_output <- value_after("--grafico")
+if (!is.null(plot_output)) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
     stop("Instale ggplot2 para generar el gráfico: install.packages('ggplot2')")
   }
-  destino <- args[plot_pos + 1]
   grafico <- ggplot2::ggplot(
     resultado,
     ggplot2::aes(x = .data[["comuna"]], y = .data[["total"]])
   ) +
     ggplot2::geom_col(fill = "#11253B") +
+    ggplot2::scale_x_discrete(limits = rev) +
     ggplot2::coord_flip() +
     ggplot2::labs(
       title = "Lugares de carga en las diez comunas con mayor oferta",
       x = "Lugares de carga (recuento)", y = "Comuna",
-      caption = "Fuente: Resultados reproducibles del caso P01 · Período: corte publicado"
+      caption = "Fuente: Resultados reproducibles de P01/P02/P04 · Período: corte publicado"
     ) +
     ggplot2::theme_minimal(base_size = 11)
-  ggplot2::ggsave(destino, grafico, width = 9, height = 5, dpi = 150)
-  cat(destino, "\n")
+  ggplot2::ggsave(plot_output, grafico, width = 9, height = 5, dpi = 150)
+  cat(plot_output, "\n")
 }
 ```
 
-12 pasos. Cada uno trae el código de **Python**, la salida que devuelve de verdad, y la **fórmula de Excel** equivalente dibujada en su hoja. 10 traen además la trampa de hacerlo de la forma obvia.
+16 pasos. Cada uno trae el código de **Python**, la salida que devuelve de verdad, y la **fórmula de Excel** equivalente dibujada en su hoja. 14 traen además la trampa de hacerlo de la forma obvia.
 
 | # | Paso | Trampa |
 | --- | --- | --- |
@@ -198,22 +377,28 @@ if (!is.na(plot_pos)) {
 | 5 | [Apilar los cinco al esquema común](#paso-5) | — |
 | 6 | [El tipo de local no está en los datos](#paso-6) | sí |
 | 7 | [¿La columna «código» es una clave?](#paso-7) | sí |
-| 8 | [Normalizar antes de agrupar](#paso-8) | sí |
-| 9 | [Contar por comuna](#paso-9) | sí |
-| 10 | [Cuánto del campo «horario» existe](#paso-10) | sí |
-| 11 | [Las dos coordenadas de cada fila](#paso-11) | sí |
-| 12 | [Las filas donde las dos coordenadas se contradicen](#paso-12) | sí |
+| 8 | [P02 · Buscar claves candidatas mínimas](#paso-8) | sí |
+| 9 | [P02 · Declarar y comprobar una clave subrogada](#paso-9) | sí |
+| 10 | [Normalizar antes de agrupar](#paso-10) | sí |
+| 11 | [P04 · Auditar cada fusión de la normalización](#paso-11) | sí |
+| 12 | [P04 · Medir el aporte real de expandir abreviaturas](#paso-12) | sí |
+| 13 | [Contar por comuna](#paso-13) | sí |
+| 14 | [Cuánto del campo «horario» existe](#paso-14) | sí |
+| 15 | [Las dos coordenadas de cada fila](#paso-15) | sí |
+| 16 | [Las filas donde las dos coordenadas se contradicen](#paso-16) | sí |
 
 ### Para trabajar
 
 | Archivo | Qué es |
 | --- | --- |
 | [`P01-caso-completo.zip`](cuaderno/P01-caso-completo.zip) | **todo el caso en un ZIP**: el cuaderno, el script, el libro de Excel y las figuras |
-| [`pasos.py`](cuaderno/pasos.py) | los 12 pasos seguidos. Se corre y muestra cada salida |
+| [`pasos.py`](cuaderno/pasos.py) | los 16 pasos seguidos. Se corre y muestra cada salida |
 | [`practica.xlsx`](cuaderno/practica.xlsx) | las fórmulas y **el resultado que deben dar**, para corregirse solo. Se abre igual en Google Sheets |
-| [`colab.ipynb`](cuaderno/colab.ipynb) | el cuaderno **ejecutable en Colab**: clona, descarga los datos del portal y corre los 12 pasos |
+| [`colab.ipynb`](cuaderno/colab.ipynb) | el cuaderno **ejecutable en Colab**: clona, descarga los datos del portal y corre los 16 pasos |
+| [`solucion_pandas.py`](cuaderno/solucion_pandas.py) | solución ejecutable en Pandas + Matplotlib; incluye el contraste numérico y el gráfico del caso |
 | [`solucion_polars.py`](cuaderno/solucion_polars.py) | solución ejecutable en Polars + Matplotlib; incluye el contraste numérico y el gráfico del caso |
 | [`solucion.R`](cuaderno/solucion.R) | solución ejecutable en R + ggplot2; incluye el contraste numérico y el gráfico del caso |
+| [`solucion.Rmd`](cuaderno/solucion.Rmd) | documento R Markdown para RStudio, Posit Cloud y render reproducible; reutiliza `solucion.R` sin duplicar la lógica |
 
 ---
 
@@ -441,7 +626,66 @@ Debe dar: **136 filas con código repetido, de 1 928**
 
 <a id="paso-8"></a>
 
-### Paso 8 · Normalizar antes de agrupar
+### Paso 8 · P02 · Buscar claves candidatas mínimas
+
+Medir todas las combinaciones mínimas que identifican las filas; una combinación única hoy todavía no es un identificador estable.
+
+#### Python
+
+```python
+p01.claves_candidatas(consolidado)
+```
+
+| columnas | tamano | combinaciones_evaluadas |
+| --- | --- | --- |
+| codigo + direccion | 2 | 9 |
+| codigo + este | 2 | 9 |
+| codigo + norte | 2 | 9 |
+*3 filas × 3 columnas.*
+
+#### Excel
+
+En Excel esta búsqueda exhaustiva no es práctica: se puede comprobar una combinación con `CONTAR.SI.CONJUNTO`, pero Python enumera todas y descarta automáticamente las que contienen otra clave ya suficiente.
+
+> **La trampa.** Confundir unicidad observada con identidad. `codigo + este` puede ser única y cambiar cuando el publicador corrige una coordenada.
+
+[↑ volver al recorrido](#2--la-solución-que-se-va-a-aplicar)
+
+---
+
+<a id="paso-9"></a>
+
+### Paso 9 · P02 · Declarar y comprobar una clave subrogada
+
+Construir un identificador determinista sobre los campos declarados como identidad y fallar si se produce una colisión.
+
+#### Python
+
+```python
+p01.informe_de_clave_subrogada(consolidado)
+```
+
+| indicador | valor | unidad |
+| --- | --- | --- |
+| campos_declarados | codigo + direccion + fuente |  |
+| filas | 1928 | filas |
+| identificadores_distintos | 1928 | ids |
+| filas_con_identidad_repetida | 0 | filas |
+*5 filas × 3 columnas, se muestran las primeras 4.*
+
+#### Excel
+
+Una concatenación de número de fila no es equivalente porque cambia al ordenar. Para una entrega pequeña puede usarse `fuente&codigo&direccion`, pero debe comprobarse duplicidad y documentar su inestabilidad.
+
+> **La trampa.** El hash no vuelve estable una dirección de texto libre: si la fuente corrige la dirección, cambia el identificador.
+
+[↑ volver al recorrido](#2--la-solución-que-se-va-a-aplicar)
+
+---
+
+<a id="paso-10"></a>
+
+### Paso 10 · Normalizar antes de agrupar
 
 `FULLCARGA` y `Fullcarga` son dos grupos para `groupby` y uno para una persona.
 
@@ -458,7 +702,7 @@ Debe dar: **136 filas con código repetido, de 1 928**
 
 #### Excel
 
-![La hoja](cuaderno/svg/paso-08-excel.svg)
+![La hoja](cuaderno/svg/paso-10-excel.svg)
 
 `=MAYUSC(ESPACIOS(B2))` cubre mayúsculas y espacios. Las tildes, con `SUSTITUIR` anidado una por vocal.
 
@@ -472,9 +716,72 @@ Debe dar: **4 valores crudos, 3 normalizados**
 
 ---
 
-<a id="paso-9"></a>
+<a id="paso-11"></a>
 
-### Paso 9 · Contar por comuna
+### Paso 11 · P04 · Auditar cada fusión de la normalización
+
+Ver qué formas crudas quedaron unidas, porque juntar entidades distintas es un error más difícil de notar que dejarlas separadas.
+
+#### Python
+
+```python
+p01.auditoria_de_fusiones(consolidado)
+```
+
+| columna | clave_normalizada | formas_crudas | formas | filas_afectadas |
+| --- | --- | --- | --- | --- |
+| entidad | FULLCARGA | 2 | Fullcarga (1579) \| FULLCARGA (36) | 1615 |
+| direccion | AVENIDA AMERICO VESPUCIO 1737 | 2 | AV. AMÉRICO VESPUCIO 1737 (1) \| AV. AMERICO … | 2 |
+| direccion | AVENIDA AMERICO VESPUCIO 2500 | 2 | Av. Américo Vespucio 2500 (1) \| AV. AMERICO … | 2 |
+| direccion | AVENIDA LIBERTADOR BERNARDO O HIGGINS 1020 | 2 | Av. Libertador Bernardo O`Higgins 1020 (1) \|… | 2 |
+| direccion | AVENIDA NUEVA PROVIDENCIA 2249 | 2 | Av. Nueva Providencia 2249 (1) \| AV. NUEVA P… | 2 |
+| direccion | SAN PEDRO 1778 | 2 | SAN PEDRO 1778 (1) \| SAN PEDRO  1778 (1) | 2 |
+*6 filas × 5 columnas.*
+
+#### Excel
+
+Conserve texto crudo y normalizado en columnas distintas; una tabla dinámica por clave normalizada permite inspeccionar las etiquetas que absorbió cada grupo.
+
+> **La trampa.** Contar solamente cuántos valores desaparecieron no dice cuáles se fusionaron ni si la fusión era correcta.
+
+[↑ volver al recorrido](#2--la-solución-que-se-va-a-aplicar)
+
+---
+
+<a id="paso-12"></a>
+
+### Paso 12 · P04 · Medir el aporte real de expandir abreviaturas
+
+Separar el efecto de mayúsculas/tildes/espacios del efecto adicional de expandir abreviaturas como AV. → AVENIDA.
+
+#### Python
+
+```python
+p01.aporte_de_las_abreviaturas(consolidado)
+```
+
+| indicador | valor | unidad | definicion |
+| --- | --- | --- | --- |
+| direcciones_crudas_distintas | 1919 | valores | Tal como vienen en los cinco archivos |
+| normalizadas_sin_expandir | 1914 | valores | Minusculas, sin tildes, espacios colapsados |
+| normalizadas_expandiendo | 1914 | valores | Lo anterior mas las trece abreviaturas declar… |
+| fusiones_de_la_normalizacion | 5 | grupos | Lo que gana normalizar, sin tocar abreviaturas |
+| fusiones_que_aporta_expandir | 0 | grupos | Lo que gana la expansion de abreviaturas. Cer… |
+*5 filas × 4 columnas.*
+
+#### Excel
+
+Compare el recuento de claves únicas antes de normalizar, después de la normalización básica y después de la tabla de sustituciones.
+
+> **La trampa.** Que una transformación esté implementada no prueba que aporte algo: en esta descarga la expansión de abreviaturas fusiona cero valores.
+
+[↑ volver al recorrido](#2--la-solución-que-se-va-a-aplicar)
+
+---
+
+<a id="paso-13"></a>
+
+### Paso 13 · Contar por comuna
 
 La pregunta que se pedía, con el desglose por tipo de local.
 
@@ -496,9 +803,13 @@ p01.por_comuna(consolidado)
 | NUNOA | Ñuñoa | 2 | 0 | 16 | 54 | 12 | 84 |
 *46 filas × 8 columnas, se muestran las primeras 8.*
 
+![Contar por comuna](cuaderno/svg/paso-13.svg)
+
+*Lugares de carga en las diez comunas con mayor oferta. Ejes con unidad, período y fuente; el código Polars y R genera la misma vista.*
+
 #### Excel
 
-![La hoja](cuaderno/svg/paso-09-excel.svg)
+![La hoja](cuaderno/svg/paso-13-excel.svg)
 
 **Insertar ▸ Tabla dinámica**: `comuna` en Filas, `tipo_local` en Columnas, `codigo` en Valores con **Contar**.
 
@@ -512,9 +823,9 @@ Debe dar: **Maipú 157, Santiago 148, Las Condes 104**
 
 ---
 
-<a id="paso-10"></a>
+<a id="paso-14"></a>
 
-### Paso 10 · Cuánto del campo «horario» existe
+### Paso 14 · Cuánto del campo «horario» existe
 
 Antes de usar un campo, saber cuánto está lleno. Y declarar **sobre qué**: la cobertura cambia según se cuenten las 1 928 filas o las 1 927 abiertas.
 
@@ -536,7 +847,7 @@ def cobertura(tabla):
 
 #### Excel
 
-![La hoja](cuaderno/svg/paso-10-excel.svg)
+![La hoja](cuaderno/svg/paso-14-excel.svg)
 
 `=CONTAR.SI(F2:F1929;"?*")/FILAS(F2:F1929)`, en formato porcentaje.
 
@@ -550,9 +861,9 @@ Debe dar: **18,10 % sobre las 1 928 filas · 18,06 % sobre las 1 927 abiertas**
 
 ---
 
-<a id="paso-11"></a>
+<a id="paso-15"></a>
 
-### Paso 11 · Las dos coordenadas de cada fila
+### Paso 15 · Las dos coordenadas de cada fila
 
 El archivo trae la misma ubicación en UTM y en grados. Convertir una y comparar con la otra es una validación que no necesita fuente externa.
 
@@ -577,13 +888,13 @@ pd.cut(desvio_m, [0, 10, 50, 58, 62, 100, 1e9]).value_counts().sort_index()
 | (100.0, 1000000000.0] | 3 |
 *6 valores.*
 
-![Las dos coordenadas de cada fila](cuaderno/svg/paso-11.svg)
+![Las dos coordenadas de cada fila](cuaderno/svg/paso-15.svg)
 
 *Dos grupos: uno en 0 m y otro en 61 m. Se recortan los mayores de 100 m —tres filas— para que la forma se vea; esos tres son el paso siguiente.*
 
 #### Excel
 
-![La hoja](cuaderno/svg/paso-11-excel.svg)
+![La hoja](cuaderno/svg/paso-15-excel.svg)
 
 La conversión de UTM a grados no se hace en Excel: es una serie de ocho términos. La distancia entre dos pares de grados, sí:
 
@@ -605,9 +916,9 @@ Debe dar: **109 filas bajo 10 m y 1 768 entre 58 y 62 m**
 
 ---
 
-<a id="paso-12"></a>
+<a id="paso-16"></a>
 
-### Paso 12 · Las filas donde las dos coordenadas se contradicen
+### Paso 16 · Las filas donde las dos coordenadas se contradicen
 
 Con el desvío calculado, un umbral declarado separa el desplazamiento sistemático de los errores reales.
 
@@ -627,7 +938,7 @@ p01.coordenadas_sospechosas(consolidado)[
 
 #### Excel
 
-![La hoja](cuaderno/svg/paso-12-excel.svg)
+![La hoja](cuaderno/svg/paso-16-excel.svg)
 
 Con el desvío en N: `=SI(N2>200;"revisar";"")` y autofiltro.
 
@@ -643,7 +954,7 @@ Debe dar: **3 filas, con desvíos de 893 m a 10,3 km**
 
 ## 4 · El resultado
 
-1 928 filas, 1 927 abiertas, 46 comunas, 3 entidades. El `codigo` no identifica una fila, ni junto al archivo de origen. La validación cruzada de las dos coordenadas encontró 3 errores de hasta 10,3 km y un desplazamiento sistemático de 61 m con distribución bimodal.
+1 928 filas, 1 927 abiertas, 46 comunas, 3 entidades. En P02, el `codigo` no identifica una fila; se evalúan las claves candidatas y una clave subrogada determinista. En P04, las seis fusiones de normalización quedan auditadas y la expansión de abreviaturas aporta cero fusiones. La validación cruzada de las dos coordenadas encontró 3 errores de hasta 10,3 km y un desplazamiento sistemático de 61 m con distribución bimodal.
 
 **No** se puede concluir cuánta gente usa cada local —no hay transacciones— ni si está abierto cuando alguien llega —el horario está en el 18,06 % de las filas—.
 
@@ -653,12 +964,14 @@ Debe dar: **3 filas, con desvíos de 893 m a 10,3 km**
 2. Una correspondencia de columnas se **declara**. Deducirla por parecido acierta hoy y falla cuando cambie un nombre, sin avisar.
 3. Lo que no está en ninguna columna —aquí, el tipo de local— se pierde al apilar si no se agrega a propósito. Y la tabla resultante queda completa y sumable.
 4. Una columna llamada «código» **no es una clave hasta que se mide**, y en este archivo no lo es ni junto al nombre del archivo de origen.
-5. Normalizar es decidir qué cosas son la misma, y hay que guardar **las dos** formas: la clave para agrupar y la etiqueta para mostrar.
-6. El **denominador es una decisión**: la cobertura del horario es 18,10 % o 18,06 % según se cuenten todas las filas o solo las abiertas, y hay que decir cuál se publica.
-7. Un campo redundante —la misma ubicación dos veces— es una validación gratuita que no necesita ninguna fuente externa.
-8. Un resumen de cinco números **esconde la forma**: la media y los percentiles no distinguen dos sistemas de coordenadas de un error de redondeo. El histograma, sí.
-9. Un umbral se escribe con su motivo. Elegirlo después de ver los datos, para que el número de hallazgos quede cómodo, es el resultado disfrazado de criterio.
-10. Lo que corresponde con un error de datos ajenos es **reportarlo al publicador**, no corregirlo en silencio: no se sabe cuál de las dos versiones es la buena.
+5. Una clave candidata única en la descarga actual no es necesariamente un identificador estable; la clave subrogada hereda la estabilidad de sus campos.
+6. Normalizar es decidir qué cosas son la misma, y hay que guardar **las dos** formas: la clave para agrupar y la etiqueta para mostrar.
+7. Cada fusión de una normalización se audita con sus formas crudas, y el aporte de una regla adicional se mide por separado en vez de atribuirle mérito por existir.
+8. El **denominador es una decisión**: la cobertura del horario es 18,10 % o 18,06 % según se cuenten todas las filas o solo las abiertas, y hay que decir cuál se publica.
+9. Un campo redundante —la misma ubicación dos veces— es una validación gratuita que no necesita ninguna fuente externa.
+10. Un resumen de cinco números **esconde la forma**: la media y los percentiles no distinguen dos sistemas de coordenadas de un error de redondeo. El histograma, sí.
+11. Un umbral se escribe con su motivo. Elegirlo después de ver los datos, para que el número de hallazgos quede cómodo, es el resultado disfrazado de criterio.
+12. Lo que corresponde con un error de datos ajenos es **reportarlo al publicador**, no corregirlo en silencio: no se sabe cuál de las dos versiones es la buena.
 
 ## Reproducir
 
