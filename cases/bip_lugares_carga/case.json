@@ -67,7 +67,9 @@
     "lab/textual.py — normalize_key, normalize_label, similarity, duplicate_candidates.",
     "lab/geo.py — utm_to_latlon, haversine_km, nearest_point.",
     "lab/keys.py — diagnóstico de columnas, claves candidatas mínimas y clave subrogada determinista.",
-    "lab/textual.py — merge_audit, que expone cada fusión con sus formas crudas."
+    "lab/textual.py — merge_audit, que expone cada fusión con sus formas crudas.",
+    "cases/bip_lugares_carga/cuaderno/solucion_polars.py — análisis alternativo con Polars y gráfico Matplotlib.",
+    "cases/bip_lugares_carga/cuaderno/solucion.R — análisis alternativo con R y gráfico ggplot2."
   ],
   "soluciones": "cases/bip_lugares_carga/solution.py, documentada paso a paso en el README del caso.",
   "resultados": "cases/bip_lugares_carga/resultados/ con nueve tablas: informe de lectura, correspondencia de esquemas, cobertura de campos, validación de clave, validación de coordenadas, filas sospechosas, resumen, agregado por comuna y agregado por entidad. Total: 1 928 lugares, 1 927 abiertos, 46 comunas, 3 entidades, 18,06 % con horario publicado. Para P02: ninguna columna identifica una fila, hay tres claves candidatas mínimas de dos columnas y ninguna sirve de identificador; la clave subrogada sobre `fuente + codigo + direccion` da 1 928 identificadores distintos sin colisiones. Para P04: la normalización fusiona seis veces en todo el archivo —cero en `comuna`, una en `entidad`, cinco en `direccion`—, las seis verificadas correctas, y la expansión de abreviaturas no aporta ninguna.",
@@ -79,7 +81,8 @@
     "La búsqueda de claves candidatas devuelve solo las mínimas y descarta de entrada las columnas con nulos; se prueba contra tablas con la respuesta conocida.",
     "La clave subrogada se prueba determinista entre llamadas y ante un reordenamiento de las filas, y se prueba que una colisión real levante un error en lugar de devolver duplicados.",
     "Cada fusión de la normalización se informa con sus formas crudas, y las seis del archivo se revisaron una por una.",
-    "El aporte de la expansión de abreviaturas se mide por separado del resto de la normalización, de modo que la cifra cero quede medida y no supuesta."
+    "El aporte de la expansión de abreviaturas se mide por separado del resto de la normalización, de modo que la cifra cero quede medida y no supuesta.",
+    "tests/test_multiengine.py ejecuta las soluciones Polars y R y exige una visualización estadística no vacía."
   ],
   "interpretacion": "El resultado describe la oferta de lugares de carga, no su uso ni su suficiencia. La distribución bimodal de los desvíos de coordenada indica que las dos columnas no se produjeron con un único proceso consistente: es un hallazgo de gobernanza de datos que corresponde consultar al publicador, no corregir por cuenta propia.",
   "limitaciones": [

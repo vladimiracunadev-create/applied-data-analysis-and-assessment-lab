@@ -5,8 +5,8 @@ tecnología hace falta, qué trampa enseña cada uno, y —la parte que suele fa
 no se puede contestar**.
 
 > **Dos documentos por caso.** El `README.md` de un caso cuenta **qué se encontró**;
-> su `CUADERNO.md` muestra **cómo se hace**, paso a paso, con el código de Pandas, la
-> salida real y la fórmula de Excel. Los dieciséis problemas están cubiertos por
+> su `CUADERNO.md` muestra **cómo se hace**, paso a paso, con Pandas, la salida real,
+> Excel, Polars, R y gráficos estadísticos. Los dieciséis problemas están cubiertos por
 > [diez cuadernos ejecutables](cuadernos.md); los problemas que comparten datos y
 > método se integran en un mismo cuaderno.
 

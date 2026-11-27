@@ -316,3 +316,10 @@ uv run python -m cases.calendario_medicion.solution --actualizar-feriados 2027
 
 Las pruebas corren **sin red**: el listado está versionado, y la descarga se ejerce
 contra un servidor falso para comprobar que valida antes de guardar.
+
+## Cuaderno, motores y gráfico
+
+- [Resolución profesional paso a paso](CUADERNO.md).
+- [Polars + Matplotlib](cuaderno/solucion_polars.py): comparación anual del denominador.
+- [R + ggplot2](cuaderno/solucion.R): contraste y gráfico equivalente.
+- [Figura publicada](cuaderno/svg/paso-07.svg).

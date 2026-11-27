@@ -4,8 +4,9 @@
 
 **Datos reales, problemas reales, resueltos paso a paso.** Cada caso trae el código de
 Python con su salida real, la fórmula de Excel dibujada en su hoja, las trampas de
-hacerlo de la forma obvia y lo que los datos **no** permiten concluir. Los tres casos
-canónicos se reproducen además en Polars y R base y se confrontan automáticamente.
+hacerlo de la forma obvia y lo que los datos **no** permiten concluir. Los diez
+cuadernos reales incluyen además una solución ejecutable en Polars con Matplotlib y
+otra en R con ggplot2; los tres casos canónicos confrontan sus métricas entre motores.
 
 <br clear="left">
 
@@ -15,7 +16,7 @@ canónicos se reproducen además en Polars y R base y se confrontan automáticam
 ![Versión 0.11.0](https://img.shields.io/badge/versi%C3%B3n-0.11.0-11253B)
 ![Python 3.11–3.14](https://img.shields.io/badge/Python-3.11%E2%80%933.14-3776AB)
 ![Licencia MIT](https://img.shields.io/badge/licencia-MIT-147D70)
-![727 pruebas](https://img.shields.io/badge/pruebas-727-147D70)
+![749 pruebas](https://img.shields.io/badge/pruebas-749-147D70)
 [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/bip_lugares_carga/cuaderno/colab.ipynb)
 
 ---
@@ -36,8 +37,8 @@ qué tecnología se usó, por qué, y qué trampa tenía cada dato.
 
 ### Si vienes a aprender a hacerlo: los cuadernos de trabajo
 
-> **[Índice de los dieciséis cuadernos](docs/cuadernos.md)** — con el estado de
-> cada problema y el enlace a su cuaderno.
+> **[Ruta de los diez cuadernos y dieciséis problemas](docs/cuadernos.md)** — en
+> orden P01 → P03 → P05 → P06 → P07 → P08 → P11 → P12 → P14 → P16.
 >
 > **[Descargar todos los casos](dist/todos-los-casos.zip)** — trece casos, diez
 > cuadernos, resultados, datos sintéticos e implementaciones en Pandas, Polars, R,
@@ -47,10 +48,11 @@ Un caso tiene dos documentos y sirven para cosas distintas:
 
 | Documento | Qué es | Cuándo sirve |
 | --- | --- | --- |
-| **`CUADERNO.md`** | el problema resuelto **paso a paso**: el código de Pandas, **la salida que devuelve de verdad**, la fórmula de Excel equivalente, y la trampa de cada paso | cuando quieres **aprender a producir** el resultado |
+| **`CUADERNO.md`** | el problema resuelto **paso a paso**: Pandas con salida real, Excel equivalente, implementaciones completas en Polars y R, y gráficos estadísticos | cuando quieres **aprender a producir y contrastar** el resultado |
 | `README.md` | qué se encontró, con las cifras y lo que no se puede concluir | cuando quieres **auditar** el resultado |
 
-El cuaderno se lee de arriba abajo y no hay que abrir nada más. Y no se escribe a mano:
+El cuaderno se lee de arriba abajo y no hay que abrir nada más. La navegación sigue una
+ruta lineal entre los diez casos, sin saltos como P01 → P08. Y no se escribe a mano:
 se **genera ejecutando el caso**, de modo que el código que aparece es el que corrió y la
 salida es la que devolvió. Si el código deja de funcionar, el cuaderno no se genera.
 
@@ -76,6 +78,8 @@ Y cada cuaderno trae sus descargables al lado:
 | Archivo | Qué es |
 | --- | --- |
 | [`cuaderno/pasos.py`](cases/bip_lugares_carga/cuaderno/pasos.py) | los pasos seguidos. Se corre y **muestra las doce salidas** |
+| [`cuaderno/solucion_polars.py`](cases/bip_lugares_carga/cuaderno/solucion_polars.py) | contraste ejecutable con **Polars + Matplotlib**; lee el resultado versionado y genera el gráfico del caso |
+| [`cuaderno/solucion.R`](cases/bip_lugares_carga/cuaderno/solucion.R) | contraste ejecutable con **R + ggplot2** sobre el mismo contrato de datos |
 | [`cuaderno/practica.xlsx`](cases/bip_lugares_carga/cuaderno/practica.xlsx) | las fórmulas como texto y **el resultado que deben dar**, para corregirse solo |
 | [`cuaderno/svg/`](cases/bip_lugares_carga/cuaderno/svg) | las nueve figuras: siete hojas de Excel y dos gráficos |
 
@@ -87,6 +91,11 @@ Los **dieciséis problemas están cubiertos** por diez cuadernos distintos: seis
 se integran en el cuaderno de otro porque comparten datos y método. El índice enlaza cada
 problema con su resolución y el [mapa de problemas](docs/problemas-de-la-instancia.md)
 declara qué se puede y qué no se puede concluir.
+
+Cada uno de esos diez cuadernos contiene al menos una visualización estadística visible,
+con título, unidad, período y fuente; las versiones Polars y R se ejecutan en pruebas y
+deben producir un PNG no vacío. No son enlaces a una referencia genérica: viven dentro
+del caso correspondiente y usan sus resultados reales.
 
 ```powershell
 python scripts/build_cuadernos.py          # regenera los cuadernos declarados
@@ -149,8 +158,8 @@ uv run python scripts/generate_data.py
 uv run python -m pytest
 ```
 
-El entorno mínimo sigue siendo Python/Pandas. Polars es un extra y R usa solo su
-biblioteca base:
+El entorno mínimo sigue siendo Python/Pandas. Polars es un extra; la referencia
+canónica de R usa la biblioteca base y los gráficos de los cuadernos usan ggplot2:
 
 ```powershell
 uv sync --extra polars
@@ -158,7 +167,7 @@ uv run --extra polars python solutions/polars_reference.py transport 1
 Rscript solutions/r_reference.R transport 1 reference_outputs/r/transport
 ```
 
-Tres comandos y 727 pruebas en verde. Después, el caso que mejor muestra de qué va
+Tres comandos y 749 pruebas en verde. Después, el caso que mejor muestra de qué va
 esto:
 
 ```powershell
@@ -287,7 +296,7 @@ fórmula que se puede abrir, sí.
 
 ## Qué comprueban las pruebas, y qué no
 
-727 pruebas en 36 archivos. Además de los cálculos:
+749 pruebas en 37 archivos. Además de los cálculos:
 
 - **Validación cruzada entre tecnologías**: Pandas contra Polars, R y SQL, indicador por
   indicador, con tolerancia 10⁻⁹; Excel conserva su control al abrir el libro.

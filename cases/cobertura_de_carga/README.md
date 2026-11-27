@@ -440,3 +440,10 @@ exactas.
 ```powershell
 python -m pytest tests/test_cobertura_de_carga.py -v
 ```
+
+## Cuaderno, motores y gráfico
+
+- [Resolución profesional paso a paso](CUADERNO.md).
+- [Polars + Matplotlib](cuaderno/solucion_polars.py): curva de sensibilidad al umbral.
+- [R + ggplot2](cuaderno/solucion.R): contraste y gráfico equivalente.
+- [Figura publicada](cuaderno/svg/paso-05.svg).

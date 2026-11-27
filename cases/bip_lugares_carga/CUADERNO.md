@@ -1,6 +1,6 @@
 # P01 · Consolidar cinco Excel públicos que describen lo mismo y no se parecen
 
-[Todos los cuadernos](../../docs/cuadernos.md) · [P08 · El cruce que no tiene clave](../cobertura_de_carga/README.md) ▶
+[Todos los cuadernos](../../docs/cuadernos.md) · [P03/P10 · Coordenadas y correspondencia](../correspondencia_metro/CUADERNO.md) ▶
 
 [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/bip_lugares_carga/cuaderno/colab.ipynb) — corre los pasos sin instalar nada: el cuaderno clona el repositorio y descarga los datos del portal.
 
@@ -77,6 +77,116 @@ obvia, que es la parte que no está en ningún tutorial y la que se pregunta en 
 
 ![El recorrido](cuaderno/svg/mapa.svg)
 
+### El mismo resultado en Pandas, Polars y R
+
+La ruta principal de los pasos usa Pandas y Excel. Las implementaciones siguientes recalculan el indicador que sostiene la conclusión con otro motor y producen el mismo gráfico estadístico. El alcance queda declarado para no confundir validación independiente con una traducción cosmética.
+
+| Motor | Alcance verificado | Archivo | Ejecutar |
+| --- | --- | --- | --- |
+| Polars + Matplotlib | ranking comunal y total por comuna | [`solucion_polars.py`](cuaderno/solucion_polars.py) | `uv run --extra polars python cases/bip_lugares_carga/cuaderno/solucion_polars.py` |
+| R + ggplot2 | ranking comunal y total por comuna | [`solucion.R`](cuaderno/solucion.R) | `Rscript cases/bip_lugares_carga/cuaderno/solucion.R` |
+
+#### Polars + Matplotlib
+
+```python
+"""Contraste Polars y visualización Matplotlib del caso bip_lugares_carga."""
+from __future__ import annotations
+
+import argparse
+import sys
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import polars as pl
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
+ROOT = Path(__file__).resolve().parents[3] if "__file__" in globals() else Path.cwd()
+SOURCE = ROOT / "cases" / "bip_lugares_carga" / "resultados" / "por_comuna.csv"
+
+
+def analizar() -> pl.DataFrame:
+    datos = pl.read_csv(SOURCE)
+    return datos.sort("total", descending=True).head(10).select(["comuna", "total"])
+
+
+def graficar(resultado: pl.DataFrame, destino: Path) -> Path:
+    x = resultado["comuna"].to_list()
+    y = resultado["total"].to_list()
+    fig, ax = plt.subplots(figsize=(9, 5))
+    ax.barh([str(value) for value in x], y, color="#11253B")
+    ax.set_xlabel("Lugares de carga (recuento)")
+    ax.set_ylabel("Comuna")
+    ax.set_xlim(left=0)
+    ax.set_title("Lugares de carga en las diez comunas con mayor oferta")
+    ax.grid(axis="y", alpha=0.25)
+    fig.text(
+        0.01,
+        0.01,
+        "Fuente: Resultados reproducibles del caso P01 · Período: corte publicado",
+        fontsize=8,
+        color="#58677A",
+    )
+    fig.tight_layout(rect=(0, 0.05, 1, 1))
+    fig.savefig(destino, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    return destino
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--grafico", type=Path)
+    args = parser.parse_args()
+    resultado = analizar()
+    print(resultado)
+    if args.grafico:
+        print(graficar(resultado, args.grafico))
+
+
+if __name__ == "__main__":
+    main()
+```
+
+#### R + ggplot2
+
+```r
+#!/usr/bin/env Rscript
+# Contraste R + ggplot2 del caso bip_lugares_carga.
+script_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
+script_path <- if (length(script_arg)) sub("^--file=", "", script_arg[1]) else "cuaderno/solucion.R"
+root <- normalizePath(file.path(dirname(script_path), "../../.."), mustWork = TRUE)
+source_csv <- file.path(root, "cases", "bip_lugares_carga", "resultados", "por_comuna.csv")
+
+datos <- read.csv(source_csv, check.names = FALSE, fileEncoding = "UTF-8")
+resultado <- head(datos[order(-datos$total), c("comuna", "total")], 10)
+print(resultado, row.names = FALSE)
+
+args <- commandArgs(trailingOnly = TRUE)
+plot_pos <- match("--grafico", args)
+if (!is.na(plot_pos)) {
+  if (plot_pos == length(args)) stop("--grafico necesita una ruta de salida")
+  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    stop("Instale ggplot2 para generar el gráfico: install.packages('ggplot2')")
+  }
+  destino <- args[plot_pos + 1]
+  grafico <- ggplot2::ggplot(
+    resultado,
+    ggplot2::aes(x = .data[["comuna"]], y = .data[["total"]])
+  ) +
+    ggplot2::geom_col(fill = "#11253B") +
+    ggplot2::coord_flip() +
+    ggplot2::labs(
+      title = "Lugares de carga en las diez comunas con mayor oferta",
+      x = "Lugares de carga (recuento)", y = "Comuna",
+      caption = "Fuente: Resultados reproducibles del caso P01 · Período: corte publicado"
+    ) +
+    ggplot2::theme_minimal(base_size = 11)
+  ggplot2::ggsave(destino, grafico, width = 9, height = 5, dpi = 150)
+  cat(destino, "\n")
+}
+```
+
 12 pasos. Cada uno trae el código de **Python**, la salida que devuelve de verdad, y la **fórmula de Excel** equivalente dibujada en su hoja. 10 traen además la trampa de hacerlo de la forma obvia.
 
 | # | Paso | Trampa |
@@ -102,6 +212,8 @@ obvia, que es la parte que no está en ningún tutorial y la que se pregunta en 
 | [`pasos.py`](cuaderno/pasos.py) | los 12 pasos seguidos. Se corre y muestra cada salida |
 | [`practica.xlsx`](cuaderno/practica.xlsx) | las fórmulas y **el resultado que deben dar**, para corregirse solo. Se abre igual en Google Sheets |
 | [`colab.ipynb`](cuaderno/colab.ipynb) | el cuaderno **ejecutable en Colab**: clona, descarga los datos del portal y corre los 12 pasos |
+| [`solucion_polars.py`](cuaderno/solucion_polars.py) | solución ejecutable en Polars + Matplotlib; incluye el contraste numérico y el gráfico del caso |
+| [`solucion.R`](cuaderno/solucion.R) | solución ejecutable en R + ggplot2; incluye el contraste numérico y el gráfico del caso |
 
 ---
 
@@ -566,4 +678,4 @@ Lo que este caso toca y se trata a fondo en otro sitio:
 - [Equivalencias entre SQL, Pandas, Polars, Excel y R](../../docs/equivalencias.md)
 - [Mapa de los 16 problemas de la instancia](../../docs/problemas-de-la-instancia.md)
 
-[Todos los cuadernos](../../docs/cuadernos.md) · [P08 · El cruce que no tiene clave](../cobertura_de_carga/README.md) ▶
+[Todos los cuadernos](../../docs/cuadernos.md) · [P03/P10 · Coordenadas y correspondencia](../correspondencia_metro/CUADERNO.md) ▶

@@ -5,12 +5,23 @@
 Practique listas, diccionarios, funciones, pathlib, excepciones. Ejercicio: función que reciba realizados y programados y devuelva None cuando el denominador sea cero.
 ## 3. Pandas
 `pd.read_csv`, `head`, `info`, `describe`, `value_counts`, `loc`, `groupby`, `agg`. Ejercicio: contar viajes por estado y comprobar el total.
-## 4. Polars y R
-Polars es opcional: `uv sync --extra polars`. Ejecute la referencia con
-`uv run --extra polars python solutions/polars_reference.py transport 1`. R usa solo
-la biblioteca base: `Rscript solutions/r_reference.R transport 1
+## 4. Polars, R y visualización
+Polars es opcional: `uv sync --extra polars`. Ejecute la referencia canónica con
+`uv run --extra polars python solutions/polars_reference.py transport 1`. La referencia
+canónica de R usa solo la biblioteca base: `Rscript solutions/r_reference.R transport 1
 reference_outputs/r/transport`. Ambos parten de los CSV crudos; no convierten la salida
 de Pandas.
+
+Los diez casos reales agregan dentro de `cases/<caso>/cuaderno/` una
+`solucion_polars.py` con Matplotlib y una `solucion.R` con ggplot2. Por ejemplo:
+
+```powershell
+python cases/cobertura_de_carga/cuaderno/solucion_polars.py --grafico cobertura.png
+Rscript cases/cobertura_de_carga/cuaderno/solucion.R --grafico cobertura-r.png
+```
+
+Ambas leen el mismo contrato de resultados del caso, muestran el resumen estadístico y
+generan una figura comparable. Los enlaces están también dentro de cada `CUADERNO.md`.
 
 ## 5. Excel
 Importe CSV como tabla; use filtros, tablas dinámicas, CONTAR.SI.CONJUNTO, SUMAR.SI.CONJUNTO, BUSCARX, SI.ERROR. Ejemplo con tablas nombradas Viajes y Recorridos: `=BUSCARX([@recorrido_id];Recorridos[recorrido_id];Recorridos[operador_id];"SIN CLAVE")`. Duración en minutos: `=SI(O([@inicio]="";[@fin]="");"";([@fin]-[@inicio])*1440)`. Convierta fechas de texto a fecha/hora primero. Los separadores dependen de la configuración regional.

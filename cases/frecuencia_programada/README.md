@@ -25,3 +25,10 @@ Excel, está en [CUADERNO.md](CUADERNO.md).
 El análisis describe oferta programada de la publicación GTFS del 14 de noviembre de
 2026. No demuestra que esas salidas se hayan realizado ni mide regularidad, demanda o
 cumplimiento operacional.
+
+## Cuaderno, motores y gráfico
+
+- [Resolución profesional paso a paso](CUADERNO.md).
+- [Polars + Matplotlib](cuaderno/solucion_polars.py): percentiles del intervalo programado.
+- [R + ggplot2](cuaderno/solucion.R): contraste y gráfico equivalente.
+- [Figura publicada](cuaderno/svg/paso-03.svg).

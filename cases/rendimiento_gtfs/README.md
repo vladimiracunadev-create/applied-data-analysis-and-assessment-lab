@@ -31,3 +31,10 @@ python -m cases.rendimiento_gtfs.solution
 DuckDB y Polars son opcionales: `uv sync --extra sql --extra polars`. Sin ellos, el caso
 ejecuta y valida los dos caminos de Pandas y marca las mediciones opcionales como no
 ejecutadas.
+
+## Cuaderno, motores y gráfico
+
+- [Resolución profesional paso a paso](CUADERNO.md).
+- [Polars + Matplotlib](cuaderno/solucion_polars.py): tiempo observado por implementación.
+- [R + ggplot2](cuaderno/solucion.R): lectura y visualización independiente del benchmark.
+- [Figura publicada](cuaderno/svg/paso-07.svg).

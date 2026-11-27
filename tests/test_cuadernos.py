@@ -14,6 +14,7 @@ from pathlib import Path
 
 from openpyxl import load_workbook
 
+from lab.notebook_enrichment import NAVIGATION, enriquecer_cuaderno
 from scripts.build_cuadernos import PROBLEMAS, casos_con_cuaderno
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -53,6 +54,27 @@ def test_cada_cuaderno_tiene_estructura_profesional():
         assert fuente.count("Paso(") >= 8, f"{slug} necesita al menos ocho pasos"
 
 
+def test_cada_cuaderno_publica_polars_r_y_un_grafico_estadistico():
+    for slug in sorted(CASOS_ESPERADOS):
+        modulo = importlib.import_module(f"cases.{slug}.cuaderno")
+        cuaderno = enriquecer_cuaderno(slug, modulo.construir())
+        assert {item.motor for item in cuaderno.implementaciones} == {
+            "Polars + Matplotlib",
+            "R + ggplot2",
+        }
+        assert any(paso.figura for paso in cuaderno.pasos), slug
+
+
+def test_la_navegacion_sigue_una_unica_ruta_sin_saltos():
+    for index, (slug, _) in enumerate(NAVIGATION):
+        modulo = importlib.import_module(f"cases.{slug}.cuaderno")
+        cuaderno = enriquecer_cuaderno(slug, modulo.construir())
+        anterior = NAVIGATION[index - 1][0] if index else None
+        siguiente = NAVIGATION[index + 1][0] if index + 1 < len(NAVIGATION) else None
+        assert (cuaderno.anterior[1].split("/")[1] if cuaderno.anterior else None) == anterior
+        assert (cuaderno.siguiente[1].split("/")[1] if cuaderno.siguiente else None) == siguiente
+
+
 def test_cada_cuaderno_publicado_tiene_sus_descargables():
     for slug in sorted(CASOS_ESPERADOS):
         base = ROOT / "cases" / slug
@@ -60,6 +82,8 @@ def test_cada_cuaderno_publicado_tiene_sus_descargables():
         assert (base / "cuaderno" / "pasos.py").is_file()
         assert (base / "cuaderno" / "practica.xlsx").is_file()
         assert (base / "cuaderno" / "colab.ipynb").is_file()
+        assert (base / "cuaderno" / "solucion_polars.py").is_file()
+        assert (base / "cuaderno" / "solucion.R").is_file()
         assert (base / "cuaderno" / "svg" / "flujo.svg").is_file()
         assert (base / "cuaderno" / "svg" / "mapa.svg").is_file()
         assert list((base / "cuaderno").glob("*-caso-completo.zip"))
@@ -90,3 +114,5 @@ def test_colab_excel_y_zip_publicados_se_pueden_abrir():
             nombres = set(archive.namelist())
             assert any(nombre.endswith("CUADERNO.md") for nombre in nombres)
             assert any(nombre.endswith("pasos.py") for nombre in nombres)
+            assert any(nombre.endswith("solucion_polars.py") for nombre in nombres)
+            assert any(nombre.endswith("solucion.R") for nombre in nombres)

@@ -99,9 +99,10 @@ El entorno mínimo son `pandas`, `numpy`, `openpyxl`, `xlsxwriter`, `matplotlib`
 en tiempo de ejecución, como hace `lab.sqlbridge.duckdb_available()`. Justifique la
 dependencia explicando qué problema resuelve que no se pueda resolver sin ella.
 
-Polars se instala con `uv sync --extra polars`; R es un runtime externo y las
-referencias usan solo R base. Si modifica una implementación multitecnología, ejecute
-`tests/test_multiengine.py`; CI instala ambas tecnologías y no admite omisiones.
+Polars se instala con `uv sync --extra polars`; R es un runtime externo. Las referencias
+canónicas usan R base y los gráficos de los cuadernos usan ggplot2. Si modifica una
+implementación multitecnología, ejecute `tests/test_multiengine.py`; CI instala ambas
+tecnologías, ejecuta los diez casos y exige que cada motor produzca su gráfico.
 
 ## Antes de enviar
 

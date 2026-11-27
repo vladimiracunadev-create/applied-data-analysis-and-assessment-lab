@@ -65,7 +65,9 @@
     "cases/cobertura_de_carga/solution.py — resolución completa.",
     "lab/geo.py — haversine sobre escalares, series y arreglos difundidos; búsqueda del punto más cercano por bloques; conversión de UTM; grados por kilómetro.",
     "cases/bip_lugares_carga/solution.py — la consolidación de los cinco Excel, reutilizada tal cual.",
-    "lab/sources.py — lectura de tablas desde el ZIP sin descomprimir, y los registros de procedencia."
+    "lab/sources.py — lectura de tablas desde el ZIP sin descomprimir, y los registros de procedencia.",
+    "cases/cobertura_de_carga/cuaderno/solucion_polars.py — curva de cobertura con Polars y Matplotlib.",
+    "cases/cobertura_de_carga/cuaderno/solucion.R — curva de cobertura con R y ggplot2."
   ],
   "soluciones": "cases/cobertura_de_carga/solution.py, documentada paso a paso en el README del caso. Se ejecuta con: python -m cases.cobertura_de_carga.solution",
   "resultados": "cases/cobertura_de_carga/resultados/ con catorce tablas. Resultado central: 59,29 % de las 12 497 paradas de embarque tiene un lugar de carga a 300 m o menos EN LÍNEA RECTA; con un factor de rodeo de 1,3, el 46,02 %. La mediana de la distancia es 249,6 m y el P90, 671,0 m. La distancia euclídea sobre grados sobreestima en todos los casos (mediana +9,41 %) y mueve la cobertura a 54,69 %, cambiando de clase 574 paradas. Elegir la otra representación de la coordenada deja la cobertura casi igual (59,17 %) pero cambia el local más cercano de 1 673 paradas.",
@@ -77,7 +79,8 @@
     "La identidad distancia·factor ≤ umbral ⇔ distancia ≤ umbral/factor se comprueba en las pruebas, de modo que el factor de rodeo no pueda aplicarse dos veces.",
     "La cobertura tiene que ser monótona creciente en el umbral y monótona decreciente en el factor de rodeo; ambas se comprueban.",
     "El identificador del lugar más cercano se prueba con dos locales distintos que comparten código, para que el resultado no pueda volver a depender de una clave que no es única.",
-    "Las pruebas no usan los datos reales: construyen una geometría sintética con distancias exactas, de modo que la suite corre sin descargar nada."
+    "Las pruebas no usan los datos reales: construyen una geometría sintética con distancias exactas, de modo que la suite corre sin descargar nada.",
+    "tests/test_multiengine.py ejecuta ambas soluciones alternativas y comprueba la curva estadística de cobertura."
   ],
   "interpretacion": "El titular depende más de las decisiones del analista que de los datos. «Seis de cada diez paradas tienen dónde cargar a tres minutos caminando» y «menos de la mitad lo tiene» son la misma medición con dos supuestos distintos, ambos defendibles, y ninguno de los dos aparece en el número si no se declara. El resultado útil no es el 59,29 % sino la curva: entre 200 y 500 metros la cobertura va de 39,60 % a 81,84 %. Hay además una asimetría que conviene no perder: el indicador agregado es robusto a la elección de la coordenada, pero la respuesta por parada no lo es. Eso decide para qué sirve el resultado. Publicar la cobertura de la red, sí. Decirle a una persona a qué local caminar, no: para eso hay que resolver primero cuál de las dos coordenadas del archivo es la buena.",
   "limitaciones": [

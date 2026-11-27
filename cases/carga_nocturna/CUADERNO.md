@@ -1,6 +1,6 @@
 # P05-P09 · Horarios libres y cobertura de carga nocturna
 
-◀ [P08 · Cobertura espacial](../cobertura_de_carga/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P10 · Correspondencia buses–Metro](../correspondencia_metro/CUADERNO.md) ▶
+◀ [P03/P10 · Coordenadas y correspondencia](../correspondencia_metro/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P06 · Expediciones por hora](../gtfs_red_movilidad/CUADERNO.md) ▶
 
 [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/carga_nocturna/cuaderno/colab.ipynb) — corre los pasos sin instalar nada: el cuaderno clona el repositorio y descarga los datos del portal.
 
@@ -33,6 +33,116 @@ datos en un intervalo y en una lista concreta de información que falta recopila
 
 ![El recorrido](cuaderno/svg/mapa.svg)
 
+### El mismo resultado en Pandas, Polars y R
+
+La ruta principal de los pasos usa Pandas y Excel. Las implementaciones siguientes recalculan el indicador que sostiene la conclusión con otro motor y producen el mismo gráfico estadístico. El alcance queda declarado para no confundir validación independiente con una traducción cosmética.
+
+| Motor | Alcance verificado | Archivo | Ejecutar |
+| --- | --- | --- | --- |
+| Polars + Matplotlib | distribución de la respuesta nocturna | [`solucion_polars.py`](cuaderno/solucion_polars.py) | `uv run --extra polars python cases/carga_nocturna/cuaderno/solucion_polars.py` |
+| R + ggplot2 | distribución de la respuesta nocturna | [`solucion.R`](cuaderno/solucion.R) | `Rscript cases/carga_nocturna/cuaderno/solucion.R` |
+
+#### Polars + Matplotlib
+
+```python
+"""Contraste Polars y visualización Matplotlib del caso carga_nocturna."""
+from __future__ import annotations
+
+import argparse
+import sys
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import polars as pl
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
+ROOT = Path(__file__).resolve().parents[3] if "__file__" in globals() else Path.cwd()
+SOURCE = ROOT / "cases" / "carga_nocturna" / "resultados" / "respuesta.csv"
+
+
+def analizar() -> pl.DataFrame:
+    datos = pl.read_csv(SOURCE)
+    return datos.filter(pl.col("situacion") != "TOTAL con servicio nocturno").sort("porcentaje", descending=True).select(["situacion", "porcentaje"])
+
+
+def graficar(resultado: pl.DataFrame, destino: Path) -> Path:
+    x = resultado["situacion"].to_list()
+    y = resultado["porcentaje"].to_list()
+    fig, ax = plt.subplots(figsize=(9, 5))
+    ax.barh([str(value) for value in x], y, color="#11253B")
+    ax.set_xlabel("Paradas con servicio nocturno (%)")
+    ax.set_ylabel("Situación")
+    ax.set_xlim(left=0)
+    ax.set_title("La mitad de las paradas queda indeterminada por falta de horario")
+    ax.grid(axis="y", alpha=0.25)
+    fig.text(
+        0.01,
+        0.01,
+        "Fuente: Resultados reproducibles del caso P05/P09 · Período: corte publicado",
+        fontsize=8,
+        color="#58677A",
+    )
+    fig.tight_layout(rect=(0, 0.05, 1, 1))
+    fig.savefig(destino, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    return destino
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--grafico", type=Path)
+    args = parser.parse_args()
+    resultado = analizar()
+    print(resultado)
+    if args.grafico:
+        print(graficar(resultado, args.grafico))
+
+
+if __name__ == "__main__":
+    main()
+```
+
+#### R + ggplot2
+
+```r
+#!/usr/bin/env Rscript
+# Contraste R + ggplot2 del caso carga_nocturna.
+script_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
+script_path <- if (length(script_arg)) sub("^--file=", "", script_arg[1]) else "cuaderno/solucion.R"
+root <- normalizePath(file.path(dirname(script_path), "../../.."), mustWork = TRUE)
+source_csv <- file.path(root, "cases", "carga_nocturna", "resultados", "respuesta.csv")
+
+datos <- read.csv(source_csv, check.names = FALSE, fileEncoding = "UTF-8")
+resultado <- subset(datos, situacion != "TOTAL con servicio nocturno", select = c("situacion", "porcentaje"))[order(-subset(datos, situacion != "TOTAL con servicio nocturno")$porcentaje), ]
+print(resultado, row.names = FALSE)
+
+args <- commandArgs(trailingOnly = TRUE)
+plot_pos <- match("--grafico", args)
+if (!is.na(plot_pos)) {
+  if (plot_pos == length(args)) stop("--grafico necesita una ruta de salida")
+  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    stop("Instale ggplot2 para generar el gráfico: install.packages('ggplot2')")
+  }
+  destino <- args[plot_pos + 1]
+  grafico <- ggplot2::ggplot(
+    resultado,
+    ggplot2::aes(x = .data[["situacion"]], y = .data[["porcentaje"]])
+  ) +
+    ggplot2::geom_col(fill = "#11253B") +
+    ggplot2::coord_flip() +
+    ggplot2::labs(
+      title = "La mitad de las paradas queda indeterminada por falta de horario",
+      x = "Paradas con servicio nocturno (%)", y = "Situación",
+      caption = "Fuente: Resultados reproducibles del caso P05/P09 · Período: corte publicado"
+    ) +
+    ggplot2::theme_minimal(base_size = 11)
+  ggplot2::ggsave(destino, grafico, width = 9, height = 5, dpi = 150)
+  cat(destino, "\n")
+}
+```
+
 9 pasos. Cada uno trae el código de **Python**, la salida que devuelve de verdad, y la **fórmula de Excel** equivalente dibujada en su hoja. 9 traen además la trampa de hacerlo de la forma obvia.
 
 | # | Paso | Trampa |
@@ -55,6 +165,8 @@ datos en un intervalo y en una lista concreta de información que falta recopila
 | [`pasos.py`](cuaderno/pasos.py) | los 9 pasos seguidos. Se corre y muestra cada salida |
 | [`practica.xlsx`](cuaderno/practica.xlsx) | las fórmulas y **el resultado que deben dar**, para corregirse solo. Se abre igual en Google Sheets |
 | [`colab.ipynb`](cuaderno/colab.ipynb) | el cuaderno **ejecutable en Colab**: clona, descarga los datos del portal y corre los 9 pasos |
+| [`solucion_polars.py`](cuaderno/solucion_polars.py) | solución ejecutable en Polars + Matplotlib; incluye el contraste numérico y el gráfico del caso |
+| [`solucion.R`](cuaderno/solucion.R) | solución ejecutable en R + ggplot2; incluye el contraste numérico y el gráfico del caso |
 
 ---
 
@@ -261,6 +373,10 @@ resultados['respuesta']
 | TOTAL con servicio nocturno | 10520 | 100.0 | — |
 *5 filas × 4 columnas.*
 
+![Clasificar en cuatro estados observables](cuaderno/svg/paso-06.svg)
+
+*La mitad de las paradas queda indeterminada por falta de horario. Ejes con unidad, período y fuente; el código Polars y R genera la misma vista.*
+
 #### Excel
 
 `SI.CONJUNTO` con distancia, horario conocido y apertura; nunca rellenar el vacío con FALSO.
@@ -387,4 +503,4 @@ Lo que este caso toca y se trata a fondo en otro sitio:
 - [P06 · Expansión de frecuencias](../gtfs_red_movilidad/CUADERNO.md)
 - [P08 · Cobertura espacial](../cobertura_de_carga/CUADERNO.md)
 
-◀ [P08 · Cobertura espacial](../cobertura_de_carga/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P10 · Correspondencia buses–Metro](../correspondencia_metro/CUADERNO.md) ▶
+◀ [P03/P10 · Coordenadas y correspondencia](../correspondencia_metro/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P06 · Expediciones por hora](../gtfs_red_movilidad/CUADERNO.md) ▶

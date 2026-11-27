@@ -466,3 +466,10 @@ versión descargada el 26 de noviembre de 2026, con las huellas registradas en
 `procedencia.json`. Con una versión posterior cambiarán las magnitudes, no los nueve
 defectos.
 
+## Cuaderno, motores y gráfico
+
+- [Resolución profesional paso a paso](CUADERNO.md), con el gráfico de distribución y el ranking comunal.
+- [Polars + Matplotlib](cuaderno/solucion_polars.py): recalcula y grafica el ranking por comuna.
+- [R + ggplot2](cuaderno/solucion.R): contraste independiente del mismo indicador y visualización.
+- [Figura publicada](cuaderno/svg/paso-11.svg).
+

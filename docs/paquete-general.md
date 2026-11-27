@@ -3,12 +3,13 @@
 [`todos-los-casos.zip`](../dist/todos-los-casos.zip) reúne en una sola descarga los
 trece casos publicados, los diez cuadernos, sus artefactos y resultados versionados,
 los tres datasets sintéticos y las implementaciones comparables en Pandas, Polars,
-R base, SQL y Excel.
+R, SQL y Excel. Cada cuaderno real incluye además su propio script Polars con
+Matplotlib, script R con ggplot2 y gráfico estadístico.
 
 ## Qué contiene
 
-- `cases/`: metadatos, README, cuadernos, scripts, libros, SVG y resultados de los
-  trece casos;
+- `cases/`: metadatos, README, cuadernos, scripts Pandas/Polars/R, libros, SVG y
+  resultados de los trece casos;
 - `solutions/`: referencias independientes en Pandas, Polars, R base y SQL, además de
   los libros de Excel resueltos;
 - `data/case_1` a `data/case_3`: los datos sintéticos reproducibles;

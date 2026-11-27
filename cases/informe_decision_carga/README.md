@@ -23,3 +23,10 @@ python -m cases.informe_decision_carga.solution
 
 El informe validado queda en `resultados/informe.md`; `lab.report` impide exportarlo si
 falta alguna sección obligatoria.
+
+## Cuaderno, motores y gráfico
+
+- [Resolución profesional paso a paso](CUADERNO.md).
+- [Polars + Matplotlib](cuaderno/solucion_polars.py): comparación de coberturas.
+- [R + ggplot2](cuaderno/solucion.R): contraste y gráfico equivalente.
+- [Figura publicada](cuaderno/svg/paso-01.svg).

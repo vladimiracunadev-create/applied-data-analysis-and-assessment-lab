@@ -69,7 +69,9 @@
     "cases/cobertura_de_carga/solution.py — el radio, el criterio de proximidad y la carga de paradas y locales, reutilizados tal cual.",
     "cases/bip_lugares_carga/solution.py — la consolidación de los cinco Excel, por vía de cobertura_de_carga.",
     "lab/geo.py — haversine por bloques para el radio de 300 m.",
-    "lab/dates.py — parse_hms_seconds, que admite horas de 24 o más y relleno de ceros irregular."
+    "lab/dates.py — parse_hms_seconds, que admite horas de 24 o más y relleno de ceros irregular.",
+    "cases/carga_nocturna/cuaderno/solucion_polars.py — distribución de resultados con Polars y Matplotlib.",
+    "cases/carga_nocturna/cuaderno/solucion.R — distribución de resultados con R y ggplot2."
   ],
   "soluciones": "cases/carga_nocturna/solution.py, documentada paso a paso en el README del caso. Se ejecuta con: python -m cases.carga_nocturna.solution",
   "resultados": "cases/carga_nocturna/resultados/ con once tablas. Resultado central: de las 10 520 paradas con servicio nocturno, CERO tienen un lugar de carga a 300 m que declare estar abierto en la ventana. 4 225 (40,2 %) no tienen ningún local cerca; 759 (7,2 %) tienen locales cerca, todos con horario conocido y ninguno abierto; y 5 536 (52,6 %) quedan INDETERMINADAS porque hay locales cerca que no declaran horario. La cobertura nocturna está por tanto entre 0,0 % y 52,6 %, un intervalo de 52,6 puntos. Ninguno de los 1 927 locales abiertos declara abrir de madrugada.",
@@ -81,7 +83,8 @@
     "Cada uno de los diez textos de horario del archivo real está fijado como caso de prueba, con la afirmación de que ninguno cubre la madrugada. Si el publicador agrega un local nocturno, la prueba cae y la conclusión del caso debe rehacerse.",
     "La regla central del intérprete —lo ilegible es desconocido y no cerrado— se prueba sobre nueve entradas distintas, incluido pd.NA de una columna de tipo string.",
     "Las cuatro clases se prueban cada una con la parada que debe caer en ella, y se prueba la transición: quitado el local sin horario, la parada indeterminada pasa a verificada.",
-    "El ancho del intervalo tiene que ser cero cuando no falta ningún horario, comprobado."
+    "El ancho del intervalo tiene que ser cero cuando no falta ningún horario, comprobado.",
+    "tests/test_multiengine.py ejecuta las soluciones Polars y R y exige gráficos estadísticos generados correctamente."
   ],
   "interpretacion": "La respuesta a la pregunta no es un número, es un intervalo de 52,6 puntos de ancho, y ese ancho no lo produce la red ni la geografía: lo produce una columna vacía en uno de los cinco archivos. El campo de horario está completo al 100 % en cuatro archivos y al 0 % en el quinto, que es además el que tiene 1 579 de los 1 927 locales. Eso no es ruido de calidad de datos, es una decisión de publicación, y tiene una consecuencia que ahora está medida: 1 546 de esos locales están a menos de 300 m de una parada con servicio nocturno, de modo que completar esos registros vuelve contestable el 52,6 % de la red nocturna. Lo que el caso entrega no es la cobertura —que no se puede establecer— sino el pedido concreto que hay que hacerle al publicador y la cifra que lo justifica. Sobre lo que sí se puede afirmar: ninguno de los 348 locales que declaran horario abre de madrugada, el más tardío cierra a las 23:00, y 4 225 paradas con servicio nocturno no tienen local alguno en trescientos metros, que es una conclusión firme porque no depende de ningún horario.",
   "limitaciones": [

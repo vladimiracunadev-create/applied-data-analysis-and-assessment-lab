@@ -345,3 +345,10 @@ calculable a mano.
 ```powershell
 python -m pytest tests/test_carga_nocturna.py tests/test_schedules.py -v
 ```
+
+## Cuaderno, motores y gráfico
+
+- [Resolución profesional paso a paso](CUADERNO.md).
+- [Polars + Matplotlib](cuaderno/solucion_polars.py): distribución de la respuesta nocturna.
+- [R + ggplot2](cuaderno/solucion.R): contraste y gráfico equivalente.
+- [Figura publicada](cuaderno/svg/paso-06.svg).

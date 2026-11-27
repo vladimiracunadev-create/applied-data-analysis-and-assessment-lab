@@ -1,6 +1,6 @@
 # P12-P13 · ICF y distribución de la frecuencia programada
 
-◀ [P11 · Calendario](../calendario_medicion/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P14-P15 · Evolución GTFS](../evolucion_gtfs/CUADERNO.md) ▶
+◀ [P11 · Calendario de medición](../calendario_medicion/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P14/P15 · Evolución GTFS](../evolucion_gtfs/CUADERNO.md) ▶
 
 [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/frecuencia_programada/cuaderno/colab.ipynb) — corre los pasos sin instalar nada: el cuaderno clona el repositorio y descarga los datos del portal.
 
@@ -25,6 +25,115 @@ análisis. La punta mañana se filtra por intersección temporal, no por hora de
 
 ![El recorrido](cuaderno/svg/mapa.svg)
 
+### El mismo resultado en Pandas, Polars y R
+
+La ruta principal de los pasos usa Pandas y Excel. Las implementaciones siguientes recalculan el indicador que sostiene la conclusión con otro motor y producen el mismo gráfico estadístico. El alcance queda declarado para no confundir validación independiente con una traducción cosmética.
+
+| Motor | Alcance verificado | Archivo | Ejecutar |
+| --- | --- | --- | --- |
+| Polars + Matplotlib | percentiles del intervalo programado | [`solucion_polars.py`](cuaderno/solucion_polars.py) | `uv run --extra polars python cases/frecuencia_programada/cuaderno/solucion_polars.py` |
+| R + ggplot2 | percentiles del intervalo programado | [`solucion.R`](cuaderno/solucion.R) | `Rscript cases/frecuencia_programada/cuaderno/solucion.R` |
+
+#### Polars + Matplotlib
+
+```python
+"""Contraste Polars y visualización Matplotlib del caso frecuencia_programada."""
+from __future__ import annotations
+
+import argparse
+import sys
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import polars as pl
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
+ROOT = Path(__file__).resolve().parents[3] if "__file__" in globals() else Path.cwd()
+SOURCE = ROOT / "cases" / "frecuencia_programada" / "resultados" / "distribucion.csv"
+
+
+def analizar() -> pl.DataFrame:
+    datos = pl.read_csv(SOURCE)
+    return datos.select(["estadistico", "intervalo_min"])
+
+
+def graficar(resultado: pl.DataFrame, destino: Path) -> Path:
+    x = resultado["estadistico"].to_list()
+    y = resultado["intervalo_min"].to_list()
+    fig, ax = plt.subplots(figsize=(9, 5))
+    ax.bar([str(value) for value in x], y, color="#11253B")
+    ax.set_xlabel("Estadístico")
+    ax.set_ylabel("Intervalo entre salidas (minutos)")
+    ax.set_ylim(bottom=0)
+    ax.set_title("La distribución revela más que un promedio")
+    ax.grid(axis="y", alpha=0.25)
+    fig.text(
+        0.01,
+        0.01,
+        "Fuente: Resultados reproducibles del caso P12/P13 · Período: publicación GTFS analizada",
+        fontsize=8,
+        color="#58677A",
+    )
+    fig.tight_layout(rect=(0, 0.05, 1, 1))
+    fig.savefig(destino, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    return destino
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--grafico", type=Path)
+    args = parser.parse_args()
+    resultado = analizar()
+    print(resultado)
+    if args.grafico:
+        print(graficar(resultado, args.grafico))
+
+
+if __name__ == "__main__":
+    main()
+```
+
+#### R + ggplot2
+
+```r
+#!/usr/bin/env Rscript
+# Contraste R + ggplot2 del caso frecuencia_programada.
+script_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
+script_path <- if (length(script_arg)) sub("^--file=", "", script_arg[1]) else "cuaderno/solucion.R"
+root <- normalizePath(file.path(dirname(script_path), "../../.."), mustWork = TRUE)
+source_csv <- file.path(root, "cases", "frecuencia_programada", "resultados", "distribucion.csv")
+
+datos <- read.csv(source_csv, check.names = FALSE, fileEncoding = "UTF-8")
+resultado <- datos[, c("estadistico", "intervalo_min")]
+print(resultado, row.names = FALSE)
+
+args <- commandArgs(trailingOnly = TRUE)
+plot_pos <- match("--grafico", args)
+if (!is.na(plot_pos)) {
+  if (plot_pos == length(args)) stop("--grafico necesita una ruta de salida")
+  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    stop("Instale ggplot2 para generar el gráfico: install.packages('ggplot2')")
+  }
+  destino <- args[plot_pos + 1]
+  grafico <- ggplot2::ggplot(
+    resultado,
+    ggplot2::aes(x = .data[["estadistico"]], y = .data[["intervalo_min"]])
+  ) +
+    ggplot2::geom_col(fill = "#11253B") +
+    ggplot2::labs(
+      title = "La distribución revela más que un promedio",
+      x = "Estadístico", y = "Intervalo entre salidas (minutos)",
+      caption = "Fuente: Resultados reproducibles del caso P12/P13 · Período: publicación GTFS analizada"
+    ) +
+    ggplot2::theme_minimal(base_size = 11)
+  ggplot2::ggsave(destino, grafico, width = 9, height = 5, dpi = 150)
+  cat(destino, "\n")
+}
+```
+
 8 pasos. Cada uno trae el código de **Python**, la salida que devuelve de verdad, y la **fórmula de Excel** equivalente dibujada en su hoja. 8 traen además la trampa de hacerlo de la forma obvia.
 
 | # | Paso | Trampa |
@@ -46,6 +155,8 @@ análisis. La punta mañana se filtra por intersección temporal, no por hora de
 | [`pasos.py`](cuaderno/pasos.py) | los 8 pasos seguidos. Se corre y muestra cada salida |
 | [`practica.xlsx`](cuaderno/practica.xlsx) | las fórmulas y **el resultado que deben dar**, para corregirse solo. Se abre igual en Google Sheets |
 | [`colab.ipynb`](cuaderno/colab.ipynb) | el cuaderno **ejecutable en Colab**: clona, descarga los datos del portal y corre los 8 pasos |
+| [`solucion_polars.py`](cuaderno/solucion_polars.py) | solución ejecutable en Polars + Matplotlib; incluye el contraste numérico y el gráfico del caso |
+| [`solucion.R`](cuaderno/solucion.R) | solución ejecutable en R + ggplot2; incluye el contraste numérico y el gráfico del caso |
 
 ---
 
@@ -129,6 +240,10 @@ resultados['alcance_icf']
 | mediciones que cumplen | NO |  | mediciones |
 | ICF oficial | NO |  | % |
 *6 filas × 4 columnas.*
+
+![Separar programa de observación](cuaderno/svg/paso-03.svg)
+
+*La distribución revela más que un promedio. Ejes con unidad, período y fuente; el código Polars y R genera la misma vista.*
 
 #### Excel
 
@@ -330,4 +445,4 @@ Lo que este caso toca y se trata a fondo en otro sitio:
 - [Resultados auditables](README.md)
 - [Definición oficial del ICF](../../docs/indicadores-oficiales-transporte.md)
 
-◀ [P11 · Calendario](../calendario_medicion/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P14-P15 · Evolución GTFS](../evolucion_gtfs/CUADERNO.md) ▶
+◀ [P11 · Calendario de medición](../calendario_medicion/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P14/P15 · Evolución GTFS](../evolucion_gtfs/CUADERNO.md) ▶

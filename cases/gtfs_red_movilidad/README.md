@@ -252,3 +252,10 @@ uv run python -m cases.gtfs_red_movilidad.solution
 El feed vigente cambia cada pocas semanas. Los números de este documento corresponden
 a `GTFS_20261114_v2.zip`; con un feed posterior cambiarán las magnitudes, no las cuatro
 trampas.
+
+## Cuaderno, motores y gráfico
+
+- [Resolución profesional paso a paso](CUADERNO.md).
+- [Polars + Matplotlib](cuaderno/solucion_polars.py): perfil horario agregado.
+- [R + ggplot2](cuaderno/solucion.R): contraste y gráfico equivalente.
+- [Figura publicada](cuaderno/svg/paso-09.svg).

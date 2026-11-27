@@ -143,7 +143,7 @@ y, si hizo falta algo nuevo, el núcleo crece con su prueba.
 | Decisión | Alternativas consideradas | Por qué esta |
 | --- | --- | --- |
 | Validación independiente con **SQLite** (`sqlite3`, biblioteca estándar) | DuckDB; una segunda implementación en Pandas | SQLite no agrega dependencias y su semántica difiere realmente de Pandas (`NULL`, `CAST`, afinidad de tipos), de modo que el acuerdo entre ambas es informativo. Una segunda implementación en Pandas compartiría los mismos malentendidos. DuckDB queda como opción detectable |
-| Polars como extra opcional y R base como runtime externo | Agregarlos al entorno mínimo | Suma dos semánticas independientes sin aumentar el costo de instalación de los cuadernos; CI ejecuta ambas |
+| Polars como extra opcional y R como runtime externo | Agregarlos al entorno mínimo | Suma dos semánticas independientes sin aumentar el costo de instalación de los cuadernos; la referencia canónica usa R base, los gráficos usan ggplot2 y CI ejecuta ambas rutas |
 | Inferencia estadística **propia** en Python puro | SciPy; Statsmodels | Mantiene el entorno mínimo sin dependencias científicas pesadas y permite explicar las fórmulas en el programa de aprendizaje. Se valida contra tablas estadísticas publicadas |
 | Búsqueda de conocimiento **léxica** (TF-IDF) | Embeddings con base vectorial | Funciona sin red ni modelos, corre en integración continua y es explicable. La opción semántica está en la hoja de ruta y solo entra si mejora de forma medible |
 | Documentación derivada **generada** | Escrita a mano | Una tabla escrita a mano se desincroniza en el primer cambio. Generada, no puede mentir, y `--check` lo verifica en CI |
@@ -170,6 +170,7 @@ applied-data-analysis-and-assessment-lab/
 ├── data/                   datos sintéticos, inmutables, con semilla fija
 ├── solutions/              referencias en Pandas, Polars, R, SQL y Excel
 │   └── excel/              libros resueltos con fórmulas vivas
+├── cases/*/cuaderno/       pasos, Polars + Matplotlib, R + ggplot2, Colab y figuras
 ├── reference_outputs/      resultados generados (no versionados)
 ├── docs/                   documentación, programa de aprendizaje y derivados
 │   └── learning/           clases por bloque

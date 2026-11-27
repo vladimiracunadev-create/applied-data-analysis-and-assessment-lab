@@ -136,6 +136,9 @@ jobs:
           r-version: release
           use-public-rspm: true
 
+      - name: Instalar ggplot2 para las visualizaciones R
+        run: Rscript -e "install.packages('ggplot2', repos='https://cloud.r-project.org')"
+
       - name: Preparar Python con Polars opcional
         run: uv sync --locked --extra polars
 

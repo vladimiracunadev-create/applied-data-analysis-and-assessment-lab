@@ -79,6 +79,15 @@ def _finish(ax, title: str, xlabel: str, ylabel: str, period: str, source: str,
     destination = Path(path)
     destination.parent.mkdir(parents=True, exist_ok=True)
     ax.figure.savefig(destination)
+    if destination.suffix.lower() == ".svg":
+        # Matplotlib deja espacios al final de algunas rutas SVG. Normalizarlos hace
+        # que los artefactos generados pasen `git diff --check` y sigan siendo
+        # deterministas entre sistemas sin alterar el dibujo.
+        svg = destination.read_text(encoding="utf-8")
+        destination.write_text(
+            "\n".join(line.rstrip() for line in svg.splitlines()) + "\n",
+            encoding="utf-8",
+        )
     plt.close(ax.figure)
     return destination
 
@@ -114,6 +123,31 @@ def bar_chart(
         for label in ax.get_xticklabels():
             label.set_horizontalalignment("right")
     return _finish(ax, title, xlabel or category, ylabel, period, source, path)
+
+
+def horizontal_bar_chart(
+    data: pd.DataFrame,
+    category: str,
+    value: str,
+    path: str | Path,
+    title: str,
+    xlabel: str,
+    ylabel: str = "",
+    period: str = "",
+    source: str = "Datos sintéticos del laboratorio",
+    sort: bool = True,
+) -> Path:
+    """Barras horizontales para etiquetas largas, con magnitud iniciada en cero."""
+    apply_style()
+    frame = data[[category, value]].dropna()
+    if frame.empty:
+        raise ValueError("No hay datos que graficar.")
+    if sort:
+        frame = frame.sort_values(value, ascending=True)
+    fig, ax = plt.subplots()
+    ax.barh(frame[category].astype(str), frame[value], color=INK, edgecolor="none")
+    ax.set_xlim(left=0)
+    return _finish(ax, title, xlabel, ylabel or category, period, source, path)
 
 
 def line_chart(

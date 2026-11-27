@@ -1,7 +1,8 @@
 """Núcleo del Applied Data Analysis and Assessment Lab.
 
 Componentes
-    `cuaderno`    cuadernos de trabajo: Pandas, su salida real y el equivalente Excel.
+    `cuaderno`    cuadernos: Pandas, Excel, motores alternativos y salidas reales.
+    `notebook_enrichment` Polars, R, gráficos y navegación de los diez cuadernos.
     `core`        utilidades de lectura, perfilado, cruce auditado y exportación.
     `contracts`   contratos de datos y validación con informe de hallazgos.
     `metrics`     indicadores, estadística descriptiva y razones seguras.
@@ -53,6 +54,7 @@ __all__ = [
     "learning",
     "method",
     "metrics",
+    "notebook_enrichment",
     "profiles",
     "report",
     "schedules",

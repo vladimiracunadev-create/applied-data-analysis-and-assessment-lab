@@ -27,6 +27,116 @@ universal.
 
 ![El recorrido](cuaderno/svg/mapa.svg)
 
+### El mismo resultado en Pandas, Polars y R
+
+La ruta principal de los pasos usa Pandas y Excel. Las implementaciones siguientes recalculan el indicador que sostiene la conclusión con otro motor y producen el mismo gráfico estadístico. El alcance queda declarado para no confundir validación independiente con una traducción cosmética.
+
+| Motor | Alcance verificado | Archivo | Ejecutar |
+| --- | --- | --- | --- |
+| Polars + Matplotlib | tiempo por implementación ejecutada | [`solucion_polars.py`](cuaderno/solucion_polars.py) | `uv run --extra polars python cases/rendimiento_gtfs/cuaderno/solucion_polars.py` |
+| R + ggplot2 | tiempo por implementación ejecutada | [`solucion.R`](cuaderno/solucion.R) | `Rscript cases/rendimiento_gtfs/cuaderno/solucion.R` |
+
+#### Polars + Matplotlib
+
+```python
+"""Contraste Polars y visualización Matplotlib del caso rendimiento_gtfs."""
+from __future__ import annotations
+
+import argparse
+import sys
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import polars as pl
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
+ROOT = Path(__file__).resolve().parents[3] if "__file__" in globals() else Path.cwd()
+SOURCE = ROOT / "cases" / "rendimiento_gtfs" / "resultados" / "benchmark.csv"
+
+
+def analizar() -> pl.DataFrame:
+    datos = pl.read_csv(SOURCE)
+    return datos.filter(pl.col("segundos").is_not_null()).sort("segundos").select(["metodo", "segundos"])
+
+
+def graficar(resultado: pl.DataFrame, destino: Path) -> Path:
+    x = resultado["metodo"].to_list()
+    y = resultado["segundos"].to_list()
+    fig, ax = plt.subplots(figsize=(9, 5))
+    ax.barh([str(value) for value in x], y, color="#11253B")
+    ax.set_xlabel("Tiempo (segundos; menor es mejor)")
+    ax.set_ylabel("Método")
+    ax.set_xlim(left=0)
+    ax.set_title("Tiempo observado para la misma agregación")
+    ax.grid(axis="y", alpha=0.25)
+    fig.text(
+        0.01,
+        0.01,
+        "Fuente: Benchmark P07; tiempos dependientes del equipo · Período: ejecución de referencia",
+        fontsize=8,
+        color="#58677A",
+    )
+    fig.tight_layout(rect=(0, 0.05, 1, 1))
+    fig.savefig(destino, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    return destino
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--grafico", type=Path)
+    args = parser.parse_args()
+    resultado = analizar()
+    print(resultado)
+    if args.grafico:
+        print(graficar(resultado, args.grafico))
+
+
+if __name__ == "__main__":
+    main()
+```
+
+#### R + ggplot2
+
+```r
+#!/usr/bin/env Rscript
+# Contraste R + ggplot2 del caso rendimiento_gtfs.
+script_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
+script_path <- if (length(script_arg)) sub("^--file=", "", script_arg[1]) else "cuaderno/solucion.R"
+root <- normalizePath(file.path(dirname(script_path), "../../.."), mustWork = TRUE)
+source_csv <- file.path(root, "cases", "rendimiento_gtfs", "resultados", "benchmark.csv")
+
+datos <- read.csv(source_csv, check.names = FALSE, fileEncoding = "UTF-8")
+resultado <- subset(datos, !is.na(segundos), select = c("metodo", "segundos"))[order(subset(datos, !is.na(segundos))$segundos), ]
+print(resultado, row.names = FALSE)
+
+args <- commandArgs(trailingOnly = TRUE)
+plot_pos <- match("--grafico", args)
+if (!is.na(plot_pos)) {
+  if (plot_pos == length(args)) stop("--grafico necesita una ruta de salida")
+  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    stop("Instale ggplot2 para generar el gráfico: install.packages('ggplot2')")
+  }
+  destino <- args[plot_pos + 1]
+  grafico <- ggplot2::ggplot(
+    resultado,
+    ggplot2::aes(x = .data[["metodo"]], y = .data[["segundos"]])
+  ) +
+    ggplot2::geom_col(fill = "#11253B") +
+    ggplot2::coord_flip() +
+    ggplot2::labs(
+      title = "Tiempo observado para la misma agregación",
+      x = "Tiempo (segundos; menor es mejor)", y = "Método",
+      caption = "Fuente: Benchmark P07; tiempos dependientes del equipo · Período: ejecución de referencia"
+    ) +
+    ggplot2::theme_minimal(base_size = 11)
+  ggplot2::ggsave(destino, grafico, width = 9, height = 5, dpi = 150)
+  cat(destino, "\n")
+}
+```
+
 8 pasos. Cada uno trae el código de **Python**, la salida que devuelve de verdad, y la **fórmula de Excel** equivalente dibujada en su hoja. 8 traen además la trampa de hacerlo de la forma obvia.
 
 | # | Paso | Trampa |
@@ -48,6 +158,8 @@ universal.
 | [`pasos.py`](cuaderno/pasos.py) | los 8 pasos seguidos. Se corre y muestra cada salida |
 | [`practica.xlsx`](cuaderno/practica.xlsx) | las fórmulas y **el resultado que deben dar**, para corregirse solo. Se abre igual en Google Sheets |
 | [`colab.ipynb`](cuaderno/colab.ipynb) | el cuaderno **ejecutable en Colab**: clona, descarga los datos del portal y corre los 8 pasos |
+| [`solucion_polars.py`](cuaderno/solucion_polars.py) | solución ejecutable en Polars + Matplotlib; incluye el contraste numérico y el gráfico del caso |
+| [`solucion.R`](cuaderno/solucion.R) | solución ejecutable en R + ggplot2; incluye el contraste numérico y el gráfico del caso |
 
 ---
 
@@ -119,8 +231,8 @@ referencia['benchmark'].query("metodo == 'Pandas completo'")
 ```
 
 ```
-            metodo  segundos  ...  filas_resultado  filas_entrada
-0  Pandas completo  0.960397  ...            12495        1098717
+            metodo  segundos  lectura_s  ...  estado  filas_resultado  filas_entrada
+0  Pandas completo  0.960397   0.758222  ...     NaN            12495        1098717
 
 [1 rows x 9 columns]
 ```
@@ -240,8 +352,12 @@ referencia['benchmark']
 | Pandas completo | 0.9603973000193946 | 0.7582218000316061 | 0.2021754999877885 | 60.248285 | 1.0 |  | 12495 | 1098717 |
 | Pandas por bloques | 1.6597541999653913 |  |  | 11.310612 | 6.0 |  | 12495 | 1098717 |
 | DuckDB sobre CSV | 1.1213004000019282 | 0.4513530000112951 | 1.1213004000019282 |  |  | ejecutado; extracción informada por separado | 12495 | 1098717 |
-| Polars lazy sobre CSV | 0.19506870000623167 | 0.41066780005348846 | 0.19506870000623167 |  |  | ejecutado; extracción informada por separado | 12495 | 1098717 |
+| Polars lazy sobre CSV | 0.1950687000062316 | 0.4106678000534884 | 0.1950687000062316 |  |  | ejecutado; extracción informada por separado | 12495 | 1098717 |
 *4 filas × 9 columnas.*
+
+![Comparar tiempo y memoria](cuaderno/svg/paso-07.svg)
+
+*Tiempo observado para la misma agregación. Ejes con unidad, período y fuente; el código Polars y R genera la misma vista.*
 
 #### Excel
 

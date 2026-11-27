@@ -10,6 +10,7 @@ from __future__ import annotations
 import importlib.util
 import shutil
 import subprocess
+import sys
 import zipfile
 from pathlib import Path
 
@@ -25,6 +26,18 @@ from solutions import reference
 ROOT = Path(__file__).resolve().parents[1]
 POLARS_AVAILABLE = importlib.util.find_spec("polars") is not None
 RSCRIPT = shutil.which("Rscript")
+NOTEBOOK_CASES = (
+    "bip_lugares_carga",
+    "correspondencia_metro",
+    "carga_nocturna",
+    "gtfs_red_movilidad",
+    "rendimiento_gtfs",
+    "cobertura_de_carga",
+    "calendario_medicion",
+    "frecuencia_programada",
+    "evolucion_gtfs",
+    "informe_decision_carga",
+)
 
 KEYS = {
     "calidad": ["indicador"],
@@ -120,6 +133,7 @@ def _run_r(case_name: str, destination: Path, number: int = 1) -> dict[str, pd.D
         check=True,
         capture_output=True,
         text=True,
+        encoding="utf-8",
     )
     return {path.stem: pd.read_csv(path) for path in destination.glob("*.csv")}
 
@@ -148,3 +162,35 @@ def test_r_reproduce_los_casos_de_negocio(case_name, tmp_path):
         actual["quality"][quality_columns],
         KEYS["quality"],
     )
+
+
+@pytest.mark.skipif(not POLARS_AVAILABLE, reason="instale el extra polars")
+@pytest.mark.parametrize("slug", NOTEBOOK_CASES)
+def test_cada_cuaderno_ejecuta_polars_y_matplotlib(slug, tmp_path):
+    script = ROOT / "cases" / slug / "cuaderno" / "solucion_polars.py"
+    chart = tmp_path / f"{slug}-polars.png"
+    subprocess.run(
+        [sys.executable, str(script), "--grafico", str(chart)],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+    assert chart.stat().st_size > 1_000
+
+
+@pytest.mark.skipif(RSCRIPT is None, reason="Rscript no está instalado")
+@pytest.mark.parametrize("slug", NOTEBOOK_CASES)
+def test_cada_cuaderno_ejecuta_r_y_ggplot2(slug, tmp_path):
+    script = ROOT / "cases" / slug / "cuaderno" / "solucion.R"
+    chart = tmp_path / f"{slug}-r.png"
+    subprocess.run(
+        [RSCRIPT, str(script), "--grafico", str(chart)],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+    assert chart.stat().st_size > 1_000

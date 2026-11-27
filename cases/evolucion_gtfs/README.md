@@ -31,3 +31,10 @@ La comparación detecta diferencias publicadas, no sus causas. Un alta o baja de
 puede ser una modificación real o una decisión de identificación. La serie ejecutada
 tiene tres puntos: describe una trayectoria reciente, no todo 2014–2026. El código
 acepta más publicaciones sin cambiar la definición.
+
+## Cuaderno, motores y gráfico
+
+- [Resolución profesional paso a paso](CUADERNO.md).
+- [Polars + Matplotlib](cuaderno/solucion_polars.py): evolución de salidas comparables.
+- [R + ggplot2](cuaderno/solucion.R): contraste y gráfico equivalente.
+- [Figura publicada](cuaderno/svg/paso-06.svg).

@@ -8,10 +8,12 @@ repositorio.
 
 ## Vengo a aprender a hacerlo, no a leer qué se encontró
 
-**[Índice de cuadernos](cuadernos.md)** — el estado de los dieciséis problemas.
+**[Ruta de cuadernos](cuadernos.md)** — diez cuadernos en orden lineal para los
+dieciséis problemas.
 
-Los **cuadernos de trabajo** son el problema resuelto paso a paso, con el código de
-Pandas, la salida real y la fórmula de Excel equivalente, en un solo archivo.
+Los **cuadernos de trabajo** son el problema resuelto paso a paso, con Pandas y su
+salida real, la fórmula de Excel equivalente, soluciones ejecutables en Polars y R, y
+un gráfico estadístico del caso en un solo archivo.
 
 El [`paquete general`](paquete-general.md) permite descargar juntos los trece casos,
 los diez cuadernos y las implementaciones comparables en Pandas, Polars, R, SQL y
@@ -33,8 +35,9 @@ Excel, sin redistribuir datos de terceros.
 El Excel de cada paso va dibujado como hoja, con la fórmula en su celda y el resultado a
 la vista.
 
-Se generan ejecutando el caso, con `python scripts/build_cuadernos.py`. Los dieciséis
-problemas están cubiertos; el alcance y los límites de cada uno están en el
+Se generan ejecutando el caso, con `python scripts/build_cuadernos.py`. Los diez
+cuadernos siguen una ruta sin saltos y cubren los dieciséis problemas; el alcance y
+los límites de cada uno están en el
 [mapa de problemas](problemas-de-la-instancia.md).
 
 ---

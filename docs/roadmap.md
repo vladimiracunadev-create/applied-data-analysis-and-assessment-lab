@@ -17,7 +17,7 @@ Los recuentos se obtienen con los comandos indicados, no de memoria.
 | Intérprete de horarios en texto libre, con lo ilegible como desconocido | implementado | `python -m pytest tests/test_schedules.py` |
 | Conciliación de inventarios con grano distinto y dos criterios | implementado | `python -m pytest tests/test_correspondencia_metro.py` |
 | Análisis de claves: candidatas mínimas y clave subrogada determinista | implementado | `python -m pytest tests/test_keys.py` |
-| Cuadernos de trabajo: 10 cuadernos cubren los 16 problemas | implementado | `python scripts/build_cuadernos.py --check` |
+| Cuadernos multiengine: 10 cuadernos cubren los 16 problemas con Pandas, Polars, R, Excel y gráficos | implementado | `python scripts/build_cuadernos.py --check` |
 | Simulaciones de cuatro horas (3) | implementado | `simulations/0{1,2,3}_enunciado.md` |
 | Solución de referencia en Pandas | implementado | `python solutions/reference.py 1` |
 | Implementación columnar en Polars | implementado | `python solutions/polars_reference.py transport 1` |
@@ -77,7 +77,9 @@ deja de estar declarada aquí.
 
 Diez cuadernos generados y ejecutables cubren los dieciséis problemas. P02 y P04 están
 integrados en P01; P09 en P05; P10 en P03; P13 en P12; y P15 en P14. Cada uno trae
-Markdown con salidas reales, script, Colab, libro de práctica, diagramas SVG y ZIP.
+Markdown con salidas reales, script Pandas, soluciones Polars y R, Colab, libro de
+práctica, al menos un gráfico estadístico, diagramas SVG y ZIP. La navegación recorre
+los diez cuadernos en orden y ya no salta de P01 a P08.
 
 P14/P15 se ejecuta sobre las últimas publicaciones oficiales de 2024 y 2025 y el feed
 vigente de 2026. Es una trayectoria reciente de tres puntos; ampliar hasta 2014 sigue
@@ -116,7 +118,8 @@ casos con datos reales: sus tres simulaciones corren sobre los datos sintéticos
 ### 2.6 Dependencias y entornos opcionales
 
 Polars está implementado como extra `polars`; DuckDB como extra `sql` y benchmark de
-P07; R base como runtime externo sin paquetes, verificado en CI. Ninguno infla el
+P07; R base sostiene la referencia canónica y ggplot2 las visualizaciones de los diez
+cuadernos reales, todo verificado en CI. Ninguno infla el
 entorno mínimo. Siguen sin integración ejecutable Power BI, Tableau, Metabase,
 GeoPandas, QGIS, Arrow/Parquet, Docker, n8n, bases vectoriales y búsqueda semántica con
 embeddings. SciPy, Statsmodels y herramientas de visualización permanecen como extras
@@ -151,8 +154,8 @@ de contraste, no como requisitos del núcleo.
 ### Fase 4 — infraestructura opcional
 
 10. Parquet como formato columnar reproducible para los casos cuyo volumen lo justifique.
-11. Extender las implementaciones Polars/R a un caso público especializado cuando la
-    comparación aporte evidencia nueva, no como traducción mecánica.
+11. Profundizar los contrastes Polars/R cuando una diferencia de motor aporte evidencia
+    nueva, no como traducción mecánica.
 12. Evaluar la búsqueda semántica sobre la base de conocimiento, midiendo si mejora
     la recuperación frente a TF-IDF antes de incorporarla. Si no mejora de forma
     medible, no se incorpora.

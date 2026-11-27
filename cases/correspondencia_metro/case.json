@@ -65,7 +65,9 @@
     "cases/bip_lugares_carga/solution.py — la consolidación de los cinco Excel y el umbral de coordenada sospechosa, reutilizados.",
     "lab/textual.py — normalize_key para construir la llave de conciliación.",
     "lab/geo.py — haversine por bloques y búsqueda del punto más cercano.",
-    "lab/metrics.py — indicator_table, que obliga a declarar unidad y definición de cada cifra."
+    "lab/metrics.py — indicator_table, que obliga a declarar unidad y definición de cada cifra.",
+    "cases/correspondencia_metro/cuaderno/solucion_polars.py — conciliación resumida con Polars y Matplotlib.",
+    "cases/correspondencia_metro/cuaderno/solucion.R — conciliación resumida con R y ggplot2."
   ],
   "soluciones": "cases/correspondencia_metro/solution.py, documentada paso a paso en el README del caso. Se ejecuta con: python -m cases.correspondencia_metro.solution",
   "resultados": "cases/correspondencia_metro/resultados/ con catorce tablas. La respuesta: las 126 estaciones de Metro tienen al menos una parada de bus a 200 m —el 100 %—, con una mediana de 13 servicios distintos por estación, P90 de 34 y máximo de 55 en Santa Lucía. El hallazgo colateral, que vale más: 11 estaciones están a más de 500 m de donde el GTFS las pone, hasta 13,1 km, y NINGUNA fue detectada por la validación interna de coordenadas de P01. Calculada con las coordenadas de bip! en lugar de las del GTFS, la respuesta cambia en 48 de 125 estaciones —el 38,4 %— y tres estaciones aparecerían sin ninguna parada de bus cerca.",
@@ -78,7 +80,8 @@
     "Se prueba el punto ciego de cada detector: que el detector 2 no vea la estación de una sola fila, y que el detector 4 sí la vea.",
     "El umbral entre filas hermanas se comprueba igual al de P01, para que el mismo tipo de juicio use el mismo criterio en los dos casos.",
     "La correspondencia de bus se prueba con paradas colocadas a 100 m y a 1 km de la estación, y con dos paradas del mismo servicio para comprobar que un servicio no se cuenta dos veces.",
-    "Las pruebas no usan los datos reales: construyen un inventario sintético de cuatro estaciones con todas las distancias calculables a mano."
+    "Las pruebas no usan los datos reales: construyen un inventario sintético de cuatro estaciones con todas las distancias calculables a mano.",
+    "tests/test_multiengine.py ejecuta las soluciones Polars y R y verifica la visualización de detectores y hallazgos."
   ],
   "interpretacion": "La respuesta a la pregunta de P10 es cómoda —el 100 % de las estaciones tiene bus cerca— y no es lo que el caso enseña. Lo que enseña es que una comprobación de calidad solo encuentra la clase de error que fue diseñada para encontrar, y que esa limitación es medible. P01 validó las coordenadas comparando las dos representaciones de cada fila y encontró tres errores en 1 928: una comprobación correcta, con un punto ciego del tamaño exacto de un error que afecte a las dos representaciones por igual. Once estaciones de Metro están a más de 500 m de donde el GTFS las pone, hasta 13,1 km, y ninguna quedó marcada. Lo importante es que tres de los cuatro detectores de este caso no necesitan ninguna fuente externa: el archivo podía delatar sus propios errores —comparando las filas hermanas de una misma estación, y comparando cada coordenada con la comuna que la propia fila declara— y nadie le hizo esas preguntas. De ahí la lección práctica: antes de confiar en un informe de calidad hay que preguntarle qué no mira. Y una advertencia sobre el resultado principal: la elección de qué fuente provee la coordenada, que casi nunca se declara porque las dos son oficiales, decide el 38,4 % de las filas del informe de correspondencia.",
   "limitaciones": [

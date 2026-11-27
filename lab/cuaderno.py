@@ -1,4 +1,4 @@
-"""Cuadernos de trabajo: el mismo problema resuelto en Pandas y en Excel, paso a paso.
+"""Cuadernos de trabajo: un problema resuelto y contrastado en varios motores.
 
 Qué hace
     Toma una lista de pasos declarados —objetivo, código de Pandas, equivalente en
@@ -11,8 +11,8 @@ Por qué existe
     Los casos del laboratorio documentaban **qué se encontró**: las cifras, los
     defectos, lo que no se puede concluir. Eso sirve para auditar el resultado y no
     sirve para aprender a producirlo. Quien se prepara para una evaluación técnica de
-    Excel y Pandas necesita ver otra cosa: **el código, su salida, y cómo se hace lo
-    mismo en una planilla**.
+    Excel y Pandas necesita ver otra cosa: **el código, su salida, cómo se hace lo
+    mismo en una planilla y cómo se contrasta en Polars y R**.
 
     Y lo necesita en un archivo, no repartido entre un README que cuenta hallazgos, un
     `solution.py` de seiscientas líneas y una tabla de equivalencias en otra carpeta.
@@ -35,6 +35,11 @@ Las cuatro partes de un paso
       función en español, siguiendo la convención de `docs/equivalencias.md`.
     - **Trampa**: qué sale mal al hacerlo de la forma obvia. Es la parte que no está en
       ningún tutorial y la que se pregunta en una evaluación.
+
+Contraste y visualización
+    Cada cuaderno agrega una implementación completa en Polars con Matplotlib y otra en
+    R con ggplot2. Ambas leen el contrato de resultado versionado del caso, recalculan
+    el indicador central y producen una gráfica con unidad, período y fuente visibles.
 
 Cómo se usa
     Cada caso declara su cuaderno en un módulo `cuaderno.py` con dos cosas: un
@@ -86,6 +91,10 @@ ARCHIVO_XLSX = "practica.xlsx"
 
 #: El cuaderno ejecutable para Google Colab. Mismo contenido que el documento, en celdas.
 ARCHIVO_IPYNB = "colab.ipynb"
+
+#: Implementaciones comparables completas que acompañan a cada cuaderno.
+ARCHIVO_POLARS = "solucion_polars.py"
+ARCHIVO_R = "solucion.R"
 
 #: Repositorio público, para el botón de Colab y el clonado del cuaderno ejecutable.
 REPO = "vladimiracunadev-create/applied-data-analysis-and-assessment-lab"
@@ -150,6 +159,18 @@ class Paso:
     sheets: str = ""
 
 
+@dataclass(frozen=True)
+class Implementacion:
+    """Una implementación ejecutable alternativa incluida en el cuaderno."""
+
+    motor: str
+    lenguaje: str
+    archivo: str
+    comando: str
+    alcance: str
+    codigo: str
+
+
 @dataclass
 class Cuaderno:
     """Un cuaderno completo: la pregunta, los datos y los pasos."""
@@ -190,6 +211,9 @@ class Cuaderno:
     #: Navegación entre cuadernos: `(texto, ruta)` del anterior y del siguiente.
     anterior: tuple[str, str] | None = None
     siguiente: tuple[str, str] | None = None
+    #: Implementaciones ejecutables que resuelven el indicador principal con otro
+    #: motor. Se publican como archivos y también se muestran dentro del cuaderno.
+    implementaciones: tuple[Implementacion, ...] = ()
 
 
 def _recortar(valor: object) -> str:
@@ -387,6 +411,28 @@ def render(cuaderno: Cuaderno, carpeta: Path | None = None,
     if cuaderno.mapa is not None:
         escribir(f"![El recorrido]({CARPETA}/svg/mapa.svg)\n\n")
 
+    if cuaderno.implementaciones:
+        escribir("### El mismo resultado en Pandas, Polars y R\n\n")
+        escribir(
+            "La ruta principal de los pasos usa Pandas y Excel. Las implementaciones "
+            "siguientes recalculan el indicador que sostiene la conclusión con otro "
+            "motor y producen el mismo gráfico estadístico. El alcance queda declarado "
+            "para no confundir validación independiente con una traducción cosmética.\n\n"
+        )
+        escribir("| Motor | Alcance verificado | Archivo | Ejecutar |\n")
+        escribir("| --- | --- | --- | --- |\n")
+        for implementacion in cuaderno.implementaciones:
+            escribir(
+                f"| {implementacion.motor} | {implementacion.alcance} | "
+                f"[`{implementacion.archivo}`]({CARPETA}/{implementacion.archivo}) | "
+                f"`{implementacion.comando}` |\n"
+            )
+        escribir("\n")
+        for implementacion in cuaderno.implementaciones:
+            escribir(f"#### {implementacion.motor}\n\n")
+            escribir(f"```{implementacion.lenguaje}\n")
+            escribir(implementacion.codigo.strip() + "\n```\n\n")
+
     escribir(
         f"{len(salidas)} pasos. Cada uno trae el código de **Python**, la salida que "
         f"devuelve de verdad, y la **fórmula de Excel** equivalente dibujada en su "
@@ -423,6 +469,12 @@ def render(cuaderno: Cuaderno, carpeta: Path | None = None,
             f"| [`{ARCHIVO_IPYNB}`]({CARPETA}/{ARCHIVO_IPYNB}) "
             "| el cuaderno **ejecutable en Colab**: clona, descarga los datos del "
             f"portal y corre los {len(salidas)} pasos |\n"
+        )
+    for implementacion in cuaderno.implementaciones:
+        escribir(
+            f"| [`{implementacion.archivo}`]({CARPETA}/{implementacion.archivo}) "
+            f"| solución ejecutable en {implementacion.motor}; incluye el contraste "
+            "numérico y el gráfico del caso |\n"
         )
     escribir("\n---\n\n")
 
@@ -555,6 +607,16 @@ def escribir_pasos_py(cuaderno: Cuaderno, salidas: list[Salida], destino: Path) 
         buffer.write("\n")
     destino.write_text(buffer.getvalue(), encoding="utf-8")
     return destino
+
+
+def escribir_implementaciones(cuaderno: Cuaderno, carpeta: Path) -> list[Path]:
+    """Escribe los motores alternativos exactamente como aparecen en el cuaderno."""
+    escritos: list[Path] = []
+    for implementacion in cuaderno.implementaciones:
+        destino = carpeta / implementacion.archivo
+        destino.write_text(implementacion.codigo.strip() + "\n", encoding="utf-8")
+        escritos.append(destino)
+    return escritos
 
 
 def _sin_markdown(texto: str) -> str:
@@ -770,6 +832,20 @@ def escribir_colab(cuaderno: Cuaderno, salidas: list[Salida], slug: str,
     if cuaderno.solucion:
         celdas.append(_celda("markdown", "## 2 · La solución que se va a aplicar\n\n"
                              + cuaderno.solucion.strip() + "\n"))
+    if cuaderno.implementaciones:
+        celdas.append(_celda(
+            "markdown",
+            "## Implementaciones comparables\n\n"
+            "La ruta principal usa Pandas. Polars y R recalculan el indicador central "
+            "desde el contrato de salida versionado y generan el mismo gráfico.\n",
+        ))
+        for implementacion in cuaderno.implementaciones:
+            celdas.append(_celda(
+                "markdown",
+                f"### {implementacion.motor}\n\n"
+                f"```{implementacion.lenguaje}\n{implementacion.codigo.strip()}\n```\n\n"
+                f"Ejecutar con `{implementacion.comando}`.\n",
+            ))
 
     importes = cuaderno.importes.strip()
     if importes:

@@ -1,6 +1,6 @@
 # P08 · Distancia al lugar de carga más cercano
 
-◀ [P06 · Expediciones por hora](../gtfs_red_movilidad/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P09 · Cobertura nocturna](../carga_nocturna/CUADERNO.md) ▶
+◀ [P07 · Rendimiento GTFS](../rendimiento_gtfs/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P11 · Calendario de medición](../calendario_medicion/CUADERNO.md) ▶
 
 [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/cobertura_de_carga/cuaderno/colab.ipynb) — corre los pasos sin instalar nada: el cuaderno clona el repositorio y descarga los datos del portal.
 
@@ -33,6 +33,116 @@ declara el límite que impide afirmar si el lugar cercano está abierto.
 
 ![El recorrido](cuaderno/svg/mapa.svg)
 
+### El mismo resultado en Pandas, Polars y R
+
+La ruta principal de los pasos usa Pandas y Excel. Las implementaciones siguientes recalculan el indicador que sostiene la conclusión con otro motor y producen el mismo gráfico estadístico. El alcance queda declarado para no confundir validación independiente con una traducción cosmética.
+
+| Motor | Alcance verificado | Archivo | Ejecutar |
+| --- | --- | --- | --- |
+| Polars + Matplotlib | curva de sensibilidad al umbral | [`solucion_polars.py`](cuaderno/solucion_polars.py) | `uv run --extra polars python cases/cobertura_de_carga/cuaderno/solucion_polars.py` |
+| R + ggplot2 | curva de sensibilidad al umbral | [`solucion.R`](cuaderno/solucion.R) | `Rscript cases/cobertura_de_carga/cuaderno/solucion.R` |
+
+#### Polars + Matplotlib
+
+```python
+"""Contraste Polars y visualización Matplotlib del caso cobertura_de_carga."""
+from __future__ import annotations
+
+import argparse
+import sys
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import polars as pl
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
+ROOT = Path(__file__).resolve().parents[3] if "__file__" in globals() else Path.cwd()
+SOURCE = ROOT / "cases" / "cobertura_de_carga" / "resultados" / "cobertura_por_umbral.csv"
+
+
+def analizar() -> pl.DataFrame:
+    datos = pl.read_csv(SOURCE)
+    return datos.sort("umbral_m").select(["umbral_m", "cobertura_pct"])
+
+
+def graficar(resultado: pl.DataFrame, destino: Path) -> Path:
+    x = resultado["umbral_m"].to_list()
+    y = resultado["cobertura_pct"].to_list()
+    fig, ax = plt.subplots(figsize=(9, 5))
+    ax.plot(x, y, marker="o", linewidth=2, color="#11253B")
+    ax.set_xlabel("Umbral de cercanía (m)")
+    ax.set_ylabel("Paradas cubiertas (%)")
+    ax.set_ylim(bottom=0)
+    ax.set_title("La cobertura depende del umbral declarado")
+    ax.grid(axis="y", alpha=0.25)
+    fig.text(
+        0.01,
+        0.01,
+        "Fuente: Resultados reproducibles del caso P08 · Período: corte publicado",
+        fontsize=8,
+        color="#58677A",
+    )
+    fig.tight_layout(rect=(0, 0.05, 1, 1))
+    fig.savefig(destino, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    return destino
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--grafico", type=Path)
+    args = parser.parse_args()
+    resultado = analizar()
+    print(resultado)
+    if args.grafico:
+        print(graficar(resultado, args.grafico))
+
+
+if __name__ == "__main__":
+    main()
+```
+
+#### R + ggplot2
+
+```r
+#!/usr/bin/env Rscript
+# Contraste R + ggplot2 del caso cobertura_de_carga.
+script_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
+script_path <- if (length(script_arg)) sub("^--file=", "", script_arg[1]) else "cuaderno/solucion.R"
+root <- normalizePath(file.path(dirname(script_path), "../../.."), mustWork = TRUE)
+source_csv <- file.path(root, "cases", "cobertura_de_carga", "resultados", "cobertura_por_umbral.csv")
+
+datos <- read.csv(source_csv, check.names = FALSE, fileEncoding = "UTF-8")
+resultado <- datos[order(datos$umbral_m), c("umbral_m", "cobertura_pct")]
+print(resultado, row.names = FALSE)
+
+args <- commandArgs(trailingOnly = TRUE)
+plot_pos <- match("--grafico", args)
+if (!is.na(plot_pos)) {
+  if (plot_pos == length(args)) stop("--grafico necesita una ruta de salida")
+  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    stop("Instale ggplot2 para generar el gráfico: install.packages('ggplot2')")
+  }
+  destino <- args[plot_pos + 1]
+  grafico <- ggplot2::ggplot(
+    resultado,
+    ggplot2::aes(x = .data[["umbral_m"]], y = .data[["cobertura_pct"]])
+  ) +
+    ggplot2::geom_line(ggplot2::aes(group = 1), linewidth = 1, colour = "#11253B") +
+    ggplot2::geom_point(size = 2.5, colour = "#55D6BE") +
+    ggplot2::labs(
+      title = "La cobertura depende del umbral declarado",
+      x = "Umbral de cercanía (m)", y = "Paradas cubiertas (%)",
+      caption = "Fuente: Resultados reproducibles del caso P08 · Período: corte publicado"
+    ) +
+    ggplot2::theme_minimal(base_size = 11)
+  ggplot2::ggsave(destino, grafico, width = 9, height = 5, dpi = 150)
+  cat(destino, "\n")
+}
+```
+
 9 pasos. Cada uno trae el código de **Python**, la salida que devuelve de verdad, y la **fórmula de Excel** equivalente dibujada en su hoja. 9 traen además la trampa de hacerlo de la forma obvia.
 
 | # | Paso | Trampa |
@@ -55,6 +165,8 @@ declara el límite que impide afirmar si el lugar cercano está abierto.
 | [`pasos.py`](cuaderno/pasos.py) | los 9 pasos seguidos. Se corre y muestra cada salida |
 | [`practica.xlsx`](cuaderno/practica.xlsx) | las fórmulas y **el resultado que deben dar**, para corregirse solo. Se abre igual en Google Sheets |
 | [`colab.ipynb`](cuaderno/colab.ipynb) | el cuaderno **ejecutable en Colab**: clona, descarga los datos del portal y corre los 9 pasos |
+| [`solucion_polars.py`](cuaderno/solucion_polars.py) | solución ejecutable en Polars + Matplotlib; incluye el contraste numérico y el gráfico del caso |
+| [`solucion.R`](cuaderno/solucion.R) | solución ejecutable en R + ggplot2; incluye el contraste numérico y el gráfico del caso |
 
 ---
 
@@ -221,6 +333,10 @@ resultados['cobertura_por_umbral']
 | 700.0 | 11351 | 12497 | 90.83 | no |
 | 1000.0 | 11900 | 12497 | 95.22 | no |
 *6 filas × 5 columnas.*
+
+![Mostrar cuánto depende del umbral](cuaderno/svg/paso-05.svg)
+
+*La cobertura depende del umbral declarado. Ejes con unidad, período y fuente; el código Polars y R genera la misma vista.*
 
 #### Excel
 
@@ -404,4 +520,4 @@ Lo que este caso toca y se trata a fondo en otro sitio:
 - [P01 · Consolidación de locales](../bip_lugares_carga/CUADERNO.md)
 - [P09 · Cobertura nocturna](../carga_nocturna/README.md)
 
-◀ [P06 · Expediciones por hora](../gtfs_red_movilidad/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P09 · Cobertura nocturna](../carga_nocturna/CUADERNO.md) ▶
+◀ [P07 · Rendimiento GTFS](../rendimiento_gtfs/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P11 · Calendario de medición](../calendario_medicion/CUADERNO.md) ▶

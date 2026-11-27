@@ -1,6 +1,6 @@
 # P16 · Informe de una página para quien decide
 
-◀ [P14-P15 · Evolución](../evolucion_gtfs/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md)
+◀ [P14/P15 · Evolución GTFS](../evolucion_gtfs/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md)
 
 [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/informe_decision_carga/cuaderno/colab.ipynb) — corre los pasos sin instalar nada: el cuaderno clona el repositorio y descarga los datos del portal.
 
@@ -26,6 +26,116 @@ exportar el informe.
 
 ![El recorrido](cuaderno/svg/mapa.svg)
 
+### El mismo resultado en Pandas, Polars y R
+
+La ruta principal de los pasos usa Pandas y Excel. Las implementaciones siguientes recalculan el indicador que sostiene la conclusión con otro motor y producen el mismo gráfico estadístico. El alcance queda declarado para no confundir validación independiente con una traducción cosmética.
+
+| Motor | Alcance verificado | Archivo | Ejecutar |
+| --- | --- | --- | --- |
+| Polars + Matplotlib | indicadores porcentuales de cobertura | [`solucion_polars.py`](cuaderno/solucion_polars.py) | `uv run --extra polars python cases/informe_decision_carga/cuaderno/solucion_polars.py` |
+| R + ggplot2 | indicadores porcentuales de cobertura | [`solucion.R`](cuaderno/solucion.R) | `Rscript cases/informe_decision_carga/cuaderno/solucion.R` |
+
+#### Polars + Matplotlib
+
+```python
+"""Contraste Polars y visualización Matplotlib del caso informe_decision_carga."""
+from __future__ import annotations
+
+import argparse
+import sys
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import polars as pl
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
+ROOT = Path(__file__).resolve().parents[3] if "__file__" in globals() else Path.cwd()
+SOURCE = ROOT / "cases" / "informe_decision_carga" / "resultados" / "resumen.csv"
+
+
+def analizar() -> pl.DataFrame:
+    datos = pl.read_csv(SOURCE)
+    return datos.filter(pl.col("unidad") == "%").select(["indicador", "valor"])
+
+
+def graficar(resultado: pl.DataFrame, destino: Path) -> Path:
+    x = resultado["indicador"].to_list()
+    y = resultado["valor"].to_list()
+    fig, ax = plt.subplots(figsize=(9, 5))
+    ax.barh([str(value) for value in x], y, color="#11253B")
+    ax.set_xlabel("Cobertura de paradas (%)")
+    ax.set_ylabel("Indicador")
+    ax.set_xlim(left=0)
+    ax.set_title("Dos supuestos espaciales producen coberturas distintas")
+    ax.grid(axis="y", alpha=0.25)
+    fig.text(
+        0.01,
+        0.01,
+        "Fuente: Resultados reproducibles del caso P16 · Período: corte publicado",
+        fontsize=8,
+        color="#58677A",
+    )
+    fig.tight_layout(rect=(0, 0.05, 1, 1))
+    fig.savefig(destino, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    return destino
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--grafico", type=Path)
+    args = parser.parse_args()
+    resultado = analizar()
+    print(resultado)
+    if args.grafico:
+        print(graficar(resultado, args.grafico))
+
+
+if __name__ == "__main__":
+    main()
+```
+
+#### R + ggplot2
+
+```r
+#!/usr/bin/env Rscript
+# Contraste R + ggplot2 del caso informe_decision_carga.
+script_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
+script_path <- if (length(script_arg)) sub("^--file=", "", script_arg[1]) else "cuaderno/solucion.R"
+root <- normalizePath(file.path(dirname(script_path), "../../.."), mustWork = TRUE)
+source_csv <- file.path(root, "cases", "informe_decision_carga", "resultados", "resumen.csv")
+
+datos <- read.csv(source_csv, check.names = FALSE, fileEncoding = "UTF-8")
+resultado <- subset(datos, unidad == "%", select = c("indicador", "valor"))
+print(resultado, row.names = FALSE)
+
+args <- commandArgs(trailingOnly = TRUE)
+plot_pos <- match("--grafico", args)
+if (!is.na(plot_pos)) {
+  if (plot_pos == length(args)) stop("--grafico necesita una ruta de salida")
+  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    stop("Instale ggplot2 para generar el gráfico: install.packages('ggplot2')")
+  }
+  destino <- args[plot_pos + 1]
+  grafico <- ggplot2::ggplot(
+    resultado,
+    ggplot2::aes(x = .data[["indicador"]], y = .data[["valor"]])
+  ) +
+    ggplot2::geom_col(fill = "#11253B") +
+    ggplot2::coord_flip() +
+    ggplot2::labs(
+      title = "Dos supuestos espaciales producen coberturas distintas",
+      x = "Cobertura de paradas (%)", y = "Indicador",
+      caption = "Fuente: Resultados reproducibles del caso P16 · Período: corte publicado"
+    ) +
+    ggplot2::theme_minimal(base_size = 11)
+  ggplot2::ggsave(destino, grafico, width = 9, height = 5, dpi = 150)
+  cat(destino, "\n")
+}
+```
+
 8 pasos. Cada uno trae el código de **Python**, la salida que devuelve de verdad, y la **fórmula de Excel** equivalente dibujada en su hoja. 8 traen además la trampa de hacerlo de la forma obvia.
 
 | # | Paso | Trampa |
@@ -47,6 +157,8 @@ exportar el informe.
 | [`pasos.py`](cuaderno/pasos.py) | los 8 pasos seguidos. Se corre y muestra cada salida |
 | [`practica.xlsx`](cuaderno/practica.xlsx) | las fórmulas y **el resultado que deben dar**, para corregirse solo. Se abre igual en Google Sheets |
 | [`colab.ipynb`](cuaderno/colab.ipynb) | el cuaderno **ejecutable en Colab**: clona, descarga los datos del portal y corre los 8 pasos |
+| [`solucion_polars.py`](cuaderno/solucion_polars.py) | solución ejecutable en Polars + Matplotlib; incluye el contraste numérico y el gráfico del caso |
+| [`solucion.R`](cuaderno/solucion.R) | solución ejecutable en R + ggplot2; incluye el contraste numérico y el gráfico del caso |
 
 ---
 
@@ -68,6 +180,10 @@ tablas = decision.cargar()
 ```
 {'salidas_por_hora': (75, 4), 'cobertura_por_umbral': (6, 5), 'sensibilidad_rodeo': (5, 5), 'por_rejilla': (296, 7)}
 ```
+
+![Auditar las tablas de entrada](cuaderno/svg/paso-01.svg)
+
+*Dos supuestos espaciales producen coberturas distintas. Ejes con unidad, período y fuente; el código Polars y R genera la misma vista.*
 
 #### Excel
 
@@ -321,4 +437,4 @@ Lo que este caso toca y se trata a fondo en otro sitio:
 - [P06 · Oferta programada](../gtfs_red_movilidad/CUADERNO.md)
 - [P08 · Cobertura espacial](../cobertura_de_carga/CUADERNO.md)
 
-◀ [P14-P15 · Evolución](../evolucion_gtfs/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md)
+◀ [P14/P15 · Evolución GTFS](../evolucion_gtfs/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md)

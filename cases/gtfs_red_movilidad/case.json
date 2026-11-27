@@ -56,14 +56,17 @@
   "implementaciones": [
     "cases/gtfs_red_movilidad/solution.py — resolución completa.",
     "lab/sources.py — adquisición con procedencia y lectura desde el ZIP.",
-    "lab/dates.py — parse_hms_seconds, seconds_to_hms y service_day_hour."
+    "lab/dates.py — parse_hms_seconds, seconds_to_hms y service_day_hour.",
+    "cases/gtfs_red_movilidad/cuaderno/solucion_polars.py — oferta horaria con Polars y Matplotlib.",
+    "cases/gtfs_red_movilidad/cuaderno/solucion.R — oferta horaria con R y ggplot2."
   ],
   "soluciones": "cases/gtfs_red_movilidad/solution.py, documentada paso a paso en el README del caso.",
   "resultados": "cases/gtfs_red_movilidad/resultados/ con el inventario del ZIP, el diagnóstico de horas, la integridad referencial, las paradas por tipo, la comparación de formas de contar y las salidas por hora y modo. Total del día laboral: 64 011 salidas.",
   "validaciones": [
     "El total se calcula por dos caminos independientes: expansión vectorizada con agrupación, y suma aritmética por ventana más expediciones de horario absoluto. Ambos dan 64 011.",
     "Seis comprobaciones de integridad referencial, todas con cero claves huérfanas.",
-    "tests/test_gtfs.py ejerce el parseo de horas, la expansión de frecuencias y el borde inclusivo/exclusivo contra datos de prueba que reproducen los formatos reales, sin descargar el feed."
+    "tests/test_gtfs.py ejerce el parseo de horas, la expansión de frecuencias y el borde inclusivo/exclusivo contra datos de prueba que reproducen los formatos reales, sin descargar el feed.",
+    "tests/test_multiengine.py ejecuta las soluciones Polars y R del cuaderno y verifica la serie gráfica de salidas por hora."
   ],
   "interpretacion": "El perfil horario tiene dos puntas, mañana y tarde, con servicio nocturno reducido y continuo. El dato describe la oferta programada, no la operación real ni la demanda: no permite afirmar nada sobre cuántos vehículos salieron efectivamente ni cuánta gente viajó.",
   "limitaciones": [

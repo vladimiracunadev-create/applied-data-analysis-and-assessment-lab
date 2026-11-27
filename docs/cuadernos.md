@@ -2,14 +2,30 @@
 
 Un **cuaderno** es el problema resuelto paso a paso: el problema explicado como
 problema, el plan de la solución antes de ejecutarla, y para cada paso el
-código de Python, la salida que devuelve de verdad, y la fórmula de Excel
-dibujada en su hoja. Se lee de arriba abajo y trae sus descargables al lado,
-incluido un ZIP con todo el caso.
+código de Python, la salida que devuelve de verdad, la fórmula de Excel y
+contrastes ejecutables en Polars y R. Cada caso incluye al menos un gráfico
+estadístico con unidades, período y fuente. Se lee de arriba abajo y trae
+sus descargables al lado, incluido un ZIP con todo el caso.
 
 No es lo mismo que el `README.md` de un caso, que cuenta **qué se encontró** y
 sirve para auditar el resultado.
 
 > Archivo generado por `scripts/build_cuadernos.py`. No lo edite a mano.
+
+## Ruta lineal de los diez cuadernos
+
+La navegación anterior/siguiente sigue este orden, sin saltar del P01 al P08:
+
+1. [P01/P02/P04 · Consolidación y calidad](../cases/bip_lugares_carga/CUADERNO.md)
+2. [P03/P10 · Coordenadas y correspondencia](../cases/correspondencia_metro/CUADERNO.md)
+3. [P05/P09 · Horarios y cobertura nocturna](../cases/carga_nocturna/CUADERNO.md)
+4. [P06 · Expediciones por hora](../cases/gtfs_red_movilidad/CUADERNO.md)
+5. [P07 · Rendimiento GTFS](../cases/rendimiento_gtfs/CUADERNO.md)
+6. [P08 · Cobertura espacial](../cases/cobertura_de_carga/CUADERNO.md)
+7. [P11 · Calendario de medición](../cases/calendario_medicion/CUADERNO.md)
+8. [P12/P13 · Frecuencia programada](../cases/frecuencia_programada/CUADERNO.md)
+9. [P14/P15 · Evolución GTFS](../cases/evolucion_gtfs/CUADERNO.md)
+10. [P16 · Informe de decisión](../cases/informe_decision_carga/CUADERNO.md)
 
 ## Los dieciséis problemas de la instancia DTPM
 

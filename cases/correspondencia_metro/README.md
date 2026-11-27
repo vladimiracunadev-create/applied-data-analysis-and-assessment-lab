@@ -288,3 +288,10 @@ estaciones con todas las distancias calculables a mano.
 ```powershell
 python -m pytest tests/test_correspondencia_metro.py -v
 ```
+
+## Cuaderno, motores y gráfico
+
+- [Resolución profesional paso a paso](CUADERNO.md), ahora en una navegación lineal.
+- [Polars + Matplotlib](cuaderno/solucion_polars.py): hallazgos por detector.
+- [R + ggplot2](cuaderno/solucion.R): contraste y gráfico equivalente.
+- [Figura publicada](cuaderno/svg/paso-04.svg).

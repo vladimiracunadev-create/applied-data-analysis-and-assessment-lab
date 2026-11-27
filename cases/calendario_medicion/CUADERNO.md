@@ -1,6 +1,6 @@
 # P11 · Calendario de medición de un indicador oficial
 
-◀ [P10 · Correspondencia buses–Metro](../correspondencia_metro/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P12-P13 · Frecuencia programada](../frecuencia_programada/CUADERNO.md) ▶
+◀ [P08 · Cobertura espacial](../cobertura_de_carga/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P12/P13 · Frecuencia programada](../frecuencia_programada/CUADERNO.md) ▶
 
 [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/calendario_medicion/cuaderno/colab.ipynb) — corre los pasos sin instalar nada: el cuaderno clona el repositorio y descarga los datos del portal.
 
@@ -32,6 +32,116 @@ sensibilidad el único supuesto no fijado por la fuente: las vacaciones de invie
 
 ![El recorrido](cuaderno/svg/mapa.svg)
 
+### El mismo resultado en Pandas, Polars y R
+
+La ruta principal de los pasos usa Pandas y Excel. Las implementaciones siguientes recalculan el indicador que sostiene la conclusión con otro motor y producen el mismo gráfico estadístico. El alcance queda declarado para no confundir validación independiente con una traducción cosmética.
+
+| Motor | Alcance verificado | Archivo | Ejecutar |
+| --- | --- | --- | --- |
+| Polars + Matplotlib | días medibles por año | [`solucion_polars.py`](cuaderno/solucion_polars.py) | `uv run --extra polars python cases/calendario_medicion/cuaderno/solucion_polars.py` |
+| R + ggplot2 | días medibles por año | [`solucion.R`](cuaderno/solucion.R) | `Rscript cases/calendario_medicion/cuaderno/solucion.R` |
+
+#### Polars + Matplotlib
+
+```python
+"""Contraste Polars y visualización Matplotlib del caso calendario_medicion."""
+from __future__ import annotations
+
+import argparse
+import sys
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import polars as pl
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
+ROOT = Path(__file__).resolve().parents[3] if "__file__" in globals() else Path.cwd()
+SOURCE = ROOT / "cases" / "calendario_medicion" / "resultados" / "comparacion_anios.csv"
+
+
+def analizar() -> pl.DataFrame:
+    datos = pl.read_csv(SOURCE)
+    return datos.sort("anio").select(["anio", "dias_medibles"])
+
+
+def graficar(resultado: pl.DataFrame, destino: Path) -> Path:
+    x = resultado["anio"].to_list()
+    y = resultado["dias_medibles"].to_list()
+    fig, ax = plt.subplots(figsize=(9, 5))
+    ax.plot(x, y, marker="o", linewidth=2, color="#11253B")
+    ax.set_xlabel("Año")
+    ax.set_ylabel("Días medibles (recuento)")
+    ax.set_ylim(bottom=0)
+    ax.set_title("El denominador cambia con el calendario anual")
+    ax.grid(axis="y", alpha=0.25)
+    fig.text(
+        0.01,
+        0.01,
+        "Fuente: Resultados reproducibles del caso P11 · Período: 2024–2027",
+        fontsize=8,
+        color="#58677A",
+    )
+    fig.tight_layout(rect=(0, 0.05, 1, 1))
+    fig.savefig(destino, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    return destino
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--grafico", type=Path)
+    args = parser.parse_args()
+    resultado = analizar()
+    print(resultado)
+    if args.grafico:
+        print(graficar(resultado, args.grafico))
+
+
+if __name__ == "__main__":
+    main()
+```
+
+#### R + ggplot2
+
+```r
+#!/usr/bin/env Rscript
+# Contraste R + ggplot2 del caso calendario_medicion.
+script_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
+script_path <- if (length(script_arg)) sub("^--file=", "", script_arg[1]) else "cuaderno/solucion.R"
+root <- normalizePath(file.path(dirname(script_path), "../../.."), mustWork = TRUE)
+source_csv <- file.path(root, "cases", "calendario_medicion", "resultados", "comparacion_anios.csv")
+
+datos <- read.csv(source_csv, check.names = FALSE, fileEncoding = "UTF-8")
+resultado <- datos[order(datos$anio), c("anio", "dias_medibles")]
+print(resultado, row.names = FALSE)
+
+args <- commandArgs(trailingOnly = TRUE)
+plot_pos <- match("--grafico", args)
+if (!is.na(plot_pos)) {
+  if (plot_pos == length(args)) stop("--grafico necesita una ruta de salida")
+  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    stop("Instale ggplot2 para generar el gráfico: install.packages('ggplot2')")
+  }
+  destino <- args[plot_pos + 1]
+  grafico <- ggplot2::ggplot(
+    resultado,
+    ggplot2::aes(x = .data[["anio"]], y = .data[["dias_medibles"]])
+  ) +
+    ggplot2::geom_line(ggplot2::aes(group = 1), linewidth = 1, colour = "#11253B") +
+    ggplot2::geom_point(size = 2.5, colour = "#55D6BE") +
+    ggplot2::labs(
+      title = "El denominador cambia con el calendario anual",
+      x = "Año", y = "Días medibles (recuento)",
+      caption = "Fuente: Resultados reproducibles del caso P11 · Período: 2024–2027"
+    ) +
+    ggplot2::theme_minimal(base_size = 11)
+  ggplot2::ggsave(destino, grafico, width = 9, height = 5, dpi = 150)
+  cat(destino, "\n")
+}
+```
+
 8 pasos. Cada uno trae el código de **Python**, la salida que devuelve de verdad, y la **fórmula de Excel** equivalente dibujada en su hoja. 8 traen además la trampa de hacerlo de la forma obvia.
 
 | # | Paso | Trampa |
@@ -53,6 +163,8 @@ sensibilidad el único supuesto no fijado por la fuente: las vacaciones de invie
 | [`pasos.py`](cuaderno/pasos.py) | los 8 pasos seguidos. Se corre y muestra cada salida |
 | [`practica.xlsx`](cuaderno/practica.xlsx) | las fórmulas y **el resultado que deben dar**, para corregirse solo. Se abre igual en Google Sheets |
 | [`colab.ipynb`](cuaderno/colab.ipynb) | el cuaderno **ejecutable en Colab**: clona, descarga los datos del portal y corre los 8 pasos |
+| [`solucion_polars.py`](cuaderno/solucion_polars.py) | solución ejecutable en Polars + Matplotlib; incluye el contraste numérico y el gráfico del caso |
+| [`solucion.R`](cuaderno/solucion.R) | solución ejecutable en R + ggplot2; incluye el contraste numérico y el gráfico del caso |
 
 ---
 
@@ -288,6 +400,10 @@ resultados['clasificacion_reglas']
 | dia_joven_combatiente | redundante estructural | 4 | 0 | 0 | no afecta en ningún año analizado |
 *8 filas × 6 columnas.*
 
+![Distinguir redundancia estructural de accidental](cuaderno/svg/paso-07.svg)
+
+*El denominador cambia con el calendario anual. Ejes con unidad, período y fuente; el código Polars y R genera la misma vista.*
+
 #### Excel
 
 Tabla por año y regla; `=MAX(rango)=0` identifica redundancia estructural en el período.
@@ -353,4 +469,4 @@ Lo que este caso toca y se trata a fondo en otro sitio:
 - [Hallazgos auditables del caso](README.md)
 - [Indicadores oficiales de transporte](../../docs/indicadores-oficiales-transporte.md)
 
-◀ [P10 · Correspondencia buses–Metro](../correspondencia_metro/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P12-P13 · Frecuencia programada](../frecuencia_programada/CUADERNO.md) ▶
+◀ [P08 · Cobertura espacial](../cobertura_de_carga/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P12/P13 · Frecuencia programada](../frecuencia_programada/CUADERNO.md) ▶

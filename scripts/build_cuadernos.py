@@ -2,13 +2,16 @@
 
 Un cuaderno es el caso resuelto **paso a paso**: el problema explicado como problema, el
 plan de la solución antes de ejecutarla, y para cada paso el código de Python, la salida
-que devuelve de verdad, y la fórmula de Excel dibujada en su hoja. Se lee de arriba
-abajo sin abrir ningún otro archivo.
+que devuelve de verdad, la fórmula de Excel dibujada en su hoja y una visualización
+estadística. Cada caso incluye además soluciones ejecutables en Polars y R. Se lee de
+arriba abajo sin abrir ningún otro archivo.
 
 Qué escribe por cada caso
 
     CUADERNO.md                      el documento
     cuaderno/pasos.py                el código seguido, que corre y muestra sus salidas
+    cuaderno/solucion_polars.py      contraste columnar y gráfico Matplotlib
+    cuaderno/solucion.R              contraste en R y gráfico ggplot2
     cuaderno/practica.xlsx           las fórmulas y el resultado que deben dar
     cuaderno/svg/flujo.svg           el diagrama del problema
     cuaderno/svg/mapa.svg            el mapa mental de la solución
@@ -52,6 +55,7 @@ from lab.cuaderno import (  # noqa: E402
     CARPETA,
     ejecutar,
     escribir_colab,
+    escribir_implementaciones,
     escribir_pasos_py,
     escribir_practica_xlsx,
     escribir_zip,
@@ -111,6 +115,8 @@ def construir(slug: str, artefactos: bool = True) -> tuple[Path, str, list[str]]
             "tiene que devolver un lab.cuaderno.Cuaderno"
         )
     cuaderno = modulo.construir()
+    from lab.notebook_enrichment import enriquecer_cuaderno
+    cuaderno = enriquecer_cuaderno(slug, cuaderno)
     carpeta_caso = ROOT / "cases" / slug
     carpeta = carpeta_caso / CARPETA
     svg = carpeta / "svg"
@@ -128,6 +134,8 @@ def construir(slug: str, artefactos: bool = True) -> tuple[Path, str, list[str]]
         escritos.append(f"{CARPETA}/{ARCHIVO_XLSX}")
         escribir_colab(cuaderno, salidas, slug, carpeta / ARCHIVO_IPYNB)
         escritos.append(f"{CARPETA}/{ARCHIVO_IPYNB}")
+        for ruta in escribir_implementaciones(cuaderno, carpeta):
+            escritos.append(f"{CARPETA}/{ruta.name}")
         escritos.extend(
             f"{CARPETA}/svg/{ruta.name}" for ruta in sorted(svg.glob("*.svg"))
         )
@@ -154,14 +162,25 @@ def escribir_indice(con_cuaderno: set[str]) -> Path:
         "",
         "Un **cuaderno** es el problema resuelto paso a paso: el problema explicado como",
         "problema, el plan de la solución antes de ejecutarla, y para cada paso el",
-        "código de Python, la salida que devuelve de verdad, y la fórmula de Excel",
-        "dibujada en su hoja. Se lee de arriba abajo y trae sus descargables al lado,",
-        "incluido un ZIP con todo el caso.",
+        "código de Python, la salida que devuelve de verdad, la fórmula de Excel y",
+        "contrastes ejecutables en Polars y R. Cada caso incluye al menos un gráfico",
+        "estadístico con unidades, período y fuente. Se lee de arriba abajo y trae",
+        "sus descargables al lado, incluido un ZIP con todo el caso.",
         "",
         "No es lo mismo que el `README.md` de un caso, que cuenta **qué se encontró** y",
         "sirve para auditar el resultado.",
         "",
         "> Archivo generado por `scripts/build_cuadernos.py`. No lo edite a mano.",
+        "",
+        "## Ruta lineal de los diez cuadernos",
+        "",
+        "La navegación anterior/siguiente sigue este orden, sin saltar del P01 al P08:",
+        "",
+    ]
+    from lab.notebook_enrichment import NAVIGATION
+    for position, (slug, label) in enumerate(NAVIGATION, start=1):
+        lineas.append(f"{position}. [{label}](../cases/{slug}/{NOMBRE_SALIDA})")
+    lineas += [
         "",
         "## Los dieciséis problemas de la instancia DTPM",
         "",
