@@ -31,6 +31,7 @@ python scripts/build_all_cases.py
 python scripts/build_all_cases.py --check
 ```
 
-El ZIP es determinista: mismos archivos producen exactamente los mismos bytes. La
-integración continua abre el paquete, verifica el manifiesto y comprueba que no se haya
-incluido ningún dato de terceros.
+El ZIP fija orden, timestamps y contenido de cada entrada; dentro del mismo runtime,
+dos construcciones producen exactamente los mismos bytes. Entre versiones de Python,
+la integración continua compara las entradas y su manifiesto SHA-256, y comprueba que
+no se haya incluido ningún dato de terceros.

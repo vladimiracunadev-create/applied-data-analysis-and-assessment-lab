@@ -121,14 +121,35 @@ def write(destination: Path = DESTINATION) -> Path:
     return destination
 
 
+def _archive_contents(data: bytes) -> dict[str, bytes]:
+    with zipfile.ZipFile(io.BytesIO(data)) as archive:
+        if archive.testzip() is not None:
+            raise ValueError("el ZIP contiene una entrada corrupta")
+        return {name: archive.read(name) for name in archive.namelist()}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true", help="falla si el ZIP publicado está desfasado")
     args = parser.parse_args()
     expected = build_bytes()
     if args.check:
-        if not DESTINATION.exists() or DESTINATION.read_bytes() != expected:
+        if not DESTINATION.exists():
             raise SystemExit(f"desfasado: {DESTINATION.relative_to(ROOT)}")
+        try:
+            current = _archive_contents(DESTINATION.read_bytes())
+            wanted = _archive_contents(expected)
+        except (ValueError, zipfile.BadZipFile) as error:
+            raise SystemExit(f"inválido: {DESTINATION.relative_to(ROOT)}: {error}") from error
+        if current != wanted:
+            changed = sorted(
+                name for name in current.keys() | wanted.keys()
+                if current.get(name) != wanted.get(name)
+            )
+            preview = ", ".join(changed[:5])
+            raise SystemExit(
+                f"desfasado: {DESTINATION.relative_to(ROOT)}; entradas: {preview}"
+            )
         print(f"al día: {DESTINATION.relative_to(ROOT)}")
         return
     DESTINATION.parent.mkdir(parents=True, exist_ok=True)
