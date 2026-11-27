@@ -63,13 +63,23 @@ def _entry(name: str, data: bytes) -> tuple[zipfile.ZipInfo, bytes]:
     return info, data
 
 
+def _portable_bytes(path: Path) -> bytes:
+    """Normaliza texto UTF-8 a LF; conserva sin cambios cualquier archivo binario."""
+    data = path.read_bytes()
+    try:
+        text = data.decode("utf-8")
+    except UnicodeDecodeError:
+        return data
+    return text.replace("\r\n", "\n").replace("\r", "\n").encode("utf-8")
+
+
 def build_bytes(root: Path = ROOT) -> bytes:
     """Devuelve el ZIP completo en memoria para permitir una comprobación exacta."""
     payload: list[tuple[str, bytes]] = []
     manifest_files: list[dict[str, object]] = []
     for path in files_to_package(root):
         relative = path.relative_to(root).as_posix()
-        data = path.read_bytes()
+        data = _portable_bytes(path)
         payload.append((relative, data))
         manifest_files.append({
             "path": relative,

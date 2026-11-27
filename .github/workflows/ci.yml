@@ -99,6 +99,11 @@ jobs:
       - name: Verificar la base de conocimiento
         run: uv run python -m lab.knowledge
 
+      # Se comprueba antes de los generadores de binarios: sus metadatos internos
+      # pueden variar entre sistemas aunque el contenido lógico sea equivalente.
+      - name: Comprobar el paquete general de casos
+        run: uv run python scripts/build_all_cases.py --check
+
       - name: Construir los libros de Excel resueltos
         run: uv run python scripts/build_excel_solutions.py
 
@@ -107,9 +112,6 @@ jobs:
 
       - name: Comprobar que la documentación derivada está al día
         run: uv run python scripts/build_docs.py --check
-
-      - name: Comprobar el paquete general de casos
-        run: uv run python scripts/build_all_cases.py --check
 
       - name: Comprobar la solución de referencia en Pandas
         run: uv run python solutions/reference.py 1
