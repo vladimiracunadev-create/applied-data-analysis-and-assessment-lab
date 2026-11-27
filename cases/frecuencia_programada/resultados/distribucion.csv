@@ -1,0 +1,10 @@
+estadistico,intervalo_min,unidad
+mínimo,3.1,minutos entre salidas
+P10,9.0,minutos entre salidas
+P25,12.0,minutos entre salidas
+P50,15.0,minutos entre salidas
+P75,20.0,minutos entre salidas
+P90,30.0,minutos entre salidas
+P95,42.85,minutos entre salidas
+máximo,330.0,minutos entre salidas
+media,21.17,minutos entre salidas

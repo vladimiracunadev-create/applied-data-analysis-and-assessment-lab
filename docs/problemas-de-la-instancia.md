@@ -6,8 +6,9 @@ no se puede contestar**.
 
 > **Dos documentos por caso.** El `README.md` de un caso cuenta **qué se encontró**;
 > su `CUADERNO.md` muestra **cómo se hace**, paso a paso, con el código de Pandas, la
-> salida real y la fórmula de Excel. Hoy existe el cuaderno de
-> [P01](../cases/bip_lugares_carga/CUADERNO.md); los otros quince están pendientes.
+> salida real y la fórmula de Excel. Los dieciséis problemas están cubiertos por
+> [diez cuadernos ejecutables](cuadernos.md); los problemas que comparten datos y
+> método se integran en un mismo cuaderno.
 
 Cada problema indica su estado: **resuelto** (hay código y resultado en el
 repositorio), **resuelto en parte** (una mitad de la pregunta se contestó y la otra no
@@ -205,7 +206,11 @@ Pandas por bloques (`iter_zip_table`), y DuckDB sobre el CSV. Medir tiempo y mem
 agregación por bloques solo sirve para estadísticos que se pueden calcular de forma
 incremental: una suma sí, una mediana exacta no.
 
-**Estado:** disponible.
+**Estado:** **resuelto** — [`cases/rendimiento_gtfs`](../cases/rendimiento_gtfs/README.md),
+con [cuaderno de trabajo](../cases/rendimiento_gtfs/CUADERNO.md). Sobre 1 098 717
+filas, los tres métodos producen exactamente los mismos 12 495 grupos. En la medición
+de referencia, bloques reduce la memoria visible de datos de 60,25 a 11,31 MB; los
+tiempos se vuelven a medir en cada máquina.
 
 ---
 
@@ -345,7 +350,11 @@ aporta el programa, no las mediciones. Se puede construir el denominador y la
 estructura del indicador, y hay que **declarar que el numerador no es calculable** con
 estos datos.
 
-**Estado:** disponible, con el alcance limitado declarado.
+**Estado:** **resuelto con alcance limitado** —
+[`cases/frecuencia_programada`](../cases/frecuencia_programada/README.md), con
+[cuaderno P12/P13](../cases/frecuencia_programada/CUADERNO.md). Se construyen 142 366
+salidas programadas; numerador, denominador observado e ICF quedan explícitamente como
+no calculables sin GPS.
 
 ### P13. Distribución de la frecuencia programada por servicio y período
 
@@ -361,7 +370,9 @@ mañana, y cómo se distribuyen los intervalos en toda la red?
 mínimo 3 minutos y máximo 5,5 horas, la media no describe a ningún servicio. Y la
 ponderación importa: ¿el intervalo típico por servicio o por ventana de tiempo?
 
-**Estado:** disponible.
+**Estado:** **resuelto** en el [cuaderno P12/P13](../cases/frecuencia_programada/CUADERNO.md).
+Las 14 520 ventanas tienen una mediana de 15 minutos; ponderadas por salida, 13,03
+minutos. El máximo de 330 minutos confirma que la media de 21,17 no basta.
 
 ---
 
@@ -381,7 +392,10 @@ cada versión con su procedencia.
 un gestor de datos. Y el problema de identidad en el tiempo: si un `route_id` se
 reutiliza para otro recorrido, la comparación por clave miente.
 
-**Estado:** disponible.
+**Estado:** **resuelto** — [`cases/evolucion_gtfs`](../cases/evolucion_gtfs/README.md),
+con [cuaderno P14/P15](../cases/evolucion_gtfs/CUADERNO.md). La comparación ejecutada
+usa las últimas publicaciones de 2024 y 2025 y la vigente de 2026; firmas geométricas
+evitan depender solo de `shape_id`.
 
 ### P15. Evolución de la oferta programada por año
 
@@ -396,7 +410,10 @@ años?
 todos: si una versión usa frecuencias donde otra usa horarios absolutos, la serie
 compara dos cosas distintas. La comparabilidad se comprueba, no se supone.
 
-**Estado:** disponible.
+**Estado:** **resuelto para la trayectoria reciente 2024–2026** en el
+[cuaderno P14/P15](../cases/evolucion_gtfs/CUADERNO.md). La misma definición produce
+68 533, 68 011 y 64 011 salidas laborales: −0,76 % y −5,88 %. Tres puntos no sustituyen
+la serie completa 2014–2026, que queda como ampliación del mismo código.
 
 ---
 
@@ -416,7 +433,11 @@ decidir dónde instalar el próximo centro de carga?
 oferta programada y ubicación de locales se puede decir dónde hay menos cobertura; no
 se puede decir dónde hay más **necesidad**, porque eso exige demanda, y no la hay.
 
-**Estado:** disponible.
+**Estado:** **resuelto** —
+[`cases/informe_decision_carga`](../cases/informe_decision_carga/README.md), con
+[cuaderno P16](../cases/informe_decision_carga/CUADERNO.md). El informe prioriza zonas
+para estudiar y clasifica explícitamente como no demostrable que allí exista mayor
+necesidad de carga.
 
 ---
 

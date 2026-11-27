@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="554" height="346" viewBox="0 0 554 346" role="img">
+<rect width="554" height="346" fill="#FFFFFF"/>
+<rect x="16.0" y="137.0" width="168.0" height="72.0" rx="10" fill="#11253B" stroke="#11253B" stroke-width="1.6"/>
+<text x="100.0" y="161.0" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">P16 · Informe</text>
+<text x="100.0" y="177.0" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">ejecutivo</text>
+<text x="100.0" y="197.0" fill="#55D6BE" font-size="11" font-weight="normal" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">8 pasos</text>
+<path d="M 184.0 173.0 C 211.0 173.0 211.0 50.0 238.0 50.0" fill="none" stroke="#1A6FB5" stroke-width="2" opacity="0.85"/>
+<rect x="238.0" y="16.0" width="300.0" height="68.0" rx="8" fill="#FFFFFF" stroke="#1A6FB5" stroke-width="1.6"/>
+<rect x="238.0" y="16.0" width="4" height="68.0" rx="2" fill="#1A6FB5"/>
+<text x="252.0" y="37.0" fill="#1A6FB5" font-size="12.5" font-weight="700" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">Reducir</text>
+<text x="252.0" y="54.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">1 · Auditar entradas</text>
+<text x="252.0" y="71.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">2 · Cuatro cifras</text>
+<path d="M 184.0 173.0 C 211.0 173.0 211.0 132.0 238.0 132.0" fill="none" stroke="#B08A3E" stroke-width="2" opacity="0.85"/>
+<rect x="238.0" y="98.0" width="300.0" height="68.0" rx="8" fill="#FFFFFF" stroke="#B08A3E" stroke-width="1.6"/>
+<rect x="238.0" y="98.0" width="4" height="68.0" rx="2" fill="#B08A3E"/>
+<text x="252.0" y="119.0" fill="#B08A3E" font-size="12.5" font-weight="700" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">Priorizar</text>
+<text x="252.0" y="136.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">3 · Regla</text>
+<text x="252.0" y="153.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">4 · Lista corta</text>
+<path d="M 184.0 173.0 C 211.0 173.0 211.0 214.0 238.0 214.0" fill="none" stroke="#1A6FB5" stroke-width="2" opacity="0.85"/>
+<rect x="238.0" y="180.0" width="300.0" height="68.0" rx="8" fill="#FFFFFF" stroke="#1A6FB5" stroke-width="1.6"/>
+<rect x="238.0" y="180.0" width="4" height="68.0" rx="2" fill="#1A6FB5"/>
+<text x="252.0" y="201.0" fill="#1A6FB5" font-size="12.5" font-weight="700" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">Calibrar</text>
+<text x="252.0" y="218.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">5 · Afirmaciones</text>
+<text x="252.0" y="235.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">6 · Límites</text>
+<path d="M 184.0 173.0 C 211.0 173.0 211.0 296.0 238.0 296.0" fill="none" stroke="#55D6BE" stroke-width="2" opacity="0.85"/>
+<rect x="238.0" y="262.0" width="300.0" height="68.0" rx="8" fill="#FFFFFF" stroke="#55D6BE" stroke-width="1.6"/>
+<rect x="238.0" y="262.0" width="4" height="68.0" rx="2" fill="#55D6BE"/>
+<text x="252.0" y="283.0" fill="#55D6BE" font-size="12.5" font-weight="700" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">Entregar</text>
+<text x="252.0" y="300.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">7 · Completitud</text>
+<text x="252.0" y="317.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">8 · Informe</text>
+</svg>

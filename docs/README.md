@@ -13,15 +13,24 @@ repositorio.
 Los **cuadernos de trabajo** son el problema resuelto paso a paso, con el código de
 Pandas, la salida real y la fórmula de Excel equivalente, en un solo archivo.
 
-| Cuaderno | Pasos | Descargables |
-| --- | --- | --- |
-| [P01 · Consolidar cinco Excel heterogéneos](../cases/bip_lugares_carga/CUADERNO.md) | 12 | [`pasos.py`](../cases/bip_lugares_carga/cuaderno/pasos.py) · [`practica.xlsx`](../cases/bip_lugares_carga/cuaderno/practica.xlsx) |
+| Cuaderno | Problemas | Pasos |
+| --- | --- | ---: |
+| [Consolidar cinco Excel](../cases/bip_lugares_carga/CUADERNO.md) | P01, P02, P04 | 12 |
+| [Conciliar Metro y buses](../cases/correspondencia_metro/CUADERNO.md) | P03, P10 | 9 |
+| [Horarios y cobertura nocturna](../cases/carga_nocturna/CUADERNO.md) | P05, P09 | 9 |
+| [Expediciones por hora](../cases/gtfs_red_movilidad/CUADERNO.md) | P06 | 10 |
+| [Cuándo dejar Pandas](../cases/rendimiento_gtfs/CUADERNO.md) | P07 | 8 |
+| [Cobertura espacial](../cases/cobertura_de_carga/CUADERNO.md) | P08 | 9 |
+| [Calendario oficial](../cases/calendario_medicion/CUADERNO.md) | P11 | 8 |
+| [Frecuencia programada](../cases/frecuencia_programada/CUADERNO.md) | P12, P13 | 8 |
+| [Evolución GTFS](../cases/evolucion_gtfs/CUADERNO.md) | P14, P15 | 8 |
+| [Informe para decisión](../cases/informe_decision_carga/CUADERNO.md) | P16 | 8 |
 
 El Excel de cada paso va dibujado como hoja, con la fórmula en su celda y el resultado a
 la vista.
 
-Se generan ejecutando el caso, con `python scripts/build_cuadernos.py`. Los otros quince
-están pendientes; el estado de cada problema está en el
+Se generan ejecutando el caso, con `python scripts/build_cuadernos.py`. Los dieciséis
+problemas están cubiertos; el alcance y los límites de cada uno están en el
 [mapa de problemas](problemas-de-la-instancia.md).
 
 ---
@@ -32,15 +41,18 @@ En orden, de lo que más rinde a lo que menos:
 
 | # | Documento | Qué te da |
 | --- | --- | --- |
-| 1 | [Mapa de problemas](problemas-de-la-instancia.md) | 16 problemas con su pregunta exacta, los datos que usa cada uno y su estado: **nueve resueltos**. Y **10 preguntas que estos datos no permiten contestar** |
+| 1 | [Mapa de problemas](problemas-de-la-instancia.md) | 16 problemas resueltos con su pregunta exacta, método, resultado y límites; además, 10 preguntas que los datos no permiten contestar |
 | 2 | [`cases/bip_lugares_carga`](../cases/bip_lugares_carga/README.md) | **P01, P02 y P04 resueltos**: consolidar cinco Excel reales con nueve defectos, y establecer qué identifica una fila cuando nada lo hace. Es lo más parecido a una prueba de cuatro horas |
 | 3 | [`cases/calendario_medicion`](../cases/calendario_medicion/README.md) | **P11 resuelto**: reconstruir el denominador de un indicador oficial |
 | 4 | [`cases/cobertura_de_carga`](../cases/cobertura_de_carga/README.md) | **P08 resuelto en parte**: el cruce que no tiene clave, y cuánto del resultado lo pone el analista |
 | 5 | [`cases/carga_nocturna`](../cases/carga_nocturna/README.md) | **P09 y P05 resueltos**: un indicador con datos faltantes, publicado como intervalo en lugar de cifra |
 | 6 | [`cases/correspondencia_metro`](../cases/correspondencia_metro/README.md) | **P10 y P03 resueltos**: conciliar dos inventarios de la misma realidad, y auditar qué no mira cada control de calidad |
-| 7 | [Equivalencias SQL / Pandas / Excel / R](equivalencias.md) | La tabla de traducción, con una columna de **trampas** donde las versiones «equivalentes» dejan de serlo |
-| 8 | [Indicadores oficiales del transporte](indicadores-oficiales-transporte.md) | Las fórmulas, el grano, las fuentes y las reglas de exclusión reales, citadas |
-| 9 | [`cases/transport`](../cases/transport/README.md) | Las tres simulaciones de cuatro horas y qué se corrige en cada una |
+| 7 | [`cases/rendimiento_gtfs`](../cases/rendimiento_gtfs/README.md) | **P07 resuelto**: benchmark comparable de Pandas, bloques y DuckDB |
+| 8 | [`cases/frecuencia_programada`](../cases/frecuencia_programada/README.md) | **P12 y P13 resueltos**: frecuencia programada e ICF no observable sin GPS |
+| 9 | [`cases/evolucion_gtfs`](../cases/evolucion_gtfs/README.md) | **P14 y P15 resueltos**: tres publicaciones oficiales comparadas con la misma definición |
+| 10 | [`cases/informe_decision_carga`](../cases/informe_decision_carga/README.md) | **P16 resuelto**: informe ejecutivo con evidencia, inferencia y límites |
+| 11 | [Equivalencias SQL / Pandas / Excel / R](equivalencias.md) | Traducción con las trampas donde las versiones dejan de ser equivalentes |
+| 12 | [`cases/transport`](../cases/transport/README.md) | Las tres simulaciones de cuatro horas y qué se corrige en cada una |
 
 Lo que **no** encontrarás: nada sobre el contenido de ninguna prueba real. No se
 conoce, y queda dicho en el mapa de problemas.
@@ -56,7 +68,7 @@ conoce, y queda dicho en el mapa de problemas.
 | [Método de investigación](research-method.md) | La versión corta, para un análisis acotado |
 | [Arquitectura](arquitectura.md) | Los contratos entre módulos y las decisiones técnicas con sus alternativas descartadas |
 | [Base de conocimiento](conocimiento.md) | 42 registros de cosas que costó descubrir. Búsqueda: `python -m lab.knowledge "consulta"` |
-| [Catálogo de casos](catalogo-casos.md) | Los nueve casos con sus metadatos y la cobertura de competencias |
+| [Catálogo de casos](catalogo-casos.md) | Los trece casos con sus metadatos y la cobertura de competencias |
 
 ---
 

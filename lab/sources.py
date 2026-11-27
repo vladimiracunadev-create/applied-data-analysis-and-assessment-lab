@@ -437,6 +437,30 @@ def feriados_cl(year: int | None = None) -> DataSource:
 
 
 CATALOG: dict[str, DataSource] = {
+    "gtfs-historicos-2024": DataSource(
+        name="gtfs-historicos-2024",
+        url="https://dtpm.cl/descargas/gtfs/2024.zip",
+        publisher="Directorio de Transporte Público Metropolitano (DTPM)",
+        description=(
+            "Archivo anual con las publicaciones GTFS de 2024. El caso de evolución "
+            "selecciona la última publicación, GTFS_20241124.zip."
+        ),
+        licence=UNVERIFIED_LICENCE,
+        licence_url="https://dtpm.cl/index.php/programas-de-operaciones/gtfs-historicos",
+        media_type="application/zip",
+    ),
+    "gtfs-historicos-2025": DataSource(
+        name="gtfs-historicos-2025",
+        url="https://dtpm.cl/descargas/gtfs/2025.zip",
+        publisher="Directorio de Transporte Público Metropolitano (DTPM)",
+        description=(
+            "Archivo anual con las publicaciones GTFS de 2025. El caso de evolución "
+            "selecciona la última publicación, GTFS_20251220.zip."
+        ),
+        licence=UNVERIFIED_LICENCE,
+        licence_url="https://dtpm.cl/index.php/programas-de-operaciones/gtfs-historicos",
+        media_type="application/zip",
+    ),
     "gtfs-red-movilidad": DataSource(
         name="gtfs-red-movilidad",
         url="https://www.dtpm.cl/index.php/gtfs-vigente",

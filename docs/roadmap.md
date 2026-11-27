@@ -4,7 +4,7 @@
 > proyectado**. Nada de la segunda lista debe citarse como una capacidad existente del
 > laboratorio.
 
-## 1. Estado actual verificado (v0.9.0)
+## 1. Estado actual verificado (v0.11.0)
 
 Todo lo de esta sección se ejecuta y está cubierto por pruebas automáticas.
 Los recuentos se obtienen con los comandos indicados, no de memoria.
@@ -12,12 +12,12 @@ Los recuentos se obtienen con los comandos indicados, no de memoria.
 | Componente | Estado | Cómo comprobarlo |
 | --- | --- | --- |
 | Núcleo (`lab/`): 26 módulos | implementado | `python -m pytest` |
-| Casos de estudio (9): 6 con datos públicos reales, 3 sintéticos | implementado | `python -m pytest tests/test_catalog.py` |
+| Casos de estudio (13): 10 con datos públicos reales o resultados reproducibles, 3 sintéticos | implementado | `python -m pytest tests/test_catalog.py` |
 | Cruce espacial por proximidad sin dependencias geoespaciales | implementado | `python -m pytest tests/test_cobertura_de_carga.py` |
 | Intérprete de horarios en texto libre, con lo ilegible como desconocido | implementado | `python -m pytest tests/test_schedules.py` |
 | Conciliación de inventarios con grano distinto y dos criterios | implementado | `python -m pytest tests/test_correspondencia_metro.py` |
 | Análisis de claves: candidatas mínimas y clave subrogada determinista | implementado | `python -m pytest tests/test_keys.py` |
-| Cuadernos de trabajo con problema, plan, diagramas, ZIP y navegación (1 de 16) | **parcial** | `python scripts/build_cuadernos.py` |
+| Cuadernos de trabajo: 10 cuadernos cubren los 16 problemas | implementado | `python scripts/build_cuadernos.py --check` |
 | Simulaciones de cuatro horas (3) | implementado | `simulations/0{1,2,3}_enunciado.md` |
 | Solución de referencia en Pandas | implementado | `python solutions/reference.py 1` |
 | Segunda implementación en SQL | implementado | `python solutions/sql_reference.py 1` |
@@ -62,30 +62,23 @@ deja de estar declarada aquí.
   *Caso previsto:* una investigación aplicada completa con hipótesis, prueba y
   limitaciones, bajo `research/`.
 
-- **`modelamiento`, `automatizacion`, `apoyo-decision`.** Aparecen en los perfiles y
-  están proyectadas; no hay caso que las cubra.
+- **`modelamiento` y `automatizacion`.** Aparecen en los perfiles y están proyectadas;
+  no hay caso que las cubra. `apoyo-decision` quedó cubierta por
+  `cases/informe_decision_carga`.
 
 - **`ingenieria-datos`** quedó cubierta en la versión 0.2.0 por la instancia
   `gtfs_red_movilidad`: adquisición con procedencia, lectura selectiva de un archivo de
   1,1 millones de filas desde un ZIP y expansión vectorizada de ventanas.
 
-### 2.2 Quince de los dieciséis cuadernos de trabajo
+### 2.2 Cuadernos de trabajo — brecha cerrada
 
-Un caso resuelto y un caso que se puede estudiar no son lo mismo. Hasta la versión
-0.10.0 los casos documentaban **qué se encontró** —que sirve para auditar un resultado—
-y no **cómo se produce**, que es lo que hace falta para practicar Excel y Pandas.
+Diez cuadernos generados y ejecutables cubren los dieciséis problemas. P02 y P04 están
+integrados en P01; P09 en P05; P10 en P03; P13 en P12; y P15 en P14. Cada uno trae
+Markdown con salidas reales, script, Colab, libro de práctica, diagramas SVG y ZIP.
 
-`lab.cuaderno` y `scripts/build_cuadernos.py` resuelven el mecanismo, y **P01 es el
-único caso con cuaderno**. Faltan quince:
-
-| Problemas | Qué falta |
-| --- | --- |
-| P02, P04 | nada: quedan cubiertos en los pasos 7 y 8 del cuaderno de P01 |
-| P03, P05, P06, P08, P09, P10, P11 | el cuaderno: el análisis ya está resuelto |
-| P07, P12, P13, P14, P15, P16 | el análisis **y** el cuaderno |
-
-P14 y P15 necesitan además descargar feeds históricos del DTPM, que se publican desde
-2014 y cuya licencia **no está verificada**.
+P14/P15 se ejecuta sobre las últimas publicaciones oficiales de 2024 y 2025 y el feed
+vigente de 2026. Es una trayectoria reciente de tres puntos; ampliar hasta 2014 sigue
+siendo una extensión posible, no una condición para reproducir la comparación actual.
 
 ### 2.3 Sin corrección de la práctica propia
 

@@ -77,16 +77,16 @@ PROBLEMAS: tuple[tuple[str, str, str, str], ...] = (
     ("P04", "Normalizar comuna y entidad para agrupar", "bip_lugares_carga", "paso 8"),
     ("P05", "Interpretar horarios escritos en texto libre", "carga_nocturna", ""),
     ("P06", "Expediciones por hora en un día laboral", "gtfs_red_movilidad", ""),
-    ("P07", "¿Cuándo conviene dejar Pandas?", "", ""),
+    ("P07", "¿Cuándo conviene dejar Pandas?", "rendimiento_gtfs", ""),
     ("P08", "Distancia de cada parada al lugar de carga", "cobertura_de_carga", ""),
     ("P09", "Cobertura de carga en el servicio nocturno", "carga_nocturna", ""),
     ("P10", "Correspondencia entre buses y Metro", "correspondencia_metro", ""),
     ("P11", "El calendario de medición de un indicador oficial", "calendario_medicion", ""),
-    ("P12", "El ICF sobre la oferta programada", "", ""),
-    ("P13", "Distribución de la frecuencia programada", "", ""),
-    ("P14", "Qué cambió entre dos versiones del feed", "", ""),
-    ("P15", "Evolución de la oferta programada por año", "", ""),
-    ("P16", "Informe de una página para quien decide", "", ""),
+    ("P12", "El ICF sobre la oferta programada", "frecuencia_programada", ""),
+    ("P13", "Distribución de la frecuencia programada", "frecuencia_programada", ""),
+    ("P14", "Qué cambió entre dos versiones del feed", "evolucion_gtfs", ""),
+    ("P15", "Evolución de la oferta programada por año", "evolucion_gtfs", ""),
+    ("P16", "Informe de una página para quien decide", "informe_decision_carga", ""),
 )
 
 
@@ -168,16 +168,23 @@ def escribir_indice(con_cuaderno: set[str]) -> Path:
         "| Problema | Cuaderno | Caso |",
         "| --- | --- | --- |",
     ]
-    propios = 0
-    dentro_de_otro = 0
+    cuadernos_distintos: set[str] = set()
+    cubiertos_en_otro = 0
+    primer_codigo_por_slug: dict[str, str] = {}
     for codigo, titulo, slug, donde in PROBLEMAS:
         ruta = f"../cases/{slug}/{NOMBRE_SALIDA}"
         if slug and slug in con_cuaderno and not donde:
-            enlace = f"[**abrir**]({ruta})"
-            propios += 1
+            if slug in primer_codigo_por_slug:
+                primero = primer_codigo_por_slug[slug]
+                enlace = f"[mismo cuaderno que {primero}]({ruta})"
+                cubiertos_en_otro += 1
+            else:
+                enlace = f"[**abrir**]({ruta})"
+                primer_codigo_por_slug[slug] = codigo
+                cuadernos_distintos.add(slug)
         elif slug and slug in con_cuaderno:
             enlace = f"[dentro del de {codigo_de(slug)}, {donde}]({ruta})"
-            dentro_de_otro += 1
+            cubiertos_en_otro += 1
         elif slug:
             enlace = "pendiente"
         else:
@@ -185,13 +192,18 @@ def escribir_indice(con_cuaderno: set[str]) -> Path:
         caso = f"[`{slug}`](../cases/{slug}/README.md)" if slug else "—"
         lineas.append(f"| {codigo} · {titulo} | {enlace} | {caso} |")
 
-    lineas += [
+    cubiertos = len(cuadernos_distintos) + cubiertos_en_otro
+    resumen = [
         "",
-        f"**{propios} de 16 cuadernos propios**, más {dentro_de_otro} problemas",
-        "cubiertos dentro del cuaderno de otro. Los problemas sin caso necesitan el",
-        "análisis además del cuaderno. El estado detallado de cada uno, con lo que",
-        "enseña y lo que no se puede contestar, está en el",
-        "[mapa de problemas](problemas-de-la-instancia.md).",
+        f"**{len(cuadernos_distintos)} cuadernos distintos cubren "
+        f"{cubiertos} de {len(PROBLEMAS)} problemas**:",
+        f"{cubiertos_en_otro} están integrados en el cuaderno de un problema relacionado.",
+    ]
+    if cubiertos < len(PROBLEMAS):
+        resumen += ["Los problemas sin caso necesitan el análisis además del cuaderno."]
+    resumen += [
+        "El estado detallado de cada uno, con lo que enseña y lo que no se puede",
+        "contestar, está en el [mapa de problemas](problemas-de-la-instancia.md).",
         "",
         "## Regenerar",
         "",
@@ -203,6 +215,7 @@ def escribir_indice(con_cuaderno: set[str]) -> Path:
         "de modo que el código que aparece es el que corrió y la salida es la que",
         "devolvió.",
     ]
+    lineas += resumen
     INDICE_SALIDA.write_text("\n".join(lineas) + "\n", encoding="utf-8")
     return INDICE_SALIDA
 

@@ -6,6 +6,35 @@ Este proyecto usa [versionado semántico](https://semver.org/lang/es/).
 La **primera versión oficial es la 0.1.0**. Los prototipos anteriores no se consideran
 releases y no se publican como tales.
 
+## [Sin publicar]
+
+### Agregado
+
+- **Cobertura completa de P01–P16.** Diez cuadernos ejecutables reúnen los dieciséis
+  problemas: Markdown con salidas reales, script seguido, Colab, libro de práctica,
+  diagramas SVG y un paquete ZIP por cuaderno. P02/P04, P09, P10, P13 y P15 se integran
+  con el problema que comparte sus datos y su método, sin duplicar casos.
+- **Cuatro casos reales y reproducibles:** benchmark de Pandas completo, por bloques y
+  DuckDB (P07); frecuencia programada y límite observable del ICF (P12/P13); comparación
+  homogénea de publicaciones GTFS 2024–2026 (P14/P15); e informe ejecutivo que separa
+  evidencia, inferencia, hipótesis y afirmaciones no demostrables (P16).
+- **Contratos de publicación en CI.** Las pruebas verifican que los dieciséis problemas
+  tengan resolución, y que cada Colab, libro Excel y ZIP publicado pueda abrirse.
+
+### Cambiado
+
+- El README principal y los índices de documentación enlazan directamente los diez
+  cuadernos y los trece casos para que la resolución sea visible desde la portada.
+- El generador cuenta cuadernos físicos distintos y problemas integrados sin inflar la
+  cobertura cuando dos problemas comparten un mismo cuaderno.
+
+### Límites declarados
+
+- La evolución histórica publicada usa tres cortes comparables —2024, 2025 y 2026—;
+  describe una trayectoria reciente, no toda la serie disponible desde 2014.
+- El GTFS permite calcular oferta e intervalos programados, pero no el ICF oficial sin
+  las mediciones GPS que forman su numerador y denominador.
+
 ## [0.11.0] — 2026-11-26
 
 ### Agregado

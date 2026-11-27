@@ -1,0 +1,4 @@
+metodo,segundos,lectura_s,agregacion_s,memoria_datos_mb,bloques,estado,filas_resultado,filas_entrada
+Pandas completo,0.42841110000154004,0.3378458000079263,0.09056529999361373,60.248285,1,,12495,1098717
+Pandas por bloques,0.648186500009615,,,11.310612,6,,12495,1098717
+DuckDB sobre CSV,0.30043489998206496,0.1857603999960702,0.30043489998206496,,,ejecutado; extracción informada por separado,12495,1098717

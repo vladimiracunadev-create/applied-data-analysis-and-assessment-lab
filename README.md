@@ -14,7 +14,7 @@ hacerlo de la forma obvia, y lo que los datos **no** permiten concluir.
 ![Versión 0.11.0](https://img.shields.io/badge/versi%C3%B3n-0.11.0-11253B)
 ![Python 3.11–3.14](https://img.shields.io/badge/Python-3.11%E2%80%933.14-3776AB)
 ![Licencia MIT](https://img.shields.io/badge/licencia-MIT-147D70)
-![702 pruebas](https://img.shields.io/badge/pruebas-702-147D70)
+![711 pruebas](https://img.shields.io/badge/pruebas-711-147D70)
 [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/bip_lugares_carga/cuaderno/colab.ipynb)
 
 ---
@@ -30,7 +30,7 @@ reglas de exclusión escondidas en una nota al pie.
 
 **Este repositorio es el método para hacer ese trabajo bien, probado contra datos
 públicos reales.** No es un curso ni una colección de ejercicios: es un recorrido de
-nueve etapas, un núcleo de código reutilizable y nueve casos resueltos que documentan
+nueve etapas, un núcleo de código reutilizable y trece casos resueltos que documentan
 qué tecnología se usó, por qué, y qué trampa tenía cada dato.
 
 ### Si vienes a aprender a hacerlo: los cuadernos de trabajo
@@ -52,6 +52,15 @@ salida es la que devolvió. Si el código deja de funcionar, el cuaderno no se g
 | Cuaderno | Pasos | Qué se practica en Excel |
 | --- | --- | --- |
 | [P01 · Consolidar cinco Excel heterogéneos](cases/bip_lugares_carga/CUADERNO.md) | 12 | `CONTAR.SI` para medir si una columna es clave, `CONTAR.SI` con `"?*"` para la cobertura de un campo, `FRECUENCIA` para el histograma, haversine en una celda, y Power Query para anexar los cinco archivos |
+| [P03/P10 · Conciliar Metro y buses](cases/correspondencia_metro/CUADERNO.md) | 9 | nombres normalizados, distancias, conteos distintos y sensibilidad a la fuente |
+| [P05/P09 · Horarios y cobertura nocturna](cases/carga_nocturna/CUADERNO.md) | 9 | estructurar texto libre, conservar desconocidos y calcular un intervalo |
+| [P06 · Expediciones por hora](cases/gtfs_red_movilidad/CUADERNO.md) | 10 | ventanas de frecuencia, fin exclusivo, horas mayores de 24 y tabla dinámica |
+| [P07 · Cuándo dejar Pandas](cases/rendimiento_gtfs/CUADERNO.md) | 8 | benchmark comparable, memoria, tiempo y validación exacta |
+| [P08 · Cobertura espacial](cases/cobertura_de_carga/CUADERNO.md) | 9 | percentiles, umbrales, sensibilidad y cruce sin clave |
+| [P11 · Calendario oficial](cases/calendario_medicion/CUADERNO.md) | 8 | reglas booleanas, solapamientos, escenarios y denominador final |
+| [P12/P13 · Frecuencia programada](cases/frecuencia_programada/CUADERNO.md) | 8 | alcance calculable, percentiles y ponderaciones |
+| [P14/P15 · Evolución GTFS](cases/evolucion_gtfs/CUADERNO.md) | 8 | comparación de versiones, altas, bajas y serie homogénea |
+| [P16 · Informe para decisión](cases/informe_decision_carga/CUADERNO.md) | 8 | lista corta, regla de prioridad y clasificación de afirmaciones |
 
 El Excel de cada paso va **dibujado como hoja**: la barra de fórmulas con su celda, las
 letras de columna, la columna donde va la fórmula resaltada, y el resultado en su sitio.
@@ -69,10 +78,10 @@ El libro de práctica **no trae los datos**: los archivos del portal son NoComer
 repositorio no los redistribuye. Se pega el consolidado que uno obtuvo, que además es
 parte del ejercicio.
 
-Los otros quince cuadernos están **pendientes**: nueve corresponden a problemas ya
-resueltos y necesitan solo el cuaderno; seis —P07, P12 a P16— no están resueltos, de modo
-que ahí el cuaderno y el análisis son el mismo trabajo. El estado real de cada uno está en
-el [mapa de problemas](docs/problemas-de-la-instancia.md).
+Los **dieciséis problemas están cubiertos** por diez cuadernos distintos: seis problemas
+se integran en el cuaderno de otro porque comparten datos y método. El índice enlaza cada
+problema con su resolución y el [mapa de problemas](docs/problemas-de-la-instancia.md)
+declara qué se puede y qué no se puede concluir.
 
 ```powershell
 python scripts/build_cuadernos.py          # regenera los cuadernos declarados
@@ -84,7 +93,7 @@ python scripts/build_cuadernos.py          # regenera los cuadernos declarados
 
 | Si necesitas… | Empieza por |
 | --- | --- |
-| **Prepararte para una evaluación técnica** de datos con Excel y Pandas | [Cuaderno de P01](cases/bip_lugares_carga/CUADERNO.md), y el [mapa de problemas](docs/problemas-de-la-instancia.md) para el resto |
+| **Prepararte para una evaluación técnica** de datos con Excel y Pandas | [Índice de los 16 problemas resueltos](docs/cuadernos.md) |
 | **Resolver un problema de datos** de tu trabajo | [El recorrido de nueve etapas](docs/instancias.md) |
 | **Aprender** con material que explica el por qué | [Programa de aprendizaje](docs/programa.md) — 8 clases con 17 secciones cada una |
 | **Reproducir un indicador oficial** | [Indicadores oficiales del transporte](docs/indicadores-oficiales-transporte.md) |
@@ -94,23 +103,27 @@ python scripts/build_cuadernos.py          # regenera los cuadernos declarados
 
 ## Lo que ya está resuelto, y qué encontró cada caso
 
-Nueve casos: seis con **datos públicos reales** y tres con datos sintéticos de semilla
+Trece casos: diez con **datos públicos reales o resultados reproducibles** y tres con datos sintéticos de semilla
 fija. Lo que importa no es el tema de cada uno, es la clase de problema que enseña a
 detectar.
 
-| Caso | Datos | La pregunta | Lo que encontró |
+| Caso | Cuaderno | Datos | Pregunta y hallazgo principal |
 | --- | --- | --- | --- |
-| [`bip_lugares_carga`](cases/bip_lugares_carga/README.md) | **reales**, licencia verificada | ¿Cuántos lugares de carga hay, y qué identifica a cada uno? | El encabezado en **5 filas distintas**; **ninguna columna identifica una fila**, ni `fuente + codigo`; y la validación cruzada de coordenadas destapó **3 errores de hasta 10,3 km** |
-| [`calendario_medicion`](cases/calendario_medicion/README.md) | **reales**, metodología oficial | ¿Qué días entran en la medición de un indicador oficial? | De 261 días laborales quedan **78 medibles**, y **4 de las 8 reglas oficiales no cambian el denominador** |
-| [`gtfs_red_movilidad`](cases/gtfs_red_movilidad/README.md) | **reales**, 1,1 M de filas | ¿Cuántas expediciones salen por hora? | El **77,5 %** de la tabla de horarios **no contiene horas**, y el conteo ingenuo se equivoca en **−87,65 %** |
-| [`cobertura_de_carga`](cases/cobertura_de_carga/README.md) | **reales**, dos fuentes sin clave común | ¿A qué distancia está el lugar de carga más cercano de cada parada? | **59,29 %** de las paradas lo tiene a 300 m en línea recta y **46,02 %** con un rodeo de 1,3: las decisiones del método mueven la respuesta **entre 39 % y 81 %** |
-| [`carga_nocturna`](cases/carga_nocturna/README.md) | **reales**, espacio y tiempo a la vez | ¿Donde hay buses de madrugada, hay dónde cargar? | **Ninguno** de los 1 927 locales declara abrir de madrugada, y para el **52,6 %** de las paradas nocturnas la pregunta **no se puede contestar**: la respuesta es el intervalo 0 %–52,6 % |
-| [`correspondencia_metro`](cases/correspondencia_metro/README.md) | **reales**, dos inventarios de lo mismo | ¿Qué estaciones de Metro tienen bus cerca? | Las 126 lo tienen, pero **11 estaciones están hasta 13 km mal ubicadas** en el otro archivo y **la validación interna de P01 no vio ninguna** |
-| [`transport`](cases/transport/README.md) | sintéticos | Indicadores operacionales con exclusiones declaradas | La validación Pandas ↔ SQL destapó que `julianday` **invierte la puntualidad en los empates** |
-| [`retail`](cases/retail/README.md) | sintéticos | Ventas netas y margen descontando devoluciones | El signo de la devolución tiene que ser una **columna explícita**, no una resta escondida |
-| [`education`](cases/education/README.md) | sintéticos | Asistencia por establecimiento | La tasa ponderada y el promedio de porcentajes **no son lo mismo** |
+| [`bip_lugares_carga`](cases/bip_lugares_carga/README.md) | [P01/P02/P04](cases/bip_lugares_carga/CUADERNO.md) | reales, licencia verificada | Cinco encabezados distintos; ninguna columna identifica una fila; tres errores de coordenada de hasta 10,3 km |
+| [`correspondencia_metro`](cases/correspondencia_metro/README.md) | [P03/P10](cases/correspondencia_metro/CUADERNO.md) | reales, dos inventarios | Las 126 estaciones tienen bus cerca, pero 11 coordenadas discrepan más de 500 m entre fuentes |
+| [`carga_nocturna`](cases/carga_nocturna/README.md) | [P05/P09](cases/carga_nocturna/CUADERNO.md) | reales, espacio y tiempo | La cobertura verificable es 0 % y 52,6 % queda indeterminado por horarios ausentes |
+| [`gtfs_red_movilidad`](cases/gtfs_red_movilidad/README.md) | [P06](cases/gtfs_red_movilidad/CUADERNO.md) | reales, 1,1 M de filas | El 77,5 % de los horarios son desplazamientos relativos; el conteo ingenuo se equivoca −87,65 % |
+| [`rendimiento_gtfs`](cases/rendimiento_gtfs/README.md) | [P07](cases/rendimiento_gtfs/CUADERNO.md) | reales, benchmark | Completo, bloques y DuckDB coinciden; bloques reduce cerca de 81 % la memoria visible de datos |
+| [`cobertura_de_carga`](cases/cobertura_de_carga/README.md) | [P08](cases/cobertura_de_carga/CUADERNO.md) | reales, cruce sin clave | 59,29 % de cobertura en línea recta y 46,02 % con rodeo 1,3 |
+| [`calendario_medicion`](cases/calendario_medicion/README.md) | [P11](cases/calendario_medicion/CUADERNO.md) | reales, metodología oficial | De 261 días laborales quedan 78 medibles; cuatro reglas no cambian el denominador de 2026 |
+| [`frecuencia_programada`](cases/frecuencia_programada/README.md) | [P12/P13](cases/frecuencia_programada/CUADERNO.md) | reales, GTFS + definición oficial | 142 366 salidas programadas; el ICF observado no es calculable sin GPS |
+| [`evolucion_gtfs`](cases/evolucion_gtfs/README.md) | [P14/P15](cases/evolucion_gtfs/CUADERNO.md) | reales, tres publicaciones | 68 533 → 68 011 → 64 011 salidas laborales entre 2024 y 2026 |
+| [`informe_decision_carga`](cases/informe_decision_carga/README.md) | [P16](cases/informe_decision_carga/CUADERNO.md) | resultados reproducibles | Prioriza zonas para factibilidad sin presentar baja cobertura como demanda demostrada |
+| [`transport`](cases/transport/README.md) | — | sintéticos | La validación Pandas ↔ SQL detecta que `julianday` invierte puntualidad en empates |
+| [`retail`](cases/retail/README.md) | — | sintéticos | El signo de devolución debe ser una columna explícita |
+| [`education`](cases/education/README.md) | — | sintéticos | La tasa ponderada y el promedio de porcentajes no son lo mismo |
 
-Los nueve hallazgos salieron de ejecutar el código, no de la intuición. Cada uno está
+Los trece hallazgos salieron de ejecutar el código, no de la intuición. Cada uno está
 documentado con su magnitud, su causa y su corrección en la
 [base de conocimiento](docs/conocimiento.md), que tiene 42 registros.
 
@@ -130,7 +143,7 @@ uv run python scripts/generate_data.py
 uv run python -m pytest
 ```
 
-Tres comandos y 702 pruebas en verde. Después, el caso que mejor muestra de qué va
+Tres comandos y 711 pruebas en verde. Después, el caso que mejor muestra de qué va
 esto:
 
 ```powershell
@@ -240,7 +253,7 @@ fórmula que se puede abrir, sí.
 
 ## Qué comprueban las pruebas, y qué no
 
-702 pruebas en 33 archivos. Además de los cálculos:
+711 pruebas en 35 archivos. Además de los cálculos:
 
 - **Validación cruzada entre tecnologías**: Pandas contra SQL, indicador por indicador,
   con tolerancia 10⁻⁹.

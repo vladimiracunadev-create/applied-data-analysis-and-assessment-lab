@@ -1,0 +1,13 @@
+seccion,clave,presente
+Contexto,contexto,sí
+Definición del problema,problema,sí
+Objetivos,objetivos,sí
+Datos y diccionario,datos,sí
+Metodología,metodologia,sí
+Supuestos,supuestos,sí
+Resultados,resultados,sí
+Validación independiente,validacion,sí
+Interpretación,interpretacion,sí
+Limitaciones,limitaciones,sí
+Conclusiones,conclusiones,sí
+Reproducibilidad,reproducibilidad,sí

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="554" height="363" viewBox="0 0 554 363" role="img">
+<rect width="554" height="363" fill="#FFFFFF"/>
+<rect x="16.0" y="145.5" width="168.0" height="72.0" rx="10" fill="#11253B" stroke="#11253B" stroke-width="1.6"/>
+<text x="100.0" y="169.5" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">P03 + P10 · Metro y</text>
+<text x="100.0" y="185.5" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">buses</text>
+<text x="100.0" y="205.5" fill="#55D6BE" font-size="11" font-weight="normal" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">9 pasos · 4 detectores</text>
+<path d="M 184.0 181.5 C 211.0 181.5 211.0 50.0 238.0 50.0" fill="none" stroke="#1A6FB5" stroke-width="2" opacity="0.85"/>
+<rect x="238.0" y="16.0" width="300.0" height="68.0" rx="8" fill="#FFFFFF" stroke="#1A6FB5" stroke-width="1.6"/>
+<rect x="238.0" y="16.0" width="4" height="68.0" rx="2" fill="#1A6FB5"/>
+<text x="252.0" y="37.0" fill="#1A6FB5" font-size="12.5" font-weight="700" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">Entender</text>
+<text x="252.0" y="54.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">1 · Grano</text>
+<text x="252.0" y="71.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">2 · Conciliación</text>
+<path d="M 184.0 181.5 C 211.0 181.5 211.0 132.0 238.0 132.0" fill="none" stroke="#B08A3E" stroke-width="2" opacity="0.85"/>
+<rect x="238.0" y="98.0" width="300.0" height="68.0" rx="8" fill="#FFFFFF" stroke="#B08A3E" stroke-width="1.6"/>
+<rect x="238.0" y="98.0" width="4" height="68.0" rx="2" fill="#B08A3E"/>
+<text x="252.0" y="119.0" fill="#B08A3E" font-size="12.5" font-weight="700" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">Investigar</text>
+<text x="252.0" y="136.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">3 · Criterios discordantes</text>
+<text x="252.0" y="153.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">4 · Detectores</text>
+<path d="M 184.0 181.5 C 211.0 181.5 211.0 222.5 238.0 222.5" fill="none" stroke="#55D6BE" stroke-width="2" opacity="0.85"/>
+<rect x="238.0" y="180.0" width="300.0" height="85.0" rx="8" fill="#FFFFFF" stroke="#55D6BE" stroke-width="1.6"/>
+<rect x="238.0" y="180.0" width="4" height="85.0" rx="2" fill="#55D6BE"/>
+<text x="252.0" y="201.0" fill="#55D6BE" font-size="12.5" font-weight="700" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">Responder</text>
+<text x="252.0" y="218.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">5 · Radio de 200 m</text>
+<text x="252.0" y="235.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">6 · Servicios</text>
+<text x="252.0" y="252.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">7 · Prioridades</text>
+<path d="M 184.0 181.5 C 211.0 181.5 211.0 313.0 238.0 313.0" fill="none" stroke="#B08A3E" stroke-width="2" opacity="0.85"/>
+<rect x="238.0" y="279.0" width="300.0" height="68.0" rx="8" fill="#FFFFFF" stroke="#B08A3E" stroke-width="1.6"/>
+<rect x="238.0" y="279.0" width="4" height="68.0" rx="2" fill="#B08A3E"/>
+<text x="252.0" y="300.0" fill="#B08A3E" font-size="12.5" font-weight="700" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">Desafiar</text>
+<text x="252.0" y="317.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">8 · Fuente de coordenadas</text>
+<text x="252.0" y="334.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">9 · Síntesis</text>
+</svg>

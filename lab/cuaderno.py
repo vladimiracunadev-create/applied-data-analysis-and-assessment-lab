@@ -168,6 +168,9 @@ class Cuaderno:
     #: Fuentes que `scripts/fetch_data.py` debe descargar para que el cuaderno de
     #: Colab corra. Sin esto, la celda de preparación no descarga nada.
     fuentes_datos: str = ""
+    #: Paquetes opcionales que este cuaderno necesita en Colab. Vacío mantiene el
+    #: entorno mínimo; por ejemplo, P07 declara DuckDB solo para su benchmark.
+    dependencias_colab: str = ""
     #: Encabezados de la hoja donde se pega el consolidado, en su orden. Son los que
     #: hacen que las referencias de las fórmulas —`A2`, `$E$2:$E$1929`— sean correctas.
     columnas_excel: tuple[str, ...] = ()
@@ -743,13 +746,17 @@ def escribir_colab(cuaderno: Cuaderno, salidas: list[Salida], slug: str,
         f"pierden al regenerar.*\n"
     )
 
+    dependencias_extra = (
+        f" {cuaderno.dependencias_colab.strip()}" if cuaderno.dependencias_colab.strip() else ""
+    )
     preparacion = (
         "# Preparación: clona el repositorio y descarga los datos públicos.\n"
         "# Los datos NO vienen del repositorio: se descargan del portal de datos\n"
         "# abiertos, porque el laboratorio no redistribuye datos de terceros.\n"
         f"!git clone --depth 1 https://github.com/{REPO}.git lab-dtpm\n"
         "%cd lab-dtpm\n"
-        "!pip install --quiet 'pandas>=2.2' 'numpy>=1.26' openpyxl XlsxWriter matplotlib\n"
+        "!pip install --quiet 'pandas>=2.2' 'numpy>=1.26' openpyxl XlsxWriter matplotlib"
+        f"{dependencias_extra}\n"
         f"!python scripts/fetch_data.py {cuaderno.fuentes_datos or ''}\n"
     )
 

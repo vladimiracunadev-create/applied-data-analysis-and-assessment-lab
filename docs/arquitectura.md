@@ -155,7 +155,7 @@ y, si hizo falta algo nuevo, el núcleo crece con su prueba.
 
 ```
 applied-data-analysis-and-assessment-lab/
-├── lab/                    núcleo transversal, sin reglas de negocio (17 módulos)
+├── lab/                    núcleo transversal, sin reglas de negocio (26 módulos)
 ├── cases/                  casos de estudio independientes
 │   ├── transport/          caso prioritario, con case.json
 │   ├── retail/
