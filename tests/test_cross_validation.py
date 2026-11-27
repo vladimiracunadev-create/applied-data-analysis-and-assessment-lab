@@ -13,6 +13,9 @@ Por qué esta suite es la más importante del repositorio
     los empates, cambiando la puntualidad en varios puntos porcentuales. Ver
     `knowledge/julianday-precision.md`.
 
+La confrontación adicional con Polars y R vive en `tests/test_multiengine.py` para que
+el entorno mínimo siga siendo liviano.
+
 Qué queda deliberadamente fuera
     La mediana y el percentil 90 no se calculan en SQL: SQLite no tiene percentil con
     interpolación lineal, y reimplementarlo en SQL introduciría una tercera

@@ -1,4 +1,4 @@
-"""Segunda implementación de los indicadores de transporte, en SQL.
+"""Implementación independiente de los indicadores de transporte, en SQL.
 
 Qué hace
     Calcula los mismos indicadores que `solutions/reference.py`, pero cargando los

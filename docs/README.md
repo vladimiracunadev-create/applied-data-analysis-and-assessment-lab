@@ -13,6 +13,10 @@ repositorio.
 Los **cuadernos de trabajo** son el problema resuelto paso a paso, con el código de
 Pandas, la salida real y la fórmula de Excel equivalente, en un solo archivo.
 
+El [`paquete general`](paquete-general.md) permite descargar juntos los trece casos,
+los diez cuadernos y las implementaciones comparables en Pandas, Polars, R, SQL y
+Excel, sin redistribuir datos de terceros.
+
 | Cuaderno | Problemas | Pasos |
 | --- | --- | ---: |
 | [Consolidar cinco Excel](../cases/bip_lugares_carga/CUADERNO.md) | P01, P02, P04 | 12 |
@@ -47,11 +51,11 @@ En orden, de lo que más rinde a lo que menos:
 | 4 | [`cases/cobertura_de_carga`](../cases/cobertura_de_carga/README.md) | **P08 resuelto en parte**: el cruce que no tiene clave, y cuánto del resultado lo pone el analista |
 | 5 | [`cases/carga_nocturna`](../cases/carga_nocturna/README.md) | **P09 y P05 resueltos**: un indicador con datos faltantes, publicado como intervalo en lugar de cifra |
 | 6 | [`cases/correspondencia_metro`](../cases/correspondencia_metro/README.md) | **P10 y P03 resueltos**: conciliar dos inventarios de la misma realidad, y auditar qué no mira cada control de calidad |
-| 7 | [`cases/rendimiento_gtfs`](../cases/rendimiento_gtfs/README.md) | **P07 resuelto**: benchmark comparable de Pandas, bloques y DuckDB |
+| 7 | [`cases/rendimiento_gtfs`](../cases/rendimiento_gtfs/README.md) | **P07 resuelto**: benchmark comparable de Pandas, bloques, DuckDB y Polars |
 | 8 | [`cases/frecuencia_programada`](../cases/frecuencia_programada/README.md) | **P12 y P13 resueltos**: frecuencia programada e ICF no observable sin GPS |
 | 9 | [`cases/evolucion_gtfs`](../cases/evolucion_gtfs/README.md) | **P14 y P15 resueltos**: tres publicaciones oficiales comparadas con la misma definición |
 | 10 | [`cases/informe_decision_carga`](../cases/informe_decision_carga/README.md) | **P16 resuelto**: informe ejecutivo con evidencia, inferencia y límites |
-| 11 | [Equivalencias SQL / Pandas / Excel / R](equivalencias.md) | Traducción con las trampas donde las versiones dejan de ser equivalentes |
+| 11 | [Equivalencias SQL / Pandas / Polars / Excel / R](equivalencias.md) | Traducción con las trampas donde las versiones dejan de ser equivalentes |
 | 12 | [`cases/transport`](../cases/transport/README.md) | Las tres simulaciones de cuatro horas y qué se corrige en cada una |
 
 Lo que **no** encontrarás: nada sobre el contenido de ninguna prueba real. No se
@@ -67,8 +71,9 @@ conoce, y queda dicho en el mapa de problemas.
 | [Metodología de 18 etapas](metodologia.md) | La versión completa y auditable, implementada en `lab.method` |
 | [Método de investigación](research-method.md) | La versión corta, para un análisis acotado |
 | [Arquitectura](arquitectura.md) | Los contratos entre módulos y las decisiones técnicas con sus alternativas descartadas |
-| [Base de conocimiento](conocimiento.md) | 42 registros de cosas que costó descubrir. Búsqueda: `python -m lab.knowledge "consulta"` |
+| [Base de conocimiento](conocimiento.md) | 43 registros de cosas que costó descubrir. Búsqueda: `python -m lab.knowledge "consulta"` |
 | [Catálogo de casos](catalogo-casos.md) | Los trece casos con sus metadatos y la cobertura de competencias |
+| [Paquete general](paquete-general.md) | Una descarga determinista con casos, cuadernos, resultados y cinco tecnologías |
 
 ---
 

@@ -99,19 +99,25 @@ El entorno mínimo son `pandas`, `numpy`, `openpyxl`, `xlsxwriter`, `matplotlib`
 en tiempo de ejecución, como hace `lab.sqlbridge.duckdb_available()`. Justifique la
 dependencia explicando qué problema resuelve que no se pueda resolver sin ella.
 
+Polars se instala con `uv sync --extra polars`; R es un runtime externo y las
+referencias usan solo R base. Si modifica una implementación multitecnología, ejecute
+`tests/test_multiengine.py`; CI instala ambas tecnologías y no admite omisiones.
+
 ## Antes de enviar
 
 ```powershell
 uv run python scripts/generate_data.py
 uv run python scripts/build_docs.py
+uv run python scripts/build_all_cases.py
 uv run python -m pytest
 uv run python scripts/build_docs.py --check
+uv run python scripts/build_all_cases.py --check
 uv run python -m lab.agents
 uv run python -m lab.learning
 ```
 
-Los seis comandos deben terminar sin error. El cuarto falla si cambió el código y no
-regeneró la documentación derivada.
+Los ocho comandos deben terminar sin error. Los comandos con `--check` fallan si la
+documentación o el paquete general quedaron desfasados.
 
 ### Y una comprobación más, si tocó un caso con datos reales
 

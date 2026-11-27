@@ -229,6 +229,8 @@ def test_el_entorno_minimo_no_crecio_sin_aviso():
         f"dependencias nuevas en el entorno mínimo: {sorted(extras)}. "
         "Las dependencias adicionales deben ser opcionales (ver CONTRIBUTING.md)."
     )
+    opcionales = pyproject["project"]["optional-dependencies"]
+    assert any(dependency.startswith("polars") for dependency in opcionales["polars"])
 
 
 def test_cada_modulo_del_nucleo_tiene_docstring_con_proposito():
@@ -254,6 +256,7 @@ def test_el_paquete_declara_todos_sus_modulos():
     "python scripts/build_excel_solutions.py",
     "python scripts/build_assessment.py",
     "python scripts/build_docs.py",
+    "python scripts/build_all_cases.py",
     "python -m pytest",
 ])
 def test_los_comandos_documentados_en_el_readme_existen(comando):

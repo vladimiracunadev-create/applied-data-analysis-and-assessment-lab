@@ -82,9 +82,11 @@ parte que más se omite y la que más vale en una evaluación.
 | Situación | Decisión habitual | Por qué |
 | --- | --- | --- |
 | Cabe en memoria, lógica compleja | Pandas | Expresividad; el cuello no es el volumen |
+| Agregación columnar o ejecución lazy | Polars | Paralelismo y plan optimizable con tipos explícitos |
 | No cabe, agregaciones por ventana | DuckDB o Parquet | El motor hace lo que la memoria no |
 | Hay que demostrar el cálculo a una persona | Excel con fórmulas vivas | Se audita abriendo la celda |
-| Se necesita una segunda opinión | SQL sobre los mismos archivos | Semántica distinta: el acuerdo es informativo |
+| Se necesita una segunda opinión fuera de Python | R base sobre los mismos archivos | Runtime distinto: el acuerdo es informativo |
+| Se necesitan varias opiniones | Pandas + Polars + R + SQL | Cada vía parte del archivo crudo y se confronta |
 | Hay coordenadas | GeoPandas | Distancias y pertenencia a polígonos |
 | Hay que anticipar | scikit-learn | Con validación fuera de muestra |
 
@@ -148,7 +150,7 @@ para turnos de producción, jornadas de guardia o cualquier horario operacional.
 | Instancia | Dominio | Datos | Qué capacidad aportó al núcleo |
 | --- | --- | --- | --- |
 | [`gtfs_red_movilidad`](../cases/gtfs_red_movilidad/README.md) | Transporte, Santiago | **Reales**, 1,1 M de filas | `lab.sources`, horarios de día de servicio |
-| [`transport`](../cases/transport/README.md) | Transporte | Sintéticos | Validación cruzada Pandas ↔ SQL ↔ Excel |
+| [`transport`](../cases/transport/README.md) | Transporte | Sintéticos | Validación cruzada Pandas ↔ Polars ↔ R ↔ SQL ↔ Excel |
 | [`retail`](../cases/retail/README.md) | Comercio | Sintéticos | Columna de signo derivada de un estado |
 | [`education`](../cases/education/README.md) | Educación | Sintéticos | Tasa ponderada frente a promedio simple |
 

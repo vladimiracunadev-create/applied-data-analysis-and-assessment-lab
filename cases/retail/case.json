@@ -39,15 +39,18 @@
   ],
   "metodologias_alternativas": [
     "Pandas con una columna de signo derivada del estado.",
+    "Polars con expresiones columnares para signo, venta neta y margen.",
+    "R base con la misma regla de signo y agregación por producto.",
     "Excel con columna auxiliar de unidades firmadas y tabla dinámica.",
     "SQL con CASE WHEN sobre el estado."
   ],
-  "implementaciones": ["cases/retail/solution.py"],
-  "soluciones": "cases/retail/solution.py produce cases/retail/reference.xlsx con hojas de calidad e indicadores.",
+  "implementaciones": ["cases/retail/solution.py", "solutions/polars_reference.py", "solutions/r_reference.R"],
+  "soluciones": "cases/retail/solution.py, solutions/polars_reference.py y solutions/r_reference.R; la referencia Pandas produce cases/retail/reference.xlsx.",
   "resultados": "Unidades, ventas netas y margen por producto, más el perfil de calidad de la tabla original.",
   "validaciones": [
     "tests/test_generic.py comprueba el signo de las devoluciones con un caso mínimo calculado a mano.",
-    "tests/test_cases.py vuelve a ejecutar la solución sobre el dataset del repositorio y verifica la coherencia de los totales."
+    "tests/test_cases.py vuelve a ejecutar la solución sobre el dataset del repositorio y verifica la coherencia de los totales.",
+    "tests/test_multiengine.py confronta las métricas de Pandas, Polars y R con tolerancia 1e-9."
   ],
   "interpretacion": "Un producto con margen negativo no es necesariamente un producto a descontinuar: puede operar como gancho de tráfico. El indicador describe; no decide.",
   "limitaciones": [

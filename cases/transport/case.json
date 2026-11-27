@@ -27,7 +27,7 @@
     "Medir el estado de los datos antes de calcular cualquier indicador.",
     "Consolidar viajes, recorridos, operadores y programación con cardinalidad controlada.",
     "Calcular demanda por operador y por hora, duración por recorrido y cumplimiento por recorrido y día.",
-    "Reproducir los resultados en hoja de cálculo y en SQL, y confrontarlos entre sí."
+    "Reproducir los resultados en Pandas, Polars, R, SQL y Excel, y confrontarlos entre sí."
   ],
   "restricciones": [
     "Cuatro horas de trabajo.",
@@ -51,19 +51,24 @@
   ],
   "metodologias_alternativas": [
     "Pandas sobre los CSV, con tipos resueltos por pd.to_numeric y pd.to_datetime.",
+    "Polars sobre los CSV, con expresiones columnares y cruces validados.",
+    "R base sobre los CSV, sin paquetes ni puente con Python.",
     "SQL sobre los mismos archivos cargados como texto, con CAST, LEFT JOIN y strftime.",
     "Excel con BUSCARX, SUMAR.SI.CONJUNTO, CONTAR.SI.CONJUNTO y tablas dinámicas."
   ],
   "implementaciones": [
     "solutions/reference.py — implementación en Pandas.",
+    "solutions/polars_reference.py — implementación independiente en Polars.",
+    "solutions/r_reference.R — implementación independiente en R base.",
     "solutions/sql_reference.py — implementación independiente en SQL.",
     "scripts/build_excel_solutions.py — libro de Excel con fórmulas vivas."
   ],
-  "soluciones": "solutions/reference.py, solutions/sql_reference.py, solutions/EXCEL.md y solutions/excel/case_N_resuelto.xlsx.",
+  "soluciones": "solutions/reference.py, solutions/polars_reference.py, solutions/r_reference.R, solutions/sql_reference.py, solutions/EXCEL.md y solutions/excel/case_N_resuelto.xlsx.",
   "resultados": "reference_outputs/case_N/ con calidad, demanda, demanda_hora, duracion, cumplimiento, cumplimiento_operador y realizados_recorrido, más el libro de referencia en Excel.",
   "validaciones": [
     "tests/test_reference.py comprueba invariantes del procesamiento en los tres casos.",
     "tests/test_cross_validation.py confronta Pandas contra SQL indicador por indicador con tolerancia 1e-9.",
+    "tests/test_multiengine.py confronta Pandas contra Polars y R en transporte, retail y educación con tolerancia 1e-9.",
     "tests/test_excel_solutions.py verifica que las fórmulas del libro apunten a los rangos correctos.",
     "La hoja 30_control de cada libro compara Excel contra Python al abrirlo en Excel."
   ],

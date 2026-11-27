@@ -39,14 +39,17 @@
   "metodologias_alternativas": [
     "Tasa ponderada: suma de asistidos sobre suma de programados.",
     "Promedio simple de las tasas por curso.",
-    "Mediana de las tasas, cuando interesa el curso típico y no el conjunto."
+    "Mediana de las tasas, cuando interesa el curso típico y no el conjunto.",
+    "Polars con expresiones columnares para ambas tasas.",
+    "R base con agregaciones separadas para numeradores, denominadores y medias."
   ],
-  "implementaciones": ["cases/education/solution.py"],
-  "soluciones": "cases/education/solution.py produce cases/education/reference.xlsx.",
+  "implementaciones": ["cases/education/solution.py", "solutions/polars_reference.py", "solutions/r_reference.R"],
+  "soluciones": "cases/education/solution.py, solutions/polars_reference.py y solutions/r_reference.R; la referencia Pandas produce cases/education/reference.xlsx.",
   "resultados": "Asistencia ponderada y promedio simple por establecimiento, con los días asistidos y programados que las sostienen.",
   "validaciones": [
     "tests/test_generic.py verifica la tasa ponderada contra un cálculo manual.",
-    "tests/test_cases.py comprueba que ninguna tasa quede fuera del rango de 0 a 100."
+    "tests/test_cases.py comprueba que ninguna tasa quede fuera del rango de 0 a 100.",
+    "tests/test_multiengine.py confronta las métricas de Pandas, Polars y R con tolerancia 1e-9."
   ],
   "interpretacion": "Cuando la tasa ponderada supera al promedio simple, los cursos grandes asisten más que los pequeños. Esa lectura es una inferencia sobre la composición de la matrícula, no una explicación de la causa de la ausencia.",
   "limitaciones": [

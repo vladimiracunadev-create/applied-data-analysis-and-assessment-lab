@@ -563,7 +563,7 @@ Lo que este caso toca y se trata a fondo en otro sitio:
 - [Qué se encontró, con las cifras y los límites — README del caso](README.md)
 - [P08 · El cruce que no tiene clave, que usa esta tabla](../cobertura_de_carga/README.md)
 - [P10 · Lo que esta validación de coordenadas no puede ver](../correspondencia_metro/README.md)
-- [Equivalencias entre SQL, Pandas, Excel y R](../../docs/equivalencias.md)
+- [Equivalencias entre SQL, Pandas, Polars, Excel y R](../../docs/equivalencias.md)
 - [Mapa de los 16 problemas de la instancia](../../docs/problemas-de-la-instancia.md)
 
 [Todos los cuadernos](../../docs/cuadernos.md) · [P08 · El cruce que no tiene clave](../cobertura_de_carga/README.md) ▶

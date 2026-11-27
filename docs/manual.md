@@ -5,23 +5,30 @@
 Practique listas, diccionarios, funciones, pathlib, excepciones. Ejercicio: función que reciba realizados y programados y devuelva None cuando el denominador sea cero.
 ## 3. Pandas
 `pd.read_csv`, `head`, `info`, `describe`, `value_counts`, `loc`, `groupby`, `agg`. Ejercicio: contar viajes por estado y comprobar el total.
-## 4. Excel
+## 4. Polars y R
+Polars es opcional: `uv sync --extra polars`. Ejecute la referencia con
+`uv run --extra polars python solutions/polars_reference.py transport 1`. R usa solo
+la biblioteca base: `Rscript solutions/r_reference.R transport 1
+reference_outputs/r/transport`. Ambos parten de los CSV crudos; no convierten la salida
+de Pandas.
+
+## 5. Excel
 Importe CSV como tabla; use filtros, tablas dinámicas, CONTAR.SI.CONJUNTO, SUMAR.SI.CONJUNTO, BUSCARX, SI.ERROR. Ejemplo con tablas nombradas Viajes y Recorridos: `=BUSCARX([@recorrido_id];Recorridos[recorrido_id];Recorridos[operador_id];"SIN CLAVE")`. Duración en minutos: `=SI(O([@inicio]="";[@fin]="");"";([@fin]-[@inicio])*1440)`. Convierta fechas de texto a fecha/hora primero. Los separadores dependen de la configuración regional.
-## 5. SQL a Pandas
+## 6. SQL a Pandas
 SELECT columnas -> df[[...]]; WHERE -> loc; GROUP BY -> groupby; JOIN -> merge; DISTINCT -> drop_duplicates. COUNT(*) -> size; COUNT(col) -> count. Verifique cardinalidad con validate='many_to_one'.
-## 6. Calidad
+## 7. Calidad
 `duplicated`, `isna`, `pd.to_numeric(errors='coerce')`, `pd.to_datetime(errors='coerce')`. No borre registros indiscriminadamente. Genere un informe de defectos y cobertura.
-## 7. Cruces
+## 8. Cruces
 Cruce viajes con recorridos y operadores. Use left join para detectar faltantes; compruebe que la cantidad de filas no aumente. Una programación sin viajes debe conservarse.
-## 8. Indicadores
+## 9. Indicadores
 Media = suma/n; mediana = valor central; percentil 90 = umbral que deja aproximadamente 90% de observaciones por debajo. Diferencie porcentaje de puntos porcentuales. Ejercicio: compare promedio y mediana de duración.
-## 9. Fechas
+## 10. Fechas
 `pd.to_datetime`, `.dt.hour`, `.dt.date`, `.dt.day`. Agrupe por hora y día; explique que la hora de inicio no equivale a la hora de cada validación.
-## 10. Transporte
+## 11. Transporte
 Diferencie viajes de vehículos y pasajeros registrados. Calcule demanda, cancelaciones, duración, cumplimiento de programación y cobertura. No infiera causas a partir de correlaciones.
-## 11. Visualización
+## 12. Visualización
 Gráfico de barras por operador y línea por hora; rotule unidades y período. Exporte tablas con `to_excel`.
-## 12. Validación
+## 13. Validación
 Compare totales de Excel y Python, documente reglas, denominadores, excepciones, diferencias de redondeo y limitaciones. Entregue código reproducible y archivos legibles.
-## 13–15. Simulaciones
+## 14–16. Simulaciones
 Use reloj de cuatro horas, sin consultar soluciones. Corrija con la rúbrica. Distribución sugerida: 15 lectura, 30 calidad, 80 Python, 55 Excel, 30 análisis, 20 validación, 10 envío.

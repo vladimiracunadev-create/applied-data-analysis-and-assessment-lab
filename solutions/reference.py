@@ -39,8 +39,9 @@ Por qué el código usa banderas y no filtros sucesivos
 Cómo se valida
     - `tests/test_reference.py` comprueba invariantes del procesamiento.
     - `tests/test_cross_validation.py` confronta cada indicador contra
-      `solutions/sql_reference.py`, una implementación independiente en SQL, con
-      tolerancia 1e-9.
+      `solutions/sql_reference.py`, una implementación independiente en SQL.
+    - `tests/test_multiengine.py` repite la confrontación con Polars y R base; ninguna
+      de esas vías consume resultados de Pandas.
     - La mediana y el P90 se comparan además contra una implementación en Python puro.
 
 Uso

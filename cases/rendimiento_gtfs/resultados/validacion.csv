@@ -1,3 +1,4 @@
 comparacion,coinciden,diferencias
 completo vs bloques,True,0
 completo vs DuckDB,True,0
+completo vs Polars,True,0

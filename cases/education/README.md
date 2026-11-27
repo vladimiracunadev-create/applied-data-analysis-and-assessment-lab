@@ -10,4 +10,13 @@ Excel con datos limpios e indicadores, código reproducible y nota de supuestos.
 ## Rúbrica
 Calidad 25; cálculo 35; comprobación Excel 20; interpretación 20 puntos.
 
-Solución Python: `uv run python -m cases.education.solution`. No consultar antes de resolver.
+## Soluciones comparables
+
+| Tecnología | Comando |
+| --- | --- |
+| Pandas | `uv run python -m cases.education.solution` |
+| Polars | `uv run --extra polars python solutions/polars_reference.py education` |
+| R base | `Rscript solutions/r_reference.R education 1 reference_outputs/r/education` |
+
+Las tres parten de `input.csv`; `tests/test_multiengine.py` confronta ambas tasas con
+tolerancia 10⁻⁹. No consulte las soluciones antes de resolver.

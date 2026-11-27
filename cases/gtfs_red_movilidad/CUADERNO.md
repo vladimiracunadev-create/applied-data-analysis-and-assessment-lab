@@ -489,6 +489,6 @@ Lo que este caso toca y se trata a fondo en otro sitio:
 - [Qué se encontró, con las cuatro trampas medidas — README del caso](README.md)
 - [P09 · La cobertura nocturna, que usa esta expansión](../carga_nocturna/README.md)
 - [P10 · La jerarquía de paradas del feed, a fondo](../correspondencia_metro/README.md)
-- [Equivalencias entre SQL, Pandas, Excel y R](../../docs/equivalencias.md)
+- [Equivalencias entre SQL, Pandas, Polars, Excel y R](../../docs/equivalencias.md)
 
 ◀ [P01 · Consolidar cinco Excel](../bip_lugares_carga/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P08 · El cruce que no tiene clave](../cobertura_de_carga/README.md) ▶

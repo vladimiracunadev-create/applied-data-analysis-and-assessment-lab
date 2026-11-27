@@ -11,6 +11,8 @@ keywords = [
     "applied-research",
     "technical-assessment",
     "pandas",
+    "polars",
+    "r-language",
     "excel",
     "education",
 ]
@@ -42,6 +44,8 @@ dependencies = [
 # Motor SQL alternativo. El puente de validación funciona sin esto, con el sqlite3 de
 # la biblioteca estándar; DuckDB se detecta con lab.sqlbridge.duckdb_available().
 sql = ["duckdb>=1.0"]
+# DataFrame columnar alternativo para las implementaciones comparables de los casos.
+polars = ["polars>=1.0,<2"]
 # Inferencia adicional. lab.stats implementa lo que el laboratorio usa sin estas
 # bibliotecas; sirven para contrastar resultados con una tercera implementación.
 stats = ["scipy>=1.11", "statsmodels>=0.14"]

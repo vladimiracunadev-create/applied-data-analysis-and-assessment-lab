@@ -22,23 +22,24 @@ lo mismo antes de comparar tiempos.
 """
 
 SOLUCION = """
-Se cuentan filas de horario por parada con lectura completa, seis bloques y una consulta
-DuckDB. Se separa el tiempo de extracción del ZIP de la consulta, se mide la memoria del
-DataFrame o bloque y se hace una unión por clave para encontrar cualquier diferencia.
-La conclusión se expresa como criterio, no como ganador universal.
+Se cuentan filas de horario por parada con lectura completa, seis bloques, una consulta
+DuckDB y un plan lazy de Polars. Se separa el tiempo de extracción del ZIP de cada
+consulta, se mide la memoria del DataFrame o bloque y se hace una unión por clave para
+encontrar cualquier diferencia. La conclusión se expresa como criterio, no como ganador
+universal.
 """
 
-FLUJO = Flujo(titulo="Misma pregunta, tres caminos medidos", etapas=[
+FLUJO = Flujo(titulo="Misma pregunta, cuatro caminos medidos", etapas=[
     Etapa("stop_times", ["1 098 717 filas", "51 MB sin comprimir", "12 495 paradas usadas"], color=TINTA),
     Etapa("Pandas completo", ["1 DataFrame", "~60 MB de datos", "groupby directo"], color=AZUL),
     Etapa("Pandas bloques", ["6 bloques", "~11 MB máximo", "suma incremental"], color=AZUL),
-    Etapa("DuckDB", ["CSV temporal", "consulta SQL", "preparación separada"], color=OCRE),
+    Etapa("DuckDB + Polars", ["CSV temporal", "SQL y plan lazy", "preparación separada"], color=OCRE),
     Etapa("Decisión", ["0 diferencias", "tiempo + memoria", "criterio por escala"], color=ACENTO),
 ])
 
 MAPA = Mapa(centro="P07 · Benchmark", subtitulo="8 pasos", ramas=[
     Rama("Diseñar", ["1 · Misma agregación", "2 · Métricas"], color=AZUL),
-    Rama("Ejecutar", ["3 · Completo", "4 · Bloques", "5 · DuckDB"], color=AZUL),
+    Rama("Ejecutar", ["3 · Completo", "4 · Bloques", "5 · DuckDB/Polars"], color=AZUL),
     Rama("Validar", ["6 · Igualdad exacta"], color=OCRE),
     Rama("Elegir", ["7 · Comparar", "8 · Regla de decisión"], color=ACENTO),
 ])
@@ -62,10 +63,10 @@ def construir() -> Cuaderno:
              "referencia['benchmark'].query(\"metodo == 'Pandas por bloques'\")",
              "Power Query puede agrupar antes de cargar, equivalente al patrón incremental.",
              "Una mediana exacta no se puede combinar sumando medianas de bloques.", mostrar="valor"),
-        Paso("Ejecutar DuckDB", "La consulta corre sobre el CSV extraído y reporta la extracción aparte.",
-             "referencia['benchmark'].query(\"metodo == 'DuckDB sobre CSV'\")",
+        Paso("Ejecutar DuckDB y Polars", "Ambos consultan el CSV extraído y reportan la extracción aparte.",
+             "referencia['benchmark'].query(\"metodo in ['DuckDB sobre CSV', 'Polars lazy sobre CSV']\")",
              "En Power Query, agrupar durante la consulta evita cargar el detalle a la hoja.",
-             "Sumar extracción y consulta o excluirla cambia la pregunta; por eso se muestran ambas.", mostrar="valor"),
+             "DuckDB y Polars lazy no son equivalentes internamente; solo comparten la pregunta y la salida.", mostrar="valor"),
         Paso("Exigir igualdad antes de mirar velocidad", "Una implementación rápida y distinta es incorrecta.",
              "referencia['validacion']",
              "Cruce por `stop_id` y columna `=conteo_A=conteo_B`; contar falsos.",
@@ -74,22 +75,22 @@ def construir() -> Cuaderno:
              "referencia['benchmark']", "Tabla con formato condicional por métrica, sin semáforo único.",
              "El color de 'ganador' borra que bloques compra memoria a cambio de tiempo.", filas=6,
              hoja=Hoja(columnas=[Columna("A","metodo",145),Columna("B","segundos",90),Columna("C","memoria_MB",95)],
-                       filas=[["Pandas completo","medido","60,25"],["Pandas bloques","medido","11,31"],["DuckDB","medido","n/a"]],
+                       filas=[["Pandas completo","medido","60,25"],["Pandas bloques","medido","11,31"],["DuckDB/Polars","medido","n/a"]],
                        celda="C3", formula="=MAX(memoria_de_cada_bloque)", resultado="11,31",
                        nota="La memoria de DuckDB no se compara con memoria de DataFrame.")),
         Paso("Tomar una decisión proporcional", "Se elige el camino más simple que cumple el límite real de recursos.",
-             "{'este_feed': 'Pandas completo cabe', 'memoria_restringida': 'bloques', 'muchos_feeds_o_consultas': 'DuckDB/columnar'}",
+             "{'este_feed': 'Pandas completo cabe', 'memoria_restringida': 'bloques', 'muchos_feeds_o_consultas': 'DuckDB/Polars'}",
              "Documentar volumen, operación, máquina y fecha junto a la elección.",
              "Extrapolar linealmente una sola corrida no sustituye medir el siguiente orden de magnitud.", mostrar="valor"),
     ]
     return Cuaderno(
         caso="P07", titulo="Cuándo conviene dejar Pandas",
-        pregunta="¿Qué se gana y qué se pierde al leer completo, por bloques o con DuckDB?",
+        pregunta="¿Qué se gana y qué se pierde al leer completo, por bloques, con DuckDB o con Polars?",
         datos="stop_times.txt del GTFS vigente: 1 098 717 filas y la misma agregación por parada.",
         pasos=pasos, contexto={"rendimiento": rendimiento}, problema=PROBLEMA, solucion=SOLUCION,
         flujo=FLUJO, mapa=MAPA,
         cierre=("En este feed Pandas completo cabe y es simple; bloques reduce cerca de 81 % la memoria de datos. "
-                "DuckDB ejecuta la consulta sin materializar un DataFrame, con preparación informada aparte."),
+                "DuckDB y Polars ejecutan planes columnares con la preparación informada aparte."),
         aprendizajes=("Un benchmark empieza por igualdad de resultado.", "Tiempo y memoria son objetivos distintos.",
                       "La agregación por bloques exige una operación combinable.", "Los tiempos se vuelven a medir por equipo."),
         relacionados=(("Resultados y límites", "README.md"),
@@ -99,5 +100,5 @@ def construir() -> Cuaderno:
         reproducir="python -m cases.rendimiento_gtfs.solution",
         importes="from cases.rendimiento_gtfs import solution as rendimiento",
         fuentes_datos="gtfs-red-movilidad", columnas_excel=("metodo", "segundos", "memoria_MB"),
-        dependencias_colab="'duckdb>=1.0'",
+        dependencias_colab="'duckdb>=1.0' 'polars>=1.0,<2'",
     )

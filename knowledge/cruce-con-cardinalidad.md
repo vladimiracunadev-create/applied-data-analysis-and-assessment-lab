@@ -2,8 +2,8 @@
 id: cruce-con-cardinalidad
 tipo: patron
 titulo: Cruzar tablas controlando la cardinalidad
-etiquetas: [cruce-consolidacion, calidad-datos, pandas, sql, excel, equivalencias]
-fuente: lab/core.py, lab/contracts.py
+etiquetas: [cruce-consolidacion, calidad-datos, pandas, polars, r, sql, excel, equivalencias]
+fuente: lab/core.py, lab/contracts.py, solutions/polars_reference.py, solutions/r_reference.R
 relacionados: [vacio-no-es-cero, count-asterisco-vs-columna]
 ---
 
@@ -36,6 +36,14 @@ izquierda.merge(catalogo, on="clave", how="left", validate="many_to_one", indica
 `lab.core.audited_join` hace esto y devuelve además la tabla de auditoría del
 indicador. `lab.contracts.ForeignKey` declara la relación para que la validación la
 compruebe antes del cruce.
+
+**En Polars.** `join(..., how="left", validate="m:1")` aplica el mismo contrato sin
+depender del índice. En un cruce completo, `coalesce=True` conserva una sola columna de
+clave.
+
+**En R base.** `merge(..., all.x=TRUE)` conserva las filas izquierdas, pero no valida
+la cardinalidad: primero se exige `!anyDuplicated(catalogo$clave)` y después se compara
+`nrow()` antes y después.
 
 **En SQL.** `LEFT JOIN` y, para detectar duplicación, comparar
 `COUNT(*)` antes y después. Las claves huérfanas se cuentan con la diferencia entre

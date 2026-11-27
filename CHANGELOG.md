@@ -14,12 +14,18 @@ releases y no se publican como tales.
   problemas: Markdown con salidas reales, script seguido, Colab, libro de práctica,
   diagramas SVG y un paquete ZIP por cuaderno. P02/P04, P09, P10, P13 y P15 se integran
   con el problema que comparte sus datos y su método, sin duplicar casos.
-- **Cuatro casos reales y reproducibles:** benchmark de Pandas completo, por bloques y
-  DuckDB (P07); frecuencia programada y límite observable del ICF (P12/P13); comparación
+- **Cuatro casos reales y reproducibles:** benchmark de Pandas completo, por bloques,
+  DuckDB y Polars (P07); frecuencia programada y límite observable del ICF (P12/P13); comparación
   homogénea de publicaciones GTFS 2024–2026 (P14/P15); e informe ejecutivo que separa
   evidencia, inferencia, hipótesis y afirmaciones no demostrables (P16).
 - **Contratos de publicación en CI.** Las pruebas verifican que los dieciséis problemas
   tengan resolución, y que cada Colab, libro Excel y ZIP publicado pueda abrirse.
+- **Implementaciones independientes en Polars y R base** para los tres casos sintéticos
+  canónicos —transporte, retail y educación—. Parten de los CSV crudos y se confrontan
+  contra Pandas con tolerancia 10⁻⁹; R se ejecuta obligatoriamente en CI.
+- **Paquete general determinista:** `dist/todos-los-casos.zip` reúne trece casos, diez
+  cuadernos, resultados, datos sintéticos y cinco representaciones tecnológicas, con
+  manifiesto SHA-256 y sin datos de terceros.
 
 ### Cambiado
 
@@ -27,6 +33,9 @@ releases y no se publican como tales.
   cuadernos y los trece casos para que la resolución sea visible desde la portada.
 - El generador cuenta cuadernos físicos distintos y problemas integrados sin inflar la
   cobertura cuando dos problemas comparten un mismo cuaderno.
+- La guía de equivalencias, la arquitectura, el recorrido, el material de ingeniería y
+  los metadatos de los casos incorporan Polars y R sin convertirlos en dependencias del
+  entorno mínimo.
 
 ### Límites declarados
 

@@ -4,7 +4,7 @@
 
 [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/rendimiento_gtfs/cuaderno/colab.ipynb) — corre los pasos sin instalar nada: el cuaderno clona el repositorio y descarga los datos del portal.
 
-> **¿Qué se gana y qué se pierde al leer completo, por bloques o con DuckDB?**
+> **¿Qué se gana y qué se pierde al leer completo, por bloques, con DuckDB o con Polars?**
 
 ## 1 · El problema
 
@@ -19,10 +19,11 @@ lo mismo antes de comparar tiempos.
 
 ## 2 · La solución que se va a aplicar
 
-Se cuentan filas de horario por parada con lectura completa, seis bloques y una consulta
-DuckDB. Se separa el tiempo de extracción del ZIP de la consulta, se mide la memoria del
-DataFrame o bloque y se hace una unión por clave para encontrar cualquier diferencia.
-La conclusión se expresa como criterio, no como ganador universal.
+Se cuentan filas de horario por parada con lectura completa, seis bloques, una consulta
+DuckDB y un plan lazy de Polars. Se separa el tiempo de extracción del ZIP de cada
+consulta, se mide la memoria del DataFrame o bloque y se hace una unión por clave para
+encontrar cualquier diferencia. La conclusión se expresa como criterio, no como ganador
+universal.
 
 ![El recorrido](cuaderno/svg/mapa.svg)
 
@@ -34,7 +35,7 @@ La conclusión se expresa como criterio, no como ganador universal.
 | 2 | [Declarar qué se mide](#paso-2) | sí |
 | 3 | [Ejecutar Pandas completo](#paso-3) | sí |
 | 4 | [Ejecutar Pandas por bloques](#paso-4) | sí |
-| 5 | [Ejecutar DuckDB](#paso-5) | sí |
+| 5 | [Ejecutar DuckDB y Polars](#paso-5) | sí |
 | 6 | [Exigir igualdad antes de mirar velocidad](#paso-6) | sí |
 | 7 | [Comparar tiempo y memoria](#paso-7) | sí |
 | 8 | [Tomar una decisión proporcional](#paso-8) | sí |
@@ -119,7 +120,7 @@ referencia['benchmark'].query("metodo == 'Pandas completo'")
 
 ```
             metodo  segundos  ...  filas_resultado  filas_entrada
-0  Pandas completo  0.428411  ...            12495        1098717
+0  Pandas completo  0.960397  ...            12495        1098717
 
 [1 rows x 9 columns]
 ```
@@ -148,7 +149,7 @@ referencia['benchmark'].query("metodo == 'Pandas por bloques'")
 
 ```
                metodo  segundos  ...  filas_resultado  filas_entrada
-1  Pandas por bloques  0.648187  ...            12495        1098717
+1  Pandas por bloques  1.659754  ...            12495        1098717
 
 [1 rows x 9 columns]
 ```
@@ -165,28 +166,29 @@ Power Query puede agrupar antes de cargar, equivalente al patrón incremental.
 
 <a id="paso-5"></a>
 
-### Paso 5 · Ejecutar DuckDB
+### Paso 5 · Ejecutar DuckDB y Polars
 
-La consulta corre sobre el CSV extraído y reporta la extracción aparte.
+Ambos consultan el CSV extraído y reportan la extracción aparte.
 
 #### Python
 
 ```python
-referencia['benchmark'].query("metodo == 'DuckDB sobre CSV'")
+referencia['benchmark'].query("metodo in ['DuckDB sobre CSV', 'Polars lazy sobre CSV']")
 ```
 
 ```
-             metodo  segundos  ...  filas_resultado  filas_entrada
-2  DuckDB sobre CSV  0.300435  ...            12495        1098717
+                  metodo  segundos  ...  filas_resultado  filas_entrada
+2       DuckDB sobre CSV  1.121300  ...            12495        1098717
+3  Polars lazy sobre CSV  0.195069  ...            12495        1098717
 
-[1 rows x 9 columns]
+[2 rows x 9 columns]
 ```
 
 #### Excel
 
 En Power Query, agrupar durante la consulta evita cargar el detalle a la hoja.
 
-> **La trampa.** Sumar extracción y consulta o excluirla cambia la pregunta; por eso se muestran ambas.
+> **La trampa.** DuckDB y Polars lazy no son equivalentes internamente; solo comparten la pregunta y la salida.
 
 [↑ volver al recorrido](#2--la-solución-que-se-va-a-aplicar)
 
@@ -208,7 +210,8 @@ referencia['validacion']
 | --- | --- | --- |
 | completo vs bloques | True | 0 |
 | completo vs DuckDB | True | 0 |
-*2 filas × 3 columnas.*
+| completo vs Polars | True | 0 |
+*3 filas × 3 columnas.*
 
 #### Excel
 
@@ -234,10 +237,11 @@ referencia['benchmark']
 
 | metodo | segundos | lectura_s | agregacion_s | memoria_datos_mb | bloques | estado | filas_resultado | filas_entrada |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Pandas completo | 0.42841110000154004 | 0.3378458000079263 | 0.09056529999361373 | 60.248285 | 1.0 |  | 12495 | 1098717 |
-| Pandas por bloques | 0.648186500009615 |  |  | 11.310612 | 6.0 |  | 12495 | 1098717 |
-| DuckDB sobre CSV | 0.30043489998206496 | 0.1857603999960702 | 0.30043489998206496 |  |  | ejecutado; extracción informada por separado | 12495 | 1098717 |
-*3 filas × 9 columnas.*
+| Pandas completo | 0.9603973000193946 | 0.7582218000316061 | 0.2021754999877885 | 60.248285 | 1.0 |  | 12495 | 1098717 |
+| Pandas por bloques | 1.6597541999653913 |  |  | 11.310612 | 6.0 |  | 12495 | 1098717 |
+| DuckDB sobre CSV | 1.1213004000019282 | 0.4513530000112951 | 1.1213004000019282 |  |  | ejecutado; extracción informada por separado | 12495 | 1098717 |
+| Polars lazy sobre CSV | 0.19506870000623167 | 0.41066780005348846 | 0.19506870000623167 |  |  | ejecutado; extracción informada por separado | 12495 | 1098717 |
+*4 filas × 9 columnas.*
 
 #### Excel
 
@@ -260,11 +264,11 @@ Se elige el camino más simple que cumple el límite real de recursos.
 #### Python
 
 ```python
-{'este_feed': 'Pandas completo cabe', 'memoria_restringida': 'bloques', 'muchos_feeds_o_consultas': 'DuckDB/columnar'}
+{'este_feed': 'Pandas completo cabe', 'memoria_restringida': 'bloques', 'muchos_feeds_o_consultas': 'DuckDB/Polars'}
 ```
 
 ```
-{'este_feed': 'Pandas completo cabe', 'memoria_restringida': 'bloques', 'muchos_feeds_o_consultas': 'DuckDB/columnar'}
+{'este_feed': 'Pandas completo cabe', 'memoria_restringida': 'bloques', 'muchos_feeds_o_consultas': 'DuckDB/Polars'}
 ```
 
 #### Excel
@@ -279,7 +283,7 @@ Documentar volumen, operación, máquina y fecha junto a la elección.
 
 ## 4 · El resultado
 
-En este feed Pandas completo cabe y es simple; bloques reduce cerca de 81 % la memoria de datos. DuckDB ejecuta la consulta sin materializar un DataFrame, con preparación informada aparte.
+En este feed Pandas completo cabe y es simple; bloques reduce cerca de 81 % la memoria de datos. DuckDB y Polars ejecutan planes columnares con la preparación informada aparte.
 
 ## 5 · Qué queda aprendido
 

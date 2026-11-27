@@ -4,7 +4,7 @@
 
 1. Elegir el tipo de cruce correcto y comprobar la cardinalidad antes y después.
 2. Detectar y cuantificar claves huérfanas y filas multiplicadas.
-3. Expresar el mismo cruce y la misma agregación en Pandas, SQL y Excel.
+3. Expresar el mismo cruce y la misma agregación en Pandas, Polars, R, SQL y Excel.
 4. Declarar un contrato de datos entre componentes y hacerlo cumplir en integración
    continua.
 5. Validar un resultado recalculándolo con una tecnología distinta.
@@ -55,7 +55,7 @@ huérfanos. Cinco pasos que ocupan diez líneas y que convierten un error silenc
 un número informado. Ver [[cruce-con-cardinalidad]].
 
 Sobre eso se construye la segunda idea de la clase: si el cruce y la agregación se
-pueden escribir en tres tecnologías, se pueden **confrontar**. Dos implementaciones
+pueden escribir en cinco tecnologías, se pueden **confrontar**. Dos implementaciones
 que coinciden no garantizan que el indicador sea el correcto —pueden compartir el
 mismo malentendido sobre la regla de negocio— pero descartan toda una familia de
 errores: tipos mal convertidos, filtros mal escritos, denominadores equivocados,
@@ -200,7 +200,7 @@ Con `INNER JOIN` el resultado habría sido 2 filas y nadie sabría que faltaba u
 filas en lugar de 3: `factor = 5/3 ≈ 1,67`. La suma de pasajeros queda inflada un 67 %
 en las filas afectadas. `validate="many_to_one"` en pandas lo detecta antes.
 
-### Ejemplo 3 — las tres implementaciones del mismo indicador
+### Ejemplo 3 — cinco implementaciones del mismo indicador
 
 **Pandas.**
 
@@ -221,6 +221,24 @@ GROUP BY operador
 ORDER BY operador
 ```
 
+**Polars.**
+
+```python
+demanda = (base.filter(~pl.col("pasajeros_invalido"))
+                .group_by("operador")
+                .agg(pl.col("pasajeros").sum(),
+                     pl.len().alias("viajes_con_dato"))
+                .sort("operador"))
+```
+
+**R base.**
+
+```r
+con_dato <- base[!base$pasajeros_invalido, ]
+demanda <- aggregate(pasajeros ~ operador, data = con_dato, FUN = sum)
+viajes <- aggregate(viaje_id ~ operador, data = con_dato, FUN = length)
+```
+
 **Excel.**
 
 ```excel
@@ -228,15 +246,17 @@ ORDER BY operador
 =CONTAR.SI.CONJUNTO(Calc[operador];$A6;Calc[valido];1)
 ```
 
-Las tres deben dar el mismo número. Si no, el orden de diagnóstico es: ¿el filtro es
+Las cinco deben dar el mismo número. Si no, el orden de diagnóstico es: ¿el filtro es
 el mismo?, ¿la conversión de tipos es la misma?, ¿el denominador es el mismo?
 
 ### Ejemplo 4 — validación cruzada ejecutada
 
-El laboratorio tiene dos implementaciones completas del caso de transporte:
-`solutions/reference.py` en Pandas y `solutions/sql_reference.py` en SQL, que parte de
-los CSV cargados como texto y hace su propio casteo. `tests/test_cross_validation.py`
-las confronta indicador por indicador con `τ = 10⁻⁹` sobre los tres casos.
+El laboratorio tiene cuatro implementaciones ejecutables del caso de transporte:
+`solutions/reference.py` en Pandas, `solutions/polars_reference.py` en Polars,
+`solutions/r_reference.R` en R base y `solutions/sql_reference.py` en SQL. Todas parten
+de los CSV crudos y hacen su propio tipado, cruce y agregación. Los libros de Excel son
+la quinta representación, con fórmulas vivas. `tests/test_cross_validation.py` y
+`tests/test_multiengine.py` las confrontan con `τ = 10⁻⁹` sobre los tres casos.
 
 Esa confrontación detectó un error real: la duración calculada con `julianday`
 difería del valor exacto en el séptimo decimal, lo que invertía la comparación

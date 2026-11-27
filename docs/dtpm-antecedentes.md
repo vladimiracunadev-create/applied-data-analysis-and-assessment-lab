@@ -135,7 +135,7 @@ con una duración máxima de cuatro horas. El laboratorio cubre cada tema así:
 | Interpretación y justificación | `docs/learning/40-analisis/01` | ítem `gd-013`, `gd-014` |
 | Declaración de supuestos | `docs/learning/00-fundamentos/02` | ítem `gd-013` |
 | Validación de entregables | `docs/learning/30-ingenieria/01` | ítem `gd-010` |
-| Equivalencias SQL / Excel / Pandas | `docs/equivalencias.md` | ítem `gd-011` |
+| Equivalencias SQL / Pandas / Polars / Excel / R | `docs/equivalencias.md` | ítem `gd-011` |
 
 ## 5. Entornos alternativos
 

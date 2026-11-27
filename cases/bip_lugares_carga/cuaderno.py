@@ -206,7 +206,7 @@ RELACIONADOS = (
      "../cobertura_de_carga/README.md"),
     ("P10 · Lo que esta validación de coordenadas no puede ver",
      "../correspondencia_metro/README.md"),
-    ("Equivalencias entre SQL, Pandas, Excel y R",
+    ("Equivalencias entre SQL, Pandas, Polars, Excel y R",
      "../../docs/equivalencias.md"),
     ("Mapa de los 16 problemas de la instancia",
      "../../docs/problemas-de-la-instancia.md"),

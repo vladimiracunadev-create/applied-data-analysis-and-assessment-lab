@@ -33,7 +33,7 @@ No se aspira a 100 % en todos: la columna de faltantes es la lista de trabajo, y
 Responder preguntas de negocio con datos existentes y comunicarlas.
 
 - **Ruta de aprendizaje:** Fundamentos de datos → Matemáticas y estadística aplicadas → Programación aplicada a datos → Análisis y comunicación
-- **Herramientas:** Python, Pandas, Excel, SQL, Power BI
+- **Herramientas:** Python, Pandas, Polars, R, Excel, SQL, Power BI
 - **Competencias núcleo:** `lectura-escritura-datos`, `limpieza-normalizacion`, `agregacion-indicadores`, `estadistica-descriptiva`, `visualizacion`, `hojas-de-calculo`, `comunicacion-resultados`
 - **Competencias de apoyo:** `sql`, `calidad-datos`, `apoyo-decision`
 - **Evidencias que demuestran el perfil:**
@@ -46,20 +46,20 @@ Responder preguntas de negocio con datos existentes y comunicarlas.
 Asegurar que los datos de una organización sean correctos, trazables y utilizables.
 
 - **Ruta de aprendizaje:** Fundamentos de datos → Programación aplicada a datos → Ingeniería y calidad de datos → Análisis y comunicación
-- **Herramientas:** Python, Pandas, Excel, SQL, Power Query
+- **Herramientas:** Python, Pandas, Polars, R, Excel, SQL, Power Query
 - **Competencias núcleo:** `calidad-datos`, `limpieza-normalizacion`, `cruce-consolidacion`, `fechas-horarios`, `agregacion-indicadores`, `gobernanza-datos`, `validacion-independiente`, `hojas-de-calculo`
 - **Competencias de apoyo:** `sql`, `automatizacion`, `comunicacion-resultados`, `reproducibilidad`
 - **Evidencias que demuestran el perfil:**
   - informe de calidad con hallazgos por regla y columna
   - cruce auditado con control de cardinalidad
-  - validación cruzada entre Pandas, SQL y hoja de cálculo
+  - validación cruzada entre Pandas, Polars, R, SQL y hoja de cálculo
 
 ### Ingeniero de datos (`ingeniero-de-datos`)
 
 Construir los procesos que llevan datos desde el origen hasta el consumo.
 
 - **Ruta de aprendizaje:** Fundamentos de datos → Programación aplicada a datos → Ingeniería y calidad de datos
-- **Herramientas:** Python, SQL, DuckDB, Parquet, Docker, GitHub Actions
+- **Herramientas:** Python, Polars, SQL, DuckDB, Parquet, Docker, GitHub Actions
 - **Competencias núcleo:** `ingenieria-datos`, `automatizacion`, `calidad-datos`, `sql`, `reproducibilidad`, `lectura-escritura-datos`
 - **Competencias de apoyo:** `gobernanza-datos`, `cruce-consolidacion`, `modelamiento`
 - **Evidencias que demuestran el perfil:**
@@ -71,7 +71,7 @@ Construir los procesos que llevan datos desde el origen hasta el consumo.
 Modelar fenómenos y cuantificar incertidumbre para anticipar o explicar.
 
 - **Ruta de aprendizaje:** Matemáticas y estadística aplicadas → Programación aplicada a datos → Investigación aplicada → Temas avanzados
-- **Herramientas:** Python, Pandas, NumPy, scikit-learn, Statsmodels, R
+- **Herramientas:** Python, Pandas, Polars, NumPy, scikit-learn, Statsmodels, R
 - **Competencias núcleo:** `estadistica-descriptiva`, `inferencia-estadistica`, `modelamiento`, `visualizacion`, `investigacion-aplicada`, `reproducibilidad`
 - **Competencias de apoyo:** `limpieza-normalizacion`, `sql`, `comunicacion-resultados`
 - **Evidencias que demuestran el perfil:**

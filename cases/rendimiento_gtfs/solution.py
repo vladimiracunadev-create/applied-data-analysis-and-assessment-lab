@@ -1,4 +1,4 @@
-"""Mide tres caminos para la misma agregación sobre `stop_times.txt`."""
+"""Mide cuatro caminos para la misma agregación sobre `stop_times.txt`."""
 
 from __future__ import annotations
 
@@ -84,6 +84,42 @@ def duckdb_csv(feed: Path = FEED) -> tuple[pd.Series | None, dict[str, object]]:
                        "estado": "ejecutado; extracción informada por separado"}
 
 
+def polars_csv(feed: Path = FEED) -> tuple[pd.Series | None, dict[str, object]]:
+    """Agrega con un plan lazy de Polars; la extracción se mide aparte."""
+    try:
+        import polars as pl
+    except ImportError:
+        return None, {"metodo": "Polars lazy sobre CSV", "segundos": pd.NA,
+                      "lectura_s": pd.NA, "agregacion_s": pd.NA,
+                      "memoria_datos_mb": pd.NA, "bloques": pd.NA,
+                      "estado": "no ejecutado: instale el extra polars"}
+
+    with tempfile.TemporaryDirectory(prefix="gtfs-polars-") as temporal:
+        csv = Path(temporal) / "stop_times.txt"
+        inicio = time.perf_counter()
+        with zipfile.ZipFile(feed) as archive, archive.open("stop_times.txt") as source, csv.open("wb") as target:
+            shutil.copyfileobj(source, target)
+        preparacion = time.perf_counter() - inicio
+        inicio = time.perf_counter()
+        frame = (
+            pl.scan_csv(csv, schema_overrides={"stop_id": pl.String})
+            .group_by("stop_id")
+            .len(name="filas")
+            .sort("stop_id")
+            .collect()
+        )
+        consulta = time.perf_counter() - inicio
+    resultado = pd.Series(
+        frame["filas"].to_list(), index=frame["stop_id"].to_list(),
+        dtype="int64", name="filas",
+    )
+    resultado.index.name = "stop_id"
+    return resultado, {"metodo": "Polars lazy sobre CSV", "segundos": consulta,
+                       "lectura_s": preparacion, "agregacion_s": consulta,
+                       "memoria_datos_mb": pd.NA, "bloques": pd.NA,
+                       "estado": "ejecutado; extracción informada por separado"}
+
+
 def benchmark(feed: Path = FEED) -> dict[str, pd.DataFrame]:
     """Ejecuta los métodos y comprueba que produzcan exactamente el mismo resultado."""
     if not feed.exists():
@@ -91,14 +127,18 @@ def benchmark(feed: Path = FEED) -> dict[str, pd.DataFrame]:
     completo, meta_completo = pandas_completo(feed)
     bloques, meta_bloques = pandas_bloques(feed)
     duck, meta_duck = duckdb_csv(feed)
+    polars, meta_polars = polars_csv(feed)
 
-    filas = [meta_completo, meta_bloques, meta_duck]
+    filas = [meta_completo, meta_bloques, meta_duck, meta_polars]
     referencia = completo.rename("completo").to_frame().join(
         bloques.rename("bloques"), how="outer")
     referencia["coincide_bloques"] = referencia["completo"].eq(referencia["bloques"])
     if duck is not None:
         referencia = referencia.join(duck.rename("duckdb"), how="outer")
         referencia["coincide_duckdb"] = referencia["completo"].eq(referencia["duckdb"])
+    if polars is not None:
+        referencia = referencia.join(polars.rename("polars"), how="outer")
+        referencia["coincide_polars"] = referencia["completo"].eq(referencia["polars"])
     resumen = pd.DataFrame(filas)
     resumen["filas_resultado"] = len(completo)
     resumen["filas_entrada"] = int(completo.sum())
@@ -107,6 +147,8 @@ def benchmark(feed: Path = FEED) -> dict[str, pd.DataFrame]:
          "diferencias": int((~referencia["coincide_bloques"]).sum())},
         {"comparacion": "completo vs DuckDB", "coinciden": (pd.NA if duck is None else bool(referencia["coincide_duckdb"].all())),
          "diferencias": (pd.NA if duck is None else int((~referencia["coincide_duckdb"]).sum()))},
+        {"comparacion": "completo vs Polars", "coinciden": (pd.NA if polars is None else bool(referencia["coincide_polars"].all())),
+         "diferencias": (pd.NA if polars is None else int((~referencia["coincide_polars"]).sum()))},
     ]), "conteos": referencia.reset_index()}
 
 

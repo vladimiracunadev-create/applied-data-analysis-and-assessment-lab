@@ -1,6 +1,6 @@
 """P07 · Cuándo conviene dejar Pandas
 
-¿Qué se gana y qué se pierde al leer completo, por bloques o con DuckDB?
+¿Qué se gana y qué se pierde al leer completo, por bloques, con DuckDB o con Polars?
 
 Generado por scripts/build_cuadernos.py desde cuaderno.py. No editar a mano.
 La explicación de cada paso está en CUADERNO.md.
@@ -52,12 +52,12 @@ print("\n=== Paso 4 · Ejecutar Pandas por bloques ===")
 print(referencia['benchmark'].query("metodo == 'Pandas por bloques'"))
 
 # ----------------------------------------------------------------------------
-# Paso 5 · Ejecutar DuckDB
-# Trampa: Sumar extracción y consulta o excluirla cambia la pregunta; por
-# eso se muestran ambas.
+# Paso 5 · Ejecutar DuckDB y Polars
+# Trampa: DuckDB y Polars lazy no son equivalentes internamente; solo
+# comparten la pregunta y la salida.
 # ----------------------------------------------------------------------------
-print("\n=== Paso 5 · Ejecutar DuckDB ===")
-print(referencia['benchmark'].query("metodo == 'DuckDB sobre CSV'"))
+print("\n=== Paso 5 · Ejecutar DuckDB y Polars ===")
+print(referencia['benchmark'].query("metodo in ['DuckDB sobre CSV', 'Polars lazy sobre CSV']"))
 
 # ----------------------------------------------------------------------------
 # Paso 6 · Exigir igualdad antes de mirar velocidad
@@ -81,5 +81,5 @@ print(referencia['benchmark'])
 # siguiente orden de magnitud.
 # ----------------------------------------------------------------------------
 print("\n=== Paso 8 · Tomar una decisión proporcional ===")
-print({'este_feed': 'Pandas completo cabe', 'memoria_restringida': 'bloques', 'muchos_feeds_o_consultas': 'DuckDB/columnar'})
+print({'este_feed': 'Pandas completo cabe', 'memoria_restringida': 'bloques', 'muchos_feeds_o_consultas': 'DuckDB/Polars'})
 

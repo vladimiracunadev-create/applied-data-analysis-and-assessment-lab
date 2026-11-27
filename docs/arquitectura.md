@@ -52,7 +52,7 @@ flowchart TB
 
     subgraph datos["Datos y resultados"]
         crudos["data/<br/>sintéticos, semilla fija"]
-        soluciones["solutions/<br/>Pandas · SQL · Excel"]
+        soluciones["solutions/<br/>Pandas · Polars · R · SQL · Excel"]
         resultados["reference_outputs/<br/>generados"]
     end
 
@@ -143,6 +143,7 @@ y, si hizo falta algo nuevo, el núcleo crece con su prueba.
 | Decisión | Alternativas consideradas | Por qué esta |
 | --- | --- | --- |
 | Validación independiente con **SQLite** (`sqlite3`, biblioteca estándar) | DuckDB; una segunda implementación en Pandas | SQLite no agrega dependencias y su semántica difiere realmente de Pandas (`NULL`, `CAST`, afinidad de tipos), de modo que el acuerdo entre ambas es informativo. Una segunda implementación en Pandas compartiría los mismos malentendidos. DuckDB queda como opción detectable |
+| Polars como extra opcional y R base como runtime externo | Agregarlos al entorno mínimo | Suma dos semánticas independientes sin aumentar el costo de instalación de los cuadernos; CI ejecuta ambas |
 | Inferencia estadística **propia** en Python puro | SciPy; Statsmodels | Mantiene el entorno mínimo sin dependencias científicas pesadas y permite explicar las fórmulas en el programa de aprendizaje. Se valida contra tablas estadísticas publicadas |
 | Búsqueda de conocimiento **léxica** (TF-IDF) | Embeddings con base vectorial | Funciona sin red ni modelos, corre en integración continua y es explicable. La opción semántica está en la hoja de ruta y solo entra si mejora de forma medible |
 | Documentación derivada **generada** | Escrita a mano | Una tabla escrita a mano se desincroniza en el primer cambio. Generada, no puede mentir, y `--check` lo verifica en CI |
@@ -167,12 +168,13 @@ applied-data-analysis-and-assessment-lab/
 ├── knowledge/              base de conocimiento: un archivo por registro
 ├── research/               investigación aplicada y plantillas
 ├── data/                   datos sintéticos, inmutables, con semilla fija
-├── solutions/              referencia en Pandas, en SQL y en Excel
+├── solutions/              referencias en Pandas, Polars, R, SQL y Excel
 │   └── excel/              libros resueltos con fórmulas vivas
 ├── reference_outputs/      resultados generados (no versionados)
 ├── docs/                   documentación, programa de aprendizaje y derivados
 │   └── learning/           clases por bloque
-├── scripts/                generadores: datos, Excel, evaluaciones, documentación
+├── scripts/                generadores: datos, Excel, evaluaciones, docs y paquete
+├── dist/                   ZIP determinista con los trece casos publicables
 ├── templates/              plantilla de caso nuevo
 ├── tests/                  suite completa
 ├── notebooks/              exploración

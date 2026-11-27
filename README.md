@@ -4,7 +4,8 @@
 
 **Datos reales, problemas reales, resueltos paso a paso.** Cada caso trae el código de
 Python con su salida real, la fórmula de Excel dibujada en su hoja, las trampas de
-hacerlo de la forma obvia, y lo que los datos **no** permiten concluir.
+hacerlo de la forma obvia y lo que los datos **no** permiten concluir. Los tres casos
+canónicos se reproducen además en Polars y R base y se confrontan automáticamente.
 
 <br clear="left">
 
@@ -14,7 +15,7 @@ hacerlo de la forma obvia, y lo que los datos **no** permiten concluir.
 ![Versión 0.11.0](https://img.shields.io/badge/versi%C3%B3n-0.11.0-11253B)
 ![Python 3.11–3.14](https://img.shields.io/badge/Python-3.11%E2%80%933.14-3776AB)
 ![Licencia MIT](https://img.shields.io/badge/licencia-MIT-147D70)
-![711 pruebas](https://img.shields.io/badge/pruebas-711-147D70)
+![726 pruebas](https://img.shields.io/badge/pruebas-726-147D70)
 [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/bip_lugares_carga/cuaderno/colab.ipynb)
 
 ---
@@ -37,6 +38,10 @@ qué tecnología se usó, por qué, y qué trampa tenía cada dato.
 
 > **[Índice de los dieciséis cuadernos](docs/cuadernos.md)** — con el estado de
 > cada problema y el enlace a su cuaderno.
+>
+> **[Descargar todos los casos](dist/todos-los-casos.zip)** — trece casos, diez
+> cuadernos, resultados, datos sintéticos e implementaciones en Pandas, Polars, R,
+> SQL y Excel, con manifiesto SHA-256.
 
 Un caso tiene dos documentos y sirven para cosas distintas:
 
@@ -85,6 +90,7 @@ declara qué se puede y qué no se puede concluir.
 
 ```powershell
 python scripts/build_cuadernos.py          # regenera los cuadernos declarados
+python scripts/build_all_cases.py          # regenera la descarga general
 ```
 
 ---
@@ -93,7 +99,7 @@ python scripts/build_cuadernos.py          # regenera los cuadernos declarados
 
 | Si necesitas… | Empieza por |
 | --- | --- |
-| **Prepararte para una evaluación técnica** de datos con Excel y Pandas | [Índice de los 16 problemas resueltos](docs/cuadernos.md) |
+| **Prepararte para una evaluación técnica** de datos con Excel, Pandas, Polars o R | [Índice de los 16 problemas resueltos](docs/cuadernos.md) |
 | **Resolver un problema de datos** de tu trabajo | [El recorrido de nueve etapas](docs/instancias.md) |
 | **Aprender** con material que explica el por qué | [Programa de aprendizaje](docs/programa.md) — 8 clases con 17 secciones cada una |
 | **Reproducir un indicador oficial** | [Indicadores oficiales del transporte](docs/indicadores-oficiales-transporte.md) |
@@ -113,19 +119,19 @@ detectar.
 | [`correspondencia_metro`](cases/correspondencia_metro/README.md) | [P03/P10](cases/correspondencia_metro/CUADERNO.md) | reales, dos inventarios | Las 126 estaciones tienen bus cerca, pero 11 coordenadas discrepan más de 500 m entre fuentes |
 | [`carga_nocturna`](cases/carga_nocturna/README.md) | [P05/P09](cases/carga_nocturna/CUADERNO.md) | reales, espacio y tiempo | La cobertura verificable es 0 % y 52,6 % queda indeterminado por horarios ausentes |
 | [`gtfs_red_movilidad`](cases/gtfs_red_movilidad/README.md) | [P06](cases/gtfs_red_movilidad/CUADERNO.md) | reales, 1,1 M de filas | El 77,5 % de los horarios son desplazamientos relativos; el conteo ingenuo se equivoca −87,65 % |
-| [`rendimiento_gtfs`](cases/rendimiento_gtfs/README.md) | [P07](cases/rendimiento_gtfs/CUADERNO.md) | reales, benchmark | Completo, bloques y DuckDB coinciden; bloques reduce cerca de 81 % la memoria visible de datos |
+| [`rendimiento_gtfs`](cases/rendimiento_gtfs/README.md) | [P07](cases/rendimiento_gtfs/CUADERNO.md) | reales, benchmark | Pandas completo, bloques, DuckDB y Polars coinciden; bloques reduce cerca de 81 % la memoria visible |
 | [`cobertura_de_carga`](cases/cobertura_de_carga/README.md) | [P08](cases/cobertura_de_carga/CUADERNO.md) | reales, cruce sin clave | 59,29 % de cobertura en línea recta y 46,02 % con rodeo 1,3 |
 | [`calendario_medicion`](cases/calendario_medicion/README.md) | [P11](cases/calendario_medicion/CUADERNO.md) | reales, metodología oficial | De 261 días laborales quedan 78 medibles; cuatro reglas no cambian el denominador de 2026 |
 | [`frecuencia_programada`](cases/frecuencia_programada/README.md) | [P12/P13](cases/frecuencia_programada/CUADERNO.md) | reales, GTFS + definición oficial | 142 366 salidas programadas; el ICF observado no es calculable sin GPS |
 | [`evolucion_gtfs`](cases/evolucion_gtfs/README.md) | [P14/P15](cases/evolucion_gtfs/CUADERNO.md) | reales, tres publicaciones | 68 533 → 68 011 → 64 011 salidas laborales entre 2024 y 2026 |
 | [`informe_decision_carga`](cases/informe_decision_carga/README.md) | [P16](cases/informe_decision_carga/CUADERNO.md) | resultados reproducibles | Prioriza zonas para factibilidad sin presentar baja cobertura como demanda demostrada |
-| [`transport`](cases/transport/README.md) | — | sintéticos | La validación Pandas ↔ SQL detecta que `julianday` invierte puntualidad en empates |
+| [`transport`](cases/transport/README.md) | — | sintéticos | Pandas, Polars, R y SQL coinciden; la comparación detectó que `julianday` invierte puntualidad en empates |
 | [`retail`](cases/retail/README.md) | — | sintéticos | El signo de devolución debe ser una columna explícita |
 | [`education`](cases/education/README.md) | — | sintéticos | La tasa ponderada y el promedio de porcentajes no son lo mismo |
 
 Los trece hallazgos salieron de ejecutar el código, no de la intuición. Cada uno está
 documentado con su magnitud, su causa y su corrección en la
-[base de conocimiento](docs/conocimiento.md), que tiene 42 registros.
+[base de conocimiento](docs/conocimiento.md), que tiene 43 registros.
 
 ---
 
@@ -143,7 +149,16 @@ uv run python scripts/generate_data.py
 uv run python -m pytest
 ```
 
-Tres comandos y 711 pruebas en verde. Después, el caso que mejor muestra de qué va
+El entorno mínimo sigue siendo Python/Pandas. Polars es un extra y R usa solo su
+biblioteca base:
+
+```powershell
+uv sync --extra polars
+uv run --extra polars python solutions/polars_reference.py transport 1
+Rscript solutions/r_reference.R transport 1 reference_outputs/r/transport
+```
+
+Tres comandos y 726 pruebas en verde. Después, el caso que mejor muestra de qué va
 esto:
 
 ```powershell
@@ -155,6 +170,25 @@ Y para ver las fuentes públicas declaradas, con su licencia y su estado:
 ```powershell
 uv run python scripts/fetch_data.py --listar
 ```
+
+---
+
+## El mismo caso en cinco tecnologías
+
+Los casos sintéticos `transport`, `retail` y `education` parten de los mismos CSV y
+aplican las mismas reglas con implementaciones que no comparten transformaciones:
+
+| Tecnología | Implementación | Cómo se verifica |
+| --- | --- | --- |
+| Pandas | [`solutions/reference.py`](solutions/reference.py) y las soluciones de cada caso | referencia contractual |
+| Polars | [`solutions/polars_reference.py`](solutions/polars_reference.py) | extra opcional `polars`, expresiones columnares |
+| R base | [`solutions/r_reference.R`](solutions/r_reference.R) | runtime R sin paquetes, ejecutado en CI |
+| SQL | [`solutions/sql_reference.py`](solutions/sql_reference.py) | SQLite con tipado y agregación independientes |
+| Excel | [`solutions/EXCEL.md`](solutions/EXCEL.md) y libros resueltos | fórmulas vivas y hoja de control |
+
+`tests/test_multiengine.py` confronta transporte, retail y educación con tolerancia
+10⁻⁹. La guía de [equivalencias](docs/equivalencias.md) muestra dónde una traducción
+deja de ser equivalente por nulos, tipos, percentiles o semántica del cruce.
 
 ---
 
@@ -189,7 +223,7 @@ como capacidad existente.
 
 ## El núcleo
 
-21 módulos en `lab/`, ninguno con reglas de negocio de ningún dominio.
+26 módulos en `lab/`, ninguno con reglas de negocio de ningún dominio.
 
 | Módulo | Para qué sirve |
 | --- | --- |
@@ -253,10 +287,10 @@ fórmula que se puede abrir, sí.
 
 ## Qué comprueban las pruebas, y qué no
 
-711 pruebas en 35 archivos. Además de los cálculos:
+726 pruebas en 36 archivos. Además de los cálculos:
 
-- **Validación cruzada entre tecnologías**: Pandas contra SQL, indicador por indicador,
-  con tolerancia 10⁻⁹.
+- **Validación cruzada entre tecnologías**: Pandas contra Polars, R y SQL, indicador por
+  indicador, con tolerancia 10⁻⁹; Excel conserva su control al abrir el libro.
 - **Estadística contra valores publicados**: la t de Student, la chi-cuadrado, el
   intervalo de Wilson y el Domingo de Pascua se comparan con tablas y artículos, no
   consigo mismos.
@@ -270,7 +304,8 @@ fórmula que se puede abrir, sí.
 
 - **El resultado numérico de las fórmulas de Excel.** Evaluarlas exige Excel o
   LibreOffice, que no están en integración continua. Lo hace la hoja `30_control` de
-  cada libro al abrirla, y el acuerdo numérico queda cubierto por la vía Pandas ↔ SQL.
+  cada libro al abrirla, y el acuerdo numérico queda cubierto por las vías
+  Pandas ↔ Polars ↔ R ↔ SQL.
 - **Mediana y P90 en SQL.** SQLite no tiene percentil con interpolación lineal, de modo
   que se validan contra la implementación en Python puro.
 
@@ -309,8 +344,8 @@ No publiques datos personales, credenciales ni material de terceros. Lee
 | | |
 | --- | --- |
 | **Empezar** | [Índice de la documentación](docs/README.md) · [Mapa de problemas](docs/problemas-de-la-instancia.md) · [El recorrido](docs/instancias.md) · [Arquitectura](docs/arquitectura.md) · [Manual](docs/manual.md) |
-| **Aprender** | [Programa](docs/programa.md) · [Perfiles profesionales](docs/perfiles.md) · [Equivalencias SQL/Pandas/Excel/R](docs/equivalencias.md) |
-| **Resolver** | [Catálogo de casos](docs/catalogo-casos.md) · [Metodología de 18 etapas](docs/metodologia.md) · [Método de investigación](docs/research-method.md) |
+| **Aprender** | [Programa](docs/programa.md) · [Perfiles profesionales](docs/perfiles.md) · [Equivalencias SQL/Pandas/Polars/Excel/R](docs/equivalencias.md) |
+| **Resolver** | [Catálogo de casos](docs/catalogo-casos.md) · [Paquete general](docs/paquete-general.md) · [Metodología de 18 etapas](docs/metodologia.md) · [Método de investigación](docs/research-method.md) |
 | **Consultar** | [Base de conocimiento](docs/conocimiento.md) · [Indicadores oficiales](docs/indicadores-oficiales-transporte.md) · [Diccionario de datos](docs/diccionario.md) · [Contratos de agentes](docs/agentes.md) |
 | **Gobernanza** | [Hoja de ruta](docs/roadmap.md) · [Cambios](CHANGELOG.md) · [Contribuir](CONTRIBUTING.md) · [Seguridad](SECURITY.md) · [Estándar visual](docs/visual-standard.md) · [Prompt maestro](PROMPT_MAESTRO.md) |
 

@@ -167,7 +167,7 @@ RELACIONADOS = (
      "../carga_nocturna/README.md"),
     ("P10 · La jerarquía de paradas del feed, a fondo",
      "../correspondencia_metro/README.md"),
-    ("Equivalencias entre SQL, Pandas, Excel y R", "../../docs/equivalencias.md"),
+    ("Equivalencias entre SQL, Pandas, Polars, Excel y R", "../../docs/equivalencias.md"),
 )
 
 

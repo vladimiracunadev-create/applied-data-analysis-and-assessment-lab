@@ -199,8 +199,9 @@ se gana midiendo en lugar de suponiendo?
 
 **Datos.** GTFS (`stop_times.txt`, 51 MB sin comprimir) y los históricos.
 
-**Tecnología.** Comparar tres caminos sobre la **misma** agregación: Pandas completo,
-Pandas por bloques (`iter_zip_table`), y DuckDB sobre el CSV. Medir tiempo y memoria.
+**Tecnología.** Comparar cuatro caminos sobre la **misma** agregación: Pandas completo,
+Pandas por bloques (`iter_zip_table`), DuckDB y Polars lazy sobre el CSV. Medir tiempo,
+memoria visible y preparación por separado.
 
 **Qué enseña.** Que la decisión de tecnología se **mide**, no se argumenta. Y que la
 agregación por bloques solo sirve para estadísticos que se pueden calcular de forma
@@ -208,7 +209,7 @@ incremental: una suma sí, una mediana exacta no.
 
 **Estado:** **resuelto** — [`cases/rendimiento_gtfs`](../cases/rendimiento_gtfs/README.md),
 con [cuaderno de trabajo](../cases/rendimiento_gtfs/CUADERNO.md). Sobre 1 098 717
-filas, los tres métodos producen exactamente los mismos 12 495 grupos. En la medición
+filas, los cuatro métodos producen exactamente los mismos 12 495 grupos. En la medición
 de referencia, bloques reduce la memoria visible de datos de 60,25 a 11,31 MB; los
 tiempos se vuelven a medir en cada máquina.
 

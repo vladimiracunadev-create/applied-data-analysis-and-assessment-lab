@@ -20,12 +20,15 @@ Los recuentos se obtienen con los comandos indicados, no de memoria.
 | Cuadernos de trabajo: 10 cuadernos cubren los 16 problemas | implementado | `python scripts/build_cuadernos.py --check` |
 | Simulaciones de cuatro horas (3) | implementado | `simulations/0{1,2,3}_enunciado.md` |
 | Solución de referencia en Pandas | implementado | `python solutions/reference.py 1` |
+| Implementación columnar en Polars | implementado | `python solutions/polars_reference.py transport 1` |
+| Implementación independiente en R base | implementado | `Rscript solutions/r_reference.R transport 1 reference_outputs/r/transport` |
 | Segunda implementación en SQL | implementado | `python solutions/sql_reference.py 1` |
-| Validación cruzada Pandas ↔ SQL, τ = 1e-9 | implementado | `python -m pytest tests/test_cross_validation.py` |
+| Validación cruzada Pandas ↔ Polars ↔ R ↔ SQL, τ = 1e-9 | implementado | `python -m pytest tests/test_cross_validation.py tests/test_multiengine.py` |
+| Paquete general de los trece casos | implementado | `python scripts/build_all_cases.py --check` |
 | Libros de Excel resueltos con fórmulas vivas | implementado | `python scripts/build_excel_solutions.py` |
 | Motor de evaluaciones con banco de ítems y rúbricas | implementado | `python scripts/build_assessment.py --list` |
 | Programa de aprendizaje: 8 clases con 17 secciones | implementado | `python -m lab.learning` |
-| Base de conocimiento (42 registros) con búsqueda léxica | implementado | `python -m lab.knowledge` |
+| Base de conocimiento (43 registros) con búsqueda léxica | implementado | `python -m lab.knowledge` |
 | Contratos de 20 agentes y arnés de verificación | implementado | `python -m lab.agents` |
 | Perfiles profesionales (11) con cobertura medida | implementado | `python -m pytest tests/test_profiles.py` |
 | Inferencia estadística sin dependencias externas | implementado | `python -m pytest tests/test_stats.py` |
@@ -105,18 +108,19 @@ casos con datos reales: sus tres simulaciones corren sobre los datos sintéticos
   resultado, porque eso exige Excel o LibreOffice y no están disponibles en
   integración continua. La hoja `30_control` de cada libro hace esa comprobación al
   abrirlo, y el acuerdo numérico entre implementaciones está cubierto por la validación
-  Pandas ↔ SQL, que sí se ejecuta.
+  Pandas ↔ Polars ↔ R ↔ SQL, que sí se ejecuta.
 - **Mediana y P90 en SQL.** No se calculan en SQLite por falta de una función de
   percentil con interpolación lineal. Se validan contra una implementación en Python
   puro escrita en la propia suite de pruebas.
 
-### 2.6 Dependencias y entornos no implementados
+### 2.6 Dependencias y entornos opcionales
 
-Declarados en el ecosistema objetivo y **no** presentes en el entorno mínimo:
-Polars, DuckDB, R/RStudio, Power BI, Tableau, Metabase, GeoPandas, QGIS, Arrow/Parquet,
-SciPy, Statsmodels, scikit-learn, Docker, n8n, bases vectoriales y búsqueda semántica
-con embeddings. `lab.sqlbridge.duckdb_available()` detecta DuckDB si alguien lo
-instala; el resto no tiene integración escrita.
+Polars está implementado como extra `polars`; DuckDB como extra `sql` y benchmark de
+P07; R base como runtime externo sin paquetes, verificado en CI. Ninguno infla el
+entorno mínimo. Siguen sin integración ejecutable Power BI, Tableau, Metabase,
+GeoPandas, QGIS, Arrow/Parquet, Docker, n8n, bases vectoriales y búsqueda semántica con
+embeddings. SciPy, Statsmodels y herramientas de visualización permanecen como extras
+de contraste, no como requisitos del núcleo.
 
 ## 3. Próximos pasos, en orden de prioridad
 
@@ -146,8 +150,9 @@ instala; el resto no tiene integración escrita.
 
 ### Fase 4 — infraestructura opcional
 
-10. DuckDB y Parquet como motor alternativo en `lab.sqlbridge`.
-11. Integración de R como tercera implementación de referencia.
+10. Parquet como formato columnar reproducible para los casos cuyo volumen lo justifique.
+11. Extender las implementaciones Polars/R a un caso público especializado cuando la
+    comparación aporte evidencia nueva, no como traducción mecánica.
 12. Evaluar la búsqueda semántica sobre la base de conocimiento, midiendo si mejora
     la recuperación frente a TF-IDF antes de incorporarla. Si no mejora de forma
     medible, no se incorpora.

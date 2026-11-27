@@ -20,10 +20,12 @@ Metadatos completos del caso: [`case.json`](case.json).
 | Datos de los tres casos | `data/case_1` … `case_3` | entrada del ejercicio |
 | Diccionario de datos y reglas | [`docs/diccionario.md`](../../docs/diccionario.md) | qué significa cada campo |
 | Solución en Pandas | `solutions/reference.py` | referencia, **después** de resolver |
+| Solución en Polars | `solutions/polars_reference.py` | implementación columnar independiente |
+| Solución en R base | `solutions/r_reference.R` | implementación independiente sin paquetes |
 | Solución en SQL | `solutions/sql_reference.py` | segunda implementación independiente |
 | Guía de Excel | [`solutions/EXCEL.md`](../../solutions/EXCEL.md) | cómo construir el libro |
 | Libros de Excel resueltos | `solutions/excel/case_N_resuelto.xlsx` | fórmulas vivas y hoja de control |
-| Equivalencias entre herramientas | [`docs/equivalencias.md`](../../docs/equivalencias.md) | SQL ↔ Pandas ↔ Excel ↔ R |
+| Equivalencias entre herramientas | [`docs/equivalencias.md`](../../docs/equivalencias.md) | SQL ↔ Pandas ↔ Polars ↔ Excel ↔ R |
 | Banco de ítems y rúbricas | `assessments/items/` | practicar por competencia |
 
 ## Preparar el entorno
@@ -39,6 +41,17 @@ uv run python scripts/generate_data.py
 ```powershell
 uv run python -m pytest
 ```
+
+Polars es opcional; para ejecutar la validación multitecnología:
+
+```powershell
+uv sync --extra polars
+uv run python solutions/polars_reference.py transport 1
+Rscript solutions/r_reference.R transport 1 reference_outputs/r/transport
+```
+
+R usa únicamente la biblioteca base. CI instala el runtime y confronta sus siete
+tablas con Pandas; no se exige R para usar el entorno mínimo de Python.
 
 Para trabajar en Excel, exporte los cuatro CSV a un libro de entradas:
 

@@ -14,11 +14,11 @@ Actúa como arquitecto de soluciones, ingeniero de datos, investigador aplicado,
 - Audita estructura, dependencias, documentación, casos, pruebas y resultados antes de editar. Registra diagnóstico y plan; conserva compatibilidad y evita cambios destructivos.
 - Separa núcleo transversal, adaptadores de fuentes, casos independientes, material pedagógico y soluciones. Cada caso debe incluir problema, objetivos, alcance, fuentes, licencias, diccionario, contrato de datos, metodología, supuestos, resultados, limitaciones y pruebas.
 - Usa la plantilla existente y amplía de forma natural a comercio, educación, transporte, salud, finanzas, logística, empleo, ciencia, administración pública, ciberseguridad y otros dominios según necesidades reales. No inventes casos implementados.
-- Incorpora SQL, DuckDB, R, Power Query, Power BI, herramientas estadísticas, GIS, ML y automatización únicamente cuando aporten valor. Mantén dependencias opcionales fuera del entorno mínimo. Usa uv para Python y pnpm si se incorpora JavaScript.
+- Incorpora SQL, DuckDB, Polars, R, Power Query, Power BI, herramientas estadísticas, GIS, ML y automatización únicamente cuando aporten valor. Mantén dependencias opcionales fuera del entorno mínimo. Usa uv para Python y pnpm si se incorpora JavaScript.
 
 ## 3. Estándar pedagógico y profesional
 - Diseña rutas desde fundamentos a nivel avanzado; cada clase incluye objetivos, prerrequisitos, definiciones formales y simples, explicación de fórmulas y unidades, ejemplos pequeños y complejos, ejercicios y soluciones comentadas.
-- Explica el porqué de cada decisión, errores frecuentes, casos límite, alternativas y criterios de validación. Incluye equivalencias SQL/Pandas/Excel y glosario acumulativo.
+- Explica el porqué de cada decisión, errores frecuentes, casos límite, alternativas y criterios de validación. Incluye equivalencias SQL/Pandas/Polars/R/Excel y glosario acumulativo.
 - Para investigación, documenta hipótesis cuando corresponda, población, muestra, sesgos, incertidumbre, reproducibilidad y diferencia entre asociación y causalidad. No inventes fuentes ni resultados; protege datos personales.
 - Usa datos sintéticos reproducibles o fuentes públicas verificadas con procedencia, fecha, licencia y método de adquisición. Separa datos originales, procesados y resultados. No publiques material confidencial.
 - Código legible, tipado cuando sea útil, comentarios explicativos, manejo de errores, pruebas unitarias e integración, validación de totales y contratos. Mantén CI y entornos reproducibles; genera lockfile si uv está disponible.
