@@ -95,6 +95,7 @@ PROBLEMAS: tuple[tuple[str, str, str, str], ...] = (
     ("P15", "Evolución de la oferta programada por año", "evolucion_gtfs", ""),
     ("P16", "Informe de una página para quien decide", "informe_decision_carga", ""),
     ("P17", "Gobernanza y catálogo de activos de datos", "gobernanza_datos_dtpm", ""),
+    ("P18", "ETL histórico y control automatizado GTFS", "etl_gtfs_automatizado", ""),
 )
 
 

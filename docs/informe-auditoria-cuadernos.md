@@ -55,3 +55,7 @@ P17 agrega gobernanza explícita sin alterar P01–P16. Su catálogo es una elab
 pedagógica basada en la procedencia documentada del repositorio y se identifica como tal;
 no se presenta como catálogo oficial del DTPM. Las tres implementaciones confrontan el
 mismo ranking de brechas y las pruebas verifican identidad, fórmula y artefactos.
+
+P18 reutiliza el inventario ejecutado de P14/P15: valida el contrato, publica controles
+separados y particiones incrementales. La capacidad Parquet queda marcada como opcional
+y no ejecutada cuando falta `pyarrow`; no se simula una validación inexistente.

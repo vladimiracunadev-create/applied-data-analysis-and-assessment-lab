@@ -18,6 +18,7 @@ SHA-256 en un archivo `*.procedencia.json`.
 | `evolucion_gtfs` · P14/P15 | GTFS históricos 2024/2025 y vigente | ZIP con publicaciones anidadas | `fetch_data.py gtfs-historicos-2024`, `...2025`, `gtfs-red-movilidad` | licencia no verificada | `resultados/oferta_total.csv` |
 | `informe_decision_carga` · P16 | resultados reproducibles de P06 y P08 | CSV versionados | incluidos en el repositorio | heredan la trazabilidad de los casos fuente | `resultados/resumen.csv` |
 | `gobernanza_datos_dtpm` · P17 | procedencia documentada por P01–P16 | catálogo pedagógico CSV | incluido y versionado en el repositorio | no es catálogo oficial; conserva estados no declarados | `resultados/riesgo_por_activo.csv` |
+| `etl_gtfs_automatizado` · P18 | inventario reproducible de P14/P15 | CSV; Parquet opcional | incluido en el repositorio | hereda licencia GTFS no verificada; Parquet declara estado real | `resultados/volumen_por_publicacion.csv` |
 
 ## Estructura y diccionario
 

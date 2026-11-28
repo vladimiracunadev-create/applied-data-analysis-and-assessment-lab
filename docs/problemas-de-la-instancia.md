@@ -6,8 +6,8 @@ no se puede contestar**.
 
 > **Dos documentos por caso.** El `README.md` de un caso cuenta **qué se encontró**;
 > su `CUADERNO.md` muestra **cómo se hace**, paso a paso, con Pandas, la salida real,
-> Excel, Polars, R y gráficos estadísticos. Los diecisiete problemas están cubiertos por
-> [once cuadernos ejecutables](cuadernos.md); los problemas que comparten datos y
+> Excel, Polars, R y gráficos estadísticos. Los dieciocho problemas están cubiertos por
+> [doce cuadernos ejecutables](cuadernos.md); los problemas que comparten datos y
 > método se integran en un mismo cuaderno.
 
 Cada problema indica su estado: **resuelto** (hay código y resultado en el
@@ -462,6 +462,22 @@ pero el puntaje no es una probabilidad de incidente.
 **Estado:** **resuelto** —
 [`cases/gobernanza_datos_dtpm`](../cases/gobernanza_datos_dtpm/README.md), con
 [cuaderno P17](../cases/gobernanza_datos_dtpm/CUADERNO.md).
+
+### P18. ¿Cómo incorporar automáticamente un nuevo corte GTFS?
+
+**La pregunta.** ¿Cómo validar, particionar y publicar un corte sin romper la serie
+histórica ni declarar como ejecutado un formato opcional?
+
+**Datos.** Inventario reproducible de las publicaciones 2024–2026 producido por P14/P15.
+
+**Tecnología.** Contrato de esquema, cinco controles independientes, particionado por
+año y fecha, CSV ejecutado y exportación Parquet opcional.
+
+**Qué enseña.** Automatizar no es sólo programar una ejecución: es detener un corte que
+rompe el contrato, conservar el último resultado válido y registrar qué se ejecutó.
+
+**Estado:** **resuelto** — [`cases/etl_gtfs_automatizado`](../cases/etl_gtfs_automatizado/README.md),
+con [cuaderno P18](../cases/etl_gtfs_automatizado/CUADERNO.md).
 
 ---
 

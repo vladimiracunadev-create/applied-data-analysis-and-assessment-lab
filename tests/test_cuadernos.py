@@ -29,6 +29,7 @@ CASOS_ESPERADOS = {
     "frecuencia_programada",
     "gtfs_red_movilidad",
     "gobernanza_datos_dtpm",
+    "etl_gtfs_automatizado",
     "informe_decision_carga",
     "rendimiento_gtfs",
 }
@@ -39,8 +40,8 @@ def test_los_casos_resueltos_declaran_cuaderno():
 
 
 def test_los_problemas_tienen_un_caso_y_un_cuaderno():
-    assert len(PROBLEMAS) == 17
-    assert {codigo for codigo, *_ in PROBLEMAS} == {f"P{numero:02d}" for numero in range(1, 18)}
+    assert len(PROBLEMAS) == 18
+    assert {codigo for codigo, *_ in PROBLEMAS} == {f"P{numero:02d}" for numero in range(1, 19)}
     assert all(slug in CASOS_ESPERADOS for _, _, slug, _ in PROBLEMAS)
 
 

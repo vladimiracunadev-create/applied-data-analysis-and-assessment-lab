@@ -27,8 +27,9 @@ La navegación anterior/siguiente sigue este orden, sin saltar del P01 al P08:
 9. [P14/P15 · Evolución GTFS](../cases/evolucion_gtfs/CUADERNO.md) · [Abrir en Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/evolucion_gtfs/cuaderno/colab.ipynb)
 10. [P16 · Informe de decisión](../cases/informe_decision_carga/CUADERNO.md) · [Abrir en Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/informe_decision_carga/cuaderno/colab.ipynb)
 11. [P17 · Gobernanza de datos DTPM](../cases/gobernanza_datos_dtpm/CUADERNO.md) · [Abrir en Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/gobernanza_datos_dtpm/cuaderno/colab.ipynb)
+12. [P18 · ETL histórico GTFS](../cases/etl_gtfs_automatizado/CUADERNO.md) · [Abrir en Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/etl_gtfs_automatizado/cuaderno/colab.ipynb)
 
-## Los 17 problemas de la instancia DTPM
+## Los 18 problemas de la instancia DTPM
 
 | Problema | Cuaderno | Caso |
 | --- | --- | --- |
@@ -49,8 +50,9 @@ La navegación anterior/siguiente sigue este orden, sin saltar del P01 al P08:
 | P15 · Evolución de la oferta programada por año | [mismo cuaderno que P14](../cases/evolucion_gtfs/CUADERNO.md) | [`evolucion_gtfs`](../cases/evolucion_gtfs/README.md) |
 | P16 · Informe de una página para quien decide | [**abrir**](../cases/informe_decision_carga/CUADERNO.md) | [`informe_decision_carga`](../cases/informe_decision_carga/README.md) |
 | P17 · Gobernanza y catálogo de activos de datos | [**abrir**](../cases/gobernanza_datos_dtpm/CUADERNO.md) | [`gobernanza_datos_dtpm`](../cases/gobernanza_datos_dtpm/README.md) |
+| P18 · ETL histórico y control automatizado GTFS | [**abrir**](../cases/etl_gtfs_automatizado/CUADERNO.md) | [`etl_gtfs_automatizado`](../cases/etl_gtfs_automatizado/README.md) |
 
-**11 cuadernos distintos cubren 17 de 17 problemas**:
+**12 cuadernos distintos cubren 18 de 18 problemas**:
 6 están integrados en el cuaderno de un problema relacionado.
 El estado detallado de cada uno, con lo que enseña y lo que no se puede
 contestar, está en el [mapa de problemas](problemas-de-la-instancia.md).

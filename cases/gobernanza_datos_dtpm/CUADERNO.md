@@ -1,6 +1,6 @@
 # P17 · Gobernanza y catálogo de activos de datos DTPM
 
-◀ [P16 · Informe de decisión](../informe_decision_carga/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md)
+◀ [P16 · Informe de decisión](../informe_decision_carga/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P18 · ETL histórico GTFS](../etl_gtfs_automatizado/CUADERNO.md) ▶
 
 [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/gobernanza_datos_dtpm/cuaderno/colab.ipynb) — corre los pasos sin instalar nada: el cuaderno clona el repositorio y descarga los datos del portal.
 
@@ -625,4 +625,4 @@ Lo que este caso toca y se trata a fondo en otro sitio:
 - [P01 · Procedencia de lugares bip!](../bip_lugares_carga/CUADERNO.md)
 - [P14/P15 · Publicaciones GTFS](../evolucion_gtfs/CUADERNO.md)
 
-◀ [P16 · Informe de decisión](../informe_decision_carga/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md)
+◀ [P16 · Informe de decisión](../informe_decision_carga/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P18 · ETL histórico GTFS](../etl_gtfs_automatizado/CUADERNO.md) ▶

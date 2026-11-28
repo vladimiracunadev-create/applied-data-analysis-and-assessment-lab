@@ -1,0 +1,6 @@
+control,cumple,regla
+publicacion_unica,True,una fila por corte
+fechas_validas,True,fecha ISO interpretable
+volumen_positivo,True,stop_times no vacío
+paradas_positivas,True,paradas de embarque presentes
+particion_unica,True,partición determinista por corte

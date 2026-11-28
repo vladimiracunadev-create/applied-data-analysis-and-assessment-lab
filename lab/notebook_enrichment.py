@@ -129,6 +129,14 @@ SPECS: dict[str, CaseSpec] = {
         '.sort(["puntaje_riesgo", "activo_id"], descending=[True, False]).select(["activo_id", "puntaje_riesgo"])',
         'datos |> dplyr::arrange(dplyr::desc(.data$puntaje_riesgo), .data$activo_id) |> dplyr::select(.data$activo_id, .data$puntaje_riesgo)', 7,
     ),
+    "etl_gtfs_automatizado": CaseSpec(
+        "volumen_por_publicacion.csv", "publicacion", "mb_stop_times", "bar",
+        "Volumen de stop_times por publicación GTFS",
+        "Publicación", "Tamaño de stop_times (MB decimales)", "publicaciones 2024–2026",
+        "Inventario reproducible P14/P15", "volumen por corte bajo el mismo contrato",
+        '.sort("publicacion").select(["publicacion", "mb_stop_times"])',
+        'datos |> dplyr::arrange(.data$publicacion) |> dplyr::select(.data$publicacion, .data$mb_stop_times)', 6,
+    ),
 }
 
 
@@ -144,6 +152,7 @@ NAVIGATION: tuple[tuple[str, str], ...] = (
     ("evolucion_gtfs", "P14/P15 · Evolución GTFS"),
     ("informe_decision_carga", "P16 · Informe de decisión"),
     ("gobernanza_datos_dtpm", "P17 · Gobernanza de datos DTPM"),
+    ("etl_gtfs_automatizado", "P18 · ETL histórico GTFS"),
 )
 
 
@@ -217,6 +226,12 @@ PEDAGOGY: dict[str, tuple[str, str, str, str]] = {
         "Una barra alta prioriza una aclaración; no demuestra mala calidad del dato ni estima la probabilidad de un incidente.",
         "Imputar un campo no declarado como conforme reduce artificialmente el puntaje y fabrica evidencia.",
     ),
+    "etl_gtfs_automatizado": (
+        "Comparar el volumen de stop_times entre cortes procesados con el mismo contrato.",
+        "MB = bytes_stop_times / 1.000.000; se conserva una fila por publicación y se ordena por fecha.",
+        "El cambio de volumen sirve como señal para inspección, pero no demuestra un cambio de servicio ni su causa.",
+        "Comparar el ZIP completo de un corte con stop_times de otro mezcla unidades y vuelve engañosa la gráfica.",
+    ),
 }
 
 PANDAS_QUERIES: dict[str, str] = {
@@ -231,6 +246,7 @@ PANDAS_QUERIES: dict[str, str] = {
     "evolucion_gtfs": 'datos.sort_values("publicacion")[["publicacion", "salidas"]]',
     "informe_decision_carga": 'datos.loc[datos["unidad"] == "%", ["indicador", "valor"]]',
     "gobernanza_datos_dtpm": 'datos.sort_values(["puntaje_riesgo", "activo_id"], ascending=[False, True])[["activo_id", "puntaje_riesgo"]]',
+    "etl_gtfs_automatizado": 'datos.sort_values("publicacion")[["publicacion", "mb_stop_times"]]',
 }
 
 
@@ -643,6 +659,8 @@ def _prepare_frame(slug: str, frame: pd.DataFrame) -> pd.DataFrame:
         return frame.sort_values(
             ["puntaje_riesgo", "activo_id"], ascending=[False, True]
         )[["activo_id", "puntaje_riesgo"]]
+    if slug == "etl_gtfs_automatizado":
+        return frame.sort_values("publicacion")[["publicacion", "mb_stop_times"]]
     raise KeyError(slug)
 
 

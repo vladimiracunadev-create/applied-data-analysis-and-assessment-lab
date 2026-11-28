@@ -16,7 +16,7 @@ No se aspira a 100 % en todos: la columna de faltantes es la lista de trabajo, y
 | --- | --- | --- | --- | --- |
 | Analista de datos | 7 | 7 | 100.0 | — |
 | Gestor de datos | 8 | 8 | 100.0 | — |
-| Ingeniero de datos | 6 | 5 | 83.3 | automatizacion |
+| Ingeniero de datos | 6 | 6 | 100.0 | — |
 | Científico de datos | 6 | 3 | 50.0 | inferencia-estadistica, modelamiento, investigacion-aplicada |
 | Analista de negocios | 4 | 4 | 100.0 | — |
 | Especialista en inteligencia de negocios | 4 | 4 | 100.0 | — |

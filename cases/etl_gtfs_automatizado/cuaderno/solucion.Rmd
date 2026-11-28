@@ -1,0 +1,21 @@
+---
+title: "P18 · ETL histórico y control automatizado de publicaciones GTFS"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+Este documento ejecuta la misma implementación de `solucion.R`; no mantiene una segunda copia de las transformaciones. Antes de renderizar, abra el repositorio como proyecto o clone sus archivos en Posit Cloud.
+
+```{r preparar, message=FALSE}
+necesarios <- c("readr", "dplyr", "ggplot2")
+faltantes <- necesarios[!vapply(necesarios, requireNamespace, logical(1), quietly = TRUE)]
+if (length(faltantes)) install.packages(faltantes, repos = "https://cloud.r-project.org")
+```
+
+```{r ejecutar}
+source("solucion.R", chdir = TRUE)
+```
+
+Para producir el PNG desde una terminal use `Rscript solucion.R --grafico comparacion-r.png`. La guía completa de RStudio, Posit Cloud, IRkernel y Colab está en [`docs/ejecucion-portable.md`](../../../docs/ejecucion-portable.md).
