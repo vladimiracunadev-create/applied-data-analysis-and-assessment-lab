@@ -31,6 +31,7 @@ CASOS_ESPERADOS = {
     "gobernanza_datos_dtpm",
     "etl_gtfs_automatizado",
     "red_correspondencias_dtpm",
+    "optimizacion_carga_bip",
     "informe_decision_carga",
     "rendimiento_gtfs",
 }
@@ -41,8 +42,8 @@ def test_los_casos_resueltos_declaran_cuaderno():
 
 
 def test_los_problemas_tienen_un_caso_y_un_cuaderno():
-    assert len(PROBLEMAS) == 19
-    assert {codigo for codigo, *_ in PROBLEMAS} == {f"P{numero:02d}" for numero in range(1, 20)}
+    assert len(PROBLEMAS) == 20
+    assert {codigo for codigo, *_ in PROBLEMAS} == {f"P{numero:02d}" for numero in range(1, 21)}
     assert all(slug in CASOS_ESPERADOS for _, _, slug, _ in PROBLEMAS)
 
 

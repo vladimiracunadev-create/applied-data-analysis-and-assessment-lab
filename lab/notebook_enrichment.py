@@ -145,6 +145,15 @@ SPECS: dict[str, CaseSpec] = {
         '.sort(["estaciones_conectadas", "servicio"], descending=[True, False]).select(["servicio", "estaciones_conectadas"])',
         'datos |> dplyr::arrange(dplyr::desc(.data$estaciones_conectadas), .data$servicio) |> dplyr::select(.data$servicio, .data$estaciones_conectadas)', 7,
     ),
+    "optimizacion_carga_bip": CaseSpec(
+        "frontera_presupuesto.csv", "presupuesto", "puntaje_total", "line",
+        "Frontera exploratoria según presupuesto de estudios",
+        "Estudios financiables (recuento)", "Puntaje exploratorio acumulado", "escenario pedagógico P20",
+        "Resultado reproducible P16; no representa demanda ni beneficio monetario",
+        "mejor cartera factible para cada presupuesto",
+        '.sort("presupuesto").select(["presupuesto", "puntaje_total"])',
+        'datos |> dplyr::arrange(.data$presupuesto) |> dplyr::select(.data$presupuesto, .data$puntaje_total)', 7,
+    ),
 }
 
 
@@ -162,6 +171,7 @@ NAVIGATION: tuple[tuple[str, str], ...] = (
     ("gobernanza_datos_dtpm", "P17 · Gobernanza de datos DTPM"),
     ("etl_gtfs_automatizado", "P18 · ETL histórico GTFS"),
     ("red_correspondencias_dtpm", "P19 · Red de correspondencias"),
+    ("optimizacion_carga_bip", "P20 · Optimización de carga bip!"),
 )
 
 
@@ -247,6 +257,12 @@ PEDAGOGY: dict[str, tuple[str, str, str, str]] = {
         "El grado mide alcance estructural bajo el radio de P10; no mide pasajeros, frecuencia, capacidad ni puntualidad.",
         "Contar filas antes de deduplicar pares estación–servicio puede inflar el grado.",
     ),
+    "optimizacion_carga_bip": (
+        "Comparar el mejor puntaje acumulado alcanzable para presupuestos de uno a cinco estudios.",
+        "max Σ prioridad_i·x_i, con Σx_i=k y al menos min(k,3) bandas; x_i∈{0,1}. El desempate usa los ID en orden ascendente.",
+        "La curva muestra valor bajo el puntaje de cribado P16; no representa utilidad social, dinero, demanda ni una orden de construcción.",
+        "Sumar prioridades sin declarar diversidad concentra la cartera; llamar beneficio al puntaje inventa una unidad económica.",
+    ),
 }
 
 PANDAS_QUERIES: dict[str, str] = {
@@ -263,6 +279,7 @@ PANDAS_QUERIES: dict[str, str] = {
     "gobernanza_datos_dtpm": 'datos.sort_values(["puntaje_riesgo", "activo_id"], ascending=[False, True])[["activo_id", "puntaje_riesgo"]]',
     "etl_gtfs_automatizado": 'datos.sort_values("publicacion")[["publicacion", "mb_stop_times"]]',
     "red_correspondencias_dtpm": 'datos.sort_values(["estaciones_conectadas", "servicio"], ascending=[False, True])[["servicio", "estaciones_conectadas"]]',
+    "optimizacion_carga_bip": 'datos.sort_values("presupuesto")[["presupuesto", "puntaje_total"]]',
 }
 
 
@@ -681,6 +698,8 @@ def _prepare_frame(slug: str, frame: pd.DataFrame) -> pd.DataFrame:
         return frame.sort_values(
             ["estaciones_conectadas", "servicio"], ascending=[False, True]
         )[["servicio", "estaciones_conectadas"]]
+    if slug == "optimizacion_carga_bip":
+        return frame.sort_values("presupuesto")[["presupuesto", "puntaje_total"]]
     raise KeyError(slug)
 
 

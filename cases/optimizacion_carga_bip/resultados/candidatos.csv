@@ -1,0 +1,11 @@
+candidato_id,celda_lat,celda_lon,paradas,cubiertas,paradas_sin_cobertura,mediana_m,cobertura_pct,parada_mas_lejana,prioridad_exploratoria,banda_territorial
+C01,-33.4,-70.66,41,1,40,582.4,2.4,PB1400-Emiliano Zapata / esq. Bernardo O'Higgins,23296.0,norte
+C02,-33.62,-70.7,29,0,29,663.8,0.0,PG987-Los Suspiros / esq. Avenida Central,19250.2,sur
+C03,-33.63,-70.62,38,9,29,625.2,23.7,PF673-Belén / esq. Río Maihue,18130.8,sur
+C04,-33.62,-70.59,26,2,24,721.7,7.7,PF720-Sargento Menadier / esq. Uruguay,17320.8,sur
+C05,-33.5,-70.71,23,2,21,741.1,8.7,PI1967-Av. Los Cerrillos / esq. C. Teresa Herrera,15563.1,norte
+C06,-33.51,-70.67,24,0,24,643.8,0.0,PH269-Av. J. J. Prieto Vial / esq. Vecinal,15451.2,norte
+C07,-33.62,-70.57,20,0,20,745.6,0.0,PF978-Av. Circunvalación / esq. Nonato Coo,14912.0,sur
+C08,-33.62,-70.58,28,5,23,570.6,17.9,PF791-Av.Pdte. Salvador Allende / esq. Pdte. Gonzáles,13123.8,centro
+C09,-33.62,-70.6,39,9,30,414.8,23.1,PF882-Rafael Alberti / esq. Ejército Libertador,12444.0,centro
+C10,-33.54,-70.68,26,4,22,564.3,15.4,PG1149-Avenida Ossa / esq. Alhué,12414.6,centro

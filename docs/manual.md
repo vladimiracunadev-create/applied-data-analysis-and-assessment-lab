@@ -12,7 +12,7 @@ canónica de R usa solo la biblioteca base: `Rscript solutions/r_reference.R tra
 reference_outputs/r/transport`. Ambos parten de los CSV crudos; no convierten la salida
 de Pandas.
 
-Los diez casos reales agregan dentro de `cases/<caso>/cuaderno/` un trío controlado:
+Los catorce casos con cuaderno agregan dentro de `cases/<caso>/cuaderno/` un trío controlado:
 `solucion_pandas.py`, `solucion_polars.py` y `solucion.R`, además de `solucion.Rmd`
 para RStudio/Posit Cloud. Por ejemplo:
 

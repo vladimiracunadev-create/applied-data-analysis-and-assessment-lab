@@ -40,6 +40,7 @@ NOTEBOOK_CASES = (
     "gobernanza_datos_dtpm",
     "etl_gtfs_automatizado",
     "red_correspondencias_dtpm",
+    "optimizacion_carga_bip",
 )
 
 KEYS = {

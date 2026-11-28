@@ -12,19 +12,19 @@ Los recuentos se obtienen con los comandos indicados, no de memoria.
 | Componente | Estado | Cómo comprobarlo |
 | --- | --- | --- |
 | Núcleo (`lab/`): 26 módulos | implementado | `python -m pytest` |
-| Casos de estudio (16): 13 con datos públicos reales, metadatos o resultados reproducibles, 3 sintéticos | implementado | `python -m pytest tests/test_catalog.py` |
+| Casos de estudio (17): 14 con datos públicos reales, metadatos o resultados reproducibles, 3 sintéticos | implementado | `python -m pytest tests/test_catalog.py` |
 | Cruce espacial por proximidad sin dependencias geoespaciales | implementado | `python -m pytest tests/test_cobertura_de_carga.py` |
 | Intérprete de horarios en texto libre, con lo ilegible como desconocido | implementado | `python -m pytest tests/test_schedules.py` |
 | Conciliación de inventarios con grano distinto y dos criterios | implementado | `python -m pytest tests/test_correspondencia_metro.py` |
 | Análisis de claves: candidatas mínimas y clave subrogada determinista | implementado | `python -m pytest tests/test_keys.py` |
-| Cuadernos multiengine: 13 cuadernos cubren los 19 problemas con Pandas, Polars, R, Excel y gráficos | implementado | `python scripts/build_cuadernos.py --check` |
+| Cuadernos multiengine: 14 cuadernos cubren los 20 problemas con Pandas, Polars, R, Excel y gráficos | implementado | `python scripts/build_cuadernos.py --check` |
 | Simulaciones de cuatro horas (3) | implementado | `simulations/0{1,2,3}_enunciado.md` |
 | Solución de referencia en Pandas | implementado | `python solutions/reference.py 1` |
 | Implementación columnar en Polars | implementado | `python solutions/polars_reference.py transport 1` |
 | Implementación independiente en R base | implementado | `Rscript solutions/r_reference.R transport 1 reference_outputs/r/transport` |
 | Segunda implementación en SQL | implementado | `python solutions/sql_reference.py 1` |
 | Validación cruzada Pandas ↔ Polars ↔ R ↔ SQL, τ = 1e-9 | implementado | `python -m pytest tests/test_cross_validation.py tests/test_multiengine.py` |
-| Paquete general de los dieciséis casos | implementado | `python scripts/build_all_cases.py --check` |
+| Paquete general de los diecisiete casos | implementado | `python scripts/build_all_cases.py --check` |
 | Libros de Excel resueltos con fórmulas vivas | implementado | `python scripts/build_excel_solutions.py` |
 | Motor de evaluaciones con banco de ítems y rúbricas | implementado | `python scripts/build_assessment.py --list` |
 | Programa de aprendizaje: 8 clases con 17 secciones | implementado | `python -m lab.learning` |
@@ -54,7 +54,7 @@ deja de estar declarada aquí.
   limitaciones, bajo `research/`.
 
 - **`automatizacion`**, brecha cerrada por P18. **`modelamiento`**, brecha cerrada por
-  el grafo bipartito y los escenarios reproducibles de P19.
+  el grafo bipartito de P19 y la cartera optimizada y auditable de P20.
 
 - **`ingenieria-datos`** quedó cubierta en la versión 0.2.0 por la instancia
   `gtfs_red_movilidad`: adquisición con procedencia, lectura selectiva de un archivo de
@@ -62,12 +62,12 @@ deja de estar declarada aquí.
 
 ### 2.2 Cuadernos de trabajo — brecha cerrada
 
-Trece cuadernos generados y ejecutables cubren los diecinueve problemas. P02 y P04 están
+Catorce cuadernos generados y ejecutables cubren los veinte problemas. P02 y P04 están
 integrados en P01; P09 en P05; P10 en P03; P13 en P12; y P15 en P14. Cada uno trae
 Markdown con salidas reales, pasos Pandas y laboratorio comparable Pandas/Polars/R,
 Colab, R Markdown, libro de
 práctica, al menos un gráfico estadístico, diagramas SVG y ZIP. La navegación recorre
-los trece cuadernos en orden y ya no salta de P01 a P08.
+los catorce cuadernos en orden y ya no salta de P01 a P08.
 
 P14/P15 se ejecuta sobre las últimas publicaciones oficiales de 2024 y 2025 y el feed
 vigente de 2026. Es una trayectoria reciente de tres puntos; ampliar hasta 2014 sigue

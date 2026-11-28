@@ -1,6 +1,6 @@
 # P19 · Estructura de la red programada de correspondencias Metro–bus
 
-◀ [P18 · ETL histórico GTFS](../etl_gtfs_automatizado/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md)
+◀ [P18 · ETL histórico GTFS](../etl_gtfs_automatizado/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P20 · Optimización de carga bip!](../optimizacion_carga_bip/CUADERNO.md) ▶
 
 [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/red_correspondencias_dtpm/cuaderno/colab.ipynb) — corre los pasos sin instalar nada: el cuaderno clona el repositorio y descarga los datos del portal.
 
@@ -636,4 +636,4 @@ Lo que este caso toca y se trata a fondo en otro sitio:
 - [P03/P10 · Fuente de correspondencias](../correspondencia_metro/CUADERNO.md)
 - [P18 · Pipeline de datos](../etl_gtfs_automatizado/CUADERNO.md)
 
-◀ [P18 · ETL histórico GTFS](../etl_gtfs_automatizado/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md)
+◀ [P18 · ETL histórico GTFS](../etl_gtfs_automatizado/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P20 · Optimización de carga bip!](../optimizacion_carga_bip/CUADERNO.md) ▶

@@ -29,6 +29,7 @@ un PNG no vacío en los dos sistemas de visualización.
 | `gobernanza_datos_dtpm` · P17 | ER/CI | ER/CI | CI | CI | CI | ER/CI | ER/CI | ER/CI | CD | CI | CD | CD | CD | CD | CI | CI | caso nuevo completo | conforme |
 | `etl_gtfs_automatizado` · P18 | ER/CI | ER/CI | CI | CI | CI | ER/CI | ER/CI | ER/CI | CD | CI | CD | CD | CD | CD | CI | CI | caso nuevo completo | conforme |
 | `red_correspondencias_dtpm` · P19 | ER/CI | ER/CI | CI | CI | CI | ER/CI | ER/CI | ER/CI | CD | CI | CD | CD | CD | CD | CI | CI | caso nuevo completo | conforme |
+| `optimizacion_carga_bip` · P20 | ER/CI | ER/CI | CI | CI | CI | ER/CI | ER/CI | ER/CI | CD | CI | CD | CD | CD | CD | CI | CI | caso nuevo completo | conforme |
 
 ## Qué cubre cada columna transversal
 
@@ -42,7 +43,7 @@ un PNG no vacío en los dos sistemas de visualización.
   tolerancia `1e-9` y validación de archivos gráficos.
 - **Dependencias:** Python se fija mediante `uv.lock`; Colab instala rangos compatibles;
   CI instala R, `readr`, `dplyr` y `ggplot2` en un runner nuevo.
-- **Referencias:** el generador enumera P01–P19 y representa juntos P01/P02/P04 donde el
+- **Referencias:** el generador enumera P01–P20 y representa juntos P01/P02/P04 donde el
   contenido es transversal, sin renumerar los problemas.
 
 ## Límites declarados

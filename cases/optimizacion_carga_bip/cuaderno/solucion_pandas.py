@@ -1,0 +1,70 @@
+"""Laboratorio comparable Pandas + Matplotlib del caso optimizacion_carga_bip.
+
+Lee el mismo contrato CSV que las versiones Polars y R. La resolución completa del
+caso permanece en ``solution.py`` y en los pasos del cuaderno; este archivo aísla el
+indicador central para que la comparación entre motores sea controlada.
+"""
+from __future__ import annotations
+
+import argparse
+import sys
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
+# Buscar la raíz desde el propio archivo evita rutas C:\... específicas del autor y
+# funciona igual después de clonar el repositorio en Linux, Windows o Google Colab.
+ROOT = Path(__file__).resolve().parents[3] if "__file__" in globals() else Path.cwd()
+SOURCE = ROOT / "cases" / "optimizacion_carga_bip" / "resultados" / "frontera_presupuesto.csv"
+REQUIRED = {"presupuesto", "puntaje_total"}
+
+
+def analizar() -> pd.DataFrame:
+    """Carga, valida y transforma el indicador; no modifica el archivo de entrada."""
+    datos = pd.read_csv(SOURCE)
+    faltantes = REQUIRED.difference(datos.columns)
+    if faltantes:
+        raise ValueError(f"Faltan columnas requeridas en {SOURCE}: {sorted(faltantes)}")
+    # La expresión conserva explícitos filtro, agrupación, orden y selección para que
+    # el estudiante pueda alinearlos con las expresiones de Polars y dplyr.
+    resultado = datos.sort_values("presupuesto")[["presupuesto", "puntaje_total"]]
+    return resultado.reset_index(drop=True)
+
+
+def graficar(resultado: pd.DataFrame, destino: Path) -> Path:
+    """Representa exactamente las columnas comparadas y explicita sus unidades."""
+    x = resultado["presupuesto"].tolist()
+    y = resultado["puntaje_total"].tolist()
+    fig, ax = plt.subplots(figsize=(9, 5))
+    ax.plot(x, y, marker="o", linewidth=2, color="#11253B")
+    ax.set_xlabel("Estudios financiables (recuento)")
+    ax.set_ylabel("Puntaje exploratorio acumulado")
+    ax.set_ylim(bottom=0)
+    ax.set_title("Frontera exploratoria según presupuesto de estudios")
+    ax.grid(axis="y", alpha=0.25)
+    fig.text(0.01, 0.01, "Fuente: Resultado reproducible P16; no representa demanda ni beneficio monetario · Período: escenario pedagógico P20", fontsize=8, color="#58677A")
+    fig.tight_layout(rect=(0, 0.05, 1, 1))
+    fig.savefig(destino, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    return destino
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--salida", type=Path, help="CSV normalizado para comparar motores")
+    parser.add_argument("--grafico", type=Path, help="PNG de la visualización comparable")
+    args = parser.parse_args()
+    resultado = analizar()
+    print(resultado.to_string(index=False))
+    if args.salida:
+        resultado.to_csv(args.salida, index=False)
+    if args.grafico:
+        print(graficar(resultado, args.grafico))
+
+
+if __name__ == "__main__":
+    main()

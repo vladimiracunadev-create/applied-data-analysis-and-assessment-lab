@@ -124,7 +124,7 @@ def social_preview(destino: Path) -> Path:
 
     etiquetas = (
         "Python · Pandas", "Excel · Sheets", "Google Colab",
-        "Datos abiertos", "16 casos",
+        "Datos abiertos", "17 casos",
     )
     x = 76
     for indice, etiqueta in enumerate(etiquetas):

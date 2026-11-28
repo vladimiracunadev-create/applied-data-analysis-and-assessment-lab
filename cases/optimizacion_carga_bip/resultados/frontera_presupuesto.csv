@@ -1,0 +1,6 @@
+presupuesto,zonas_minimas,candidatos,puntaje_total,zonas_representadas,paradas_sin_cobertura_referenciales
+1,1,C01,23296.0,1,40
+2,2,C01;C02,42546.2,2,69
+3,3,C01;C02;C08,55670.0,3,92
+4,3,C01;C02;C03;C08,73800.8,3,121
+5,3,C01;C02;C03;C04;C08,91121.6,3,145

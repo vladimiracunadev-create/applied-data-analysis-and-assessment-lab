@@ -6,8 +6,8 @@ no se puede contestar**.
 
 > **Dos documentos por caso.** El `README.md` de un caso cuenta **qué se encontró**;
 > su `CUADERNO.md` muestra **cómo se hace**, paso a paso, con Pandas, la salida real,
-> Excel, Polars, R y gráficos estadísticos. Los diecinueve problemas están cubiertos por
-> [trece cuadernos ejecutables](cuadernos.md); los problemas que comparten datos y
+> Excel, Polars, R y gráficos estadísticos. Los veinte problemas están cubiertos por
+> [catorce cuadernos ejecutables](cuadernos.md); los problemas que comparten datos y
 > método se integran en un mismo cuaderno.
 
 Cada problema indica su estado: **resuelto** (hay código y resultado en el
@@ -493,6 +493,22 @@ mide demanda, frecuencia, capacidad, puntualidad ni pasajeros afectados.
 
 **Estado:** **resuelto** — [`cases/red_correspondencias_dtpm`](../cases/red_correspondencias_dtpm/README.md),
 con [cuaderno P19](../cases/red_correspondencias_dtpm/CUADERNO.md).
+
+### P20. ¿Qué zonas conviene estudiar primero con un presupuesto limitado?
+
+**La pregunta.** ¿Qué combinación de celdas candidatas maximiza el puntaje exploratorio
+de P16 y conserva diversidad territorial para presupuestos de uno a cinco estudios?
+
+**Datos.** Diez celdas priorizadas por P16, derivadas de GTFS DTPM y lugares bip!.
+
+**Tecnología.** Variables binarias, enumeración exhaustiva, restricción de bandas
+relativas de latitud, desempate determinista y frontera presupuestaria.
+
+**Qué enseña.** Un óptimo hereda los límites de sus datos y reglas. La cartera prioriza
+estudios de factibilidad; no demuestra demanda ni autoriza predios, obras o inversión.
+
+**Estado:** **resuelto** — [`cases/optimizacion_carga_bip`](../cases/optimizacion_carga_bip/README.md),
+con [cuaderno P20](../cases/optimizacion_carga_bip/CUADERNO.md).
 
 ---
 

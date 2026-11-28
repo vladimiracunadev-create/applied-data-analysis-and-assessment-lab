@@ -29,8 +29,9 @@ La navegación anterior/siguiente sigue este orden, sin saltar del P01 al P08:
 11. [P17 · Gobernanza de datos DTPM](../cases/gobernanza_datos_dtpm/CUADERNO.md) · [Abrir en Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/gobernanza_datos_dtpm/cuaderno/colab.ipynb)
 12. [P18 · ETL histórico GTFS](../cases/etl_gtfs_automatizado/CUADERNO.md) · [Abrir en Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/etl_gtfs_automatizado/cuaderno/colab.ipynb)
 13. [P19 · Red de correspondencias](../cases/red_correspondencias_dtpm/CUADERNO.md) · [Abrir en Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/red_correspondencias_dtpm/cuaderno/colab.ipynb)
+14. [P20 · Optimización de carga bip!](../cases/optimizacion_carga_bip/CUADERNO.md) · [Abrir en Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/optimizacion_carga_bip/cuaderno/colab.ipynb)
 
-## Los 19 problemas de la instancia DTPM
+## Los 20 problemas de la instancia DTPM
 
 | Problema | Cuaderno | Caso |
 | --- | --- | --- |
@@ -53,8 +54,9 @@ La navegación anterior/siguiente sigue este orden, sin saltar del P01 al P08:
 | P17 · Gobernanza y catálogo de activos de datos | [**abrir**](../cases/gobernanza_datos_dtpm/CUADERNO.md) | [`gobernanza_datos_dtpm`](../cases/gobernanza_datos_dtpm/README.md) |
 | P18 · ETL histórico y control automatizado GTFS | [**abrir**](../cases/etl_gtfs_automatizado/CUADERNO.md) | [`etl_gtfs_automatizado`](../cases/etl_gtfs_automatizado/README.md) |
 | P19 · Estructura de correspondencias Metro–bus | [**abrir**](../cases/red_correspondencias_dtpm/CUADERNO.md) | [`red_correspondencias_dtpm`](../cases/red_correspondencias_dtpm/README.md) |
+| P20 · Optimización de estudios para carga bip! | [**abrir**](../cases/optimizacion_carga_bip/CUADERNO.md) | [`optimizacion_carga_bip`](../cases/optimizacion_carga_bip/README.md) |
 
-**13 cuadernos distintos cubren 19 de 19 problemas**:
+**14 cuadernos distintos cubren 20 de 20 problemas**:
 6 están integrados en el cuaderno de un problema relacionado.
 El estado detallado de cada uno, con lo que enseña y lo que no se puede
 contestar, está en el [mapa de problemas](problemas-de-la-instancia.md).

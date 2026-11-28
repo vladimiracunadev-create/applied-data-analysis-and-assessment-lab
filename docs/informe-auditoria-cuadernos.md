@@ -63,3 +63,8 @@ y no ejecutada cuando falta `pyarrow`; no se simula una validación inexistente.
 P19 modela como grafo bipartito las correspondencias reproducibles de P03/P10. Publica
 aristas, grados y escenarios, y limita expresamente su interpretación a estructura
 programada: no los presenta como demanda, operación observada ni pasajeros afectados.
+
+P20 amplía la lista corta de P16 mediante enumeración exhaustiva de carteras, presupuesto
+y diversidad territorial relativa. Publica la frontera y alternativas auditables, y
+separa expresamente la priorización de estudios de cualquier aprobación de predios,
+infraestructura o inversión.
