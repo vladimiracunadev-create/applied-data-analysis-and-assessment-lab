@@ -12,7 +12,7 @@ sirve para auditar el resultado.
 
 > Archivo generado por `scripts/build_cuadernos.py`. No lo edite a mano.
 
-## Ruta lineal de los diez cuadernos
+## Ruta lineal de los cuadernos
 
 La navegación anterior/siguiente sigue este orden, sin saltar del P01 al P08:
 
@@ -26,8 +26,9 @@ La navegación anterior/siguiente sigue este orden, sin saltar del P01 al P08:
 8. [P12/P13 · Frecuencia programada](../cases/frecuencia_programada/CUADERNO.md) · [Abrir en Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/frecuencia_programada/cuaderno/colab.ipynb)
 9. [P14/P15 · Evolución GTFS](../cases/evolucion_gtfs/CUADERNO.md) · [Abrir en Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/evolucion_gtfs/cuaderno/colab.ipynb)
 10. [P16 · Informe de decisión](../cases/informe_decision_carga/CUADERNO.md) · [Abrir en Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/informe_decision_carga/cuaderno/colab.ipynb)
+11. [P17 · Gobernanza de datos DTPM](../cases/gobernanza_datos_dtpm/CUADERNO.md) · [Abrir en Colab](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/gobernanza_datos_dtpm/cuaderno/colab.ipynb)
 
-## Los dieciséis problemas de la instancia DTPM
+## Los 17 problemas de la instancia DTPM
 
 | Problema | Cuaderno | Caso |
 | --- | --- | --- |
@@ -47,8 +48,9 @@ La navegación anterior/siguiente sigue este orden, sin saltar del P01 al P08:
 | P14 · Qué cambió entre dos versiones del feed | [**abrir**](../cases/evolucion_gtfs/CUADERNO.md) | [`evolucion_gtfs`](../cases/evolucion_gtfs/README.md) |
 | P15 · Evolución de la oferta programada por año | [mismo cuaderno que P14](../cases/evolucion_gtfs/CUADERNO.md) | [`evolucion_gtfs`](../cases/evolucion_gtfs/README.md) |
 | P16 · Informe de una página para quien decide | [**abrir**](../cases/informe_decision_carga/CUADERNO.md) | [`informe_decision_carga`](../cases/informe_decision_carga/README.md) |
+| P17 · Gobernanza y catálogo de activos de datos | [**abrir**](../cases/gobernanza_datos_dtpm/CUADERNO.md) | [`gobernanza_datos_dtpm`](../cases/gobernanza_datos_dtpm/README.md) |
 
-**10 cuadernos distintos cubren 16 de 16 problemas**:
+**11 cuadernos distintos cubren 17 de 17 problemas**:
 6 están integrados en el cuaderno de un problema relacionado.
 El estado detallado de cada uno, con lo que enseña y lo que no se puede
 contestar, está en el [mapa de problemas](problemas-de-la-instancia.md).

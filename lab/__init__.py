@@ -2,7 +2,7 @@
 
 Componentes
     `cuaderno`    cuadernos: Pandas, Excel, motores alternativos y salidas reales.
-    `notebook_enrichment` Polars, R, gráficos y navegación de los diez cuadernos.
+    `notebook_enrichment` Polars, R, gráficos y navegación de los cuadernos.
     `core`        utilidades de lectura, perfilado, cruce auditado y exportación.
     `contracts`   contratos de datos y validación con informe de hallazgos.
     `metrics`     indicadores, estadística descriptiva y razones seguras.

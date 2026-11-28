@@ -175,7 +175,7 @@ applied-data-analysis-and-assessment-lab/
 ├── docs/                   documentación, programa de aprendizaje y derivados
 │   └── learning/           clases por bloque
 ├── scripts/                generadores: datos, Excel, evaluaciones, docs y paquete
-├── dist/                   ZIP determinista con los trece casos publicables
+├── dist/                   ZIP determinista con los catorce casos publicables
 ├── templates/              plantilla de caso nuevo
 ├── tests/                  suite completa
 ├── notebooks/              exploración

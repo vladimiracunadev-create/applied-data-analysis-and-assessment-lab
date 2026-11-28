@@ -409,8 +409,8 @@ referencia['benchmark'].query("metodo == 'Pandas completo'")
 ```
 
 ```
-            metodo  segundos  lectura_s  ...  estado  filas_resultado  filas_entrada
-0  Pandas completo  0.960397   0.758222  ...     NaN            12495        1098717
+            metodo  segundos  ...  filas_resultado  filas_entrada
+0  Pandas completo  0.960397  ...            12495        1098717
 
 [1 rows x 9 columns]
 ```
@@ -530,7 +530,7 @@ referencia['benchmark']
 | Pandas completo | 0.9603973000193946 | 0.7582218000316061 | 0.2021754999877885 | 60.248285 | 1.0 |  | 12495 | 1098717 |
 | Pandas por bloques | 1.6597541999653913 |  |  | 11.310612 | 6.0 |  | 12495 | 1098717 |
 | DuckDB sobre CSV | 1.1213004000019282 | 0.4513530000112951 | 1.1213004000019282 |  |  | ejecutado; extracción informada por separado | 12495 | 1098717 |
-| Polars lazy sobre CSV | 0.1950687000062316 | 0.4106678000534884 | 0.1950687000062316 |  |  | ejecutado; extracción informada por separado | 12495 | 1098717 |
+| Polars lazy sobre CSV | 0.19506870000623167 | 0.41066780005348846 | 0.19506870000623167 |  |  | ejecutado; extracción informada por separado | 12495 | 1098717 |
 *4 filas × 9 columnas.*
 
 ![Comparar tiempo y memoria](cuaderno/svg/paso-07.svg)

@@ -19,6 +19,7 @@ marcado como tal, no se oculta.
 | [`education`](../cases/education/README.md) | Asistencia ponderada por establecimiento | analisis-de-datos | educacion | introductorio | implementado | 90 min | sí |
 | [`evolucion_gtfs`](../cases/evolucion_gtfs/README.md) | Cambios de red y oferta programada entre publicaciones GTFS | ingenieria-de-datos | transporte | especializado | implementado | 210 min | sí |
 | [`frecuencia_programada`](../cases/frecuencia_programada/README.md) | Frecuencia programada y alcance calculable del ICF | analisis-de-datos | transporte | avanzado | implementado | 150 min | sí |
+| [`gobernanza_datos_dtpm`](../cases/gobernanza_datos_dtpm/README.md) | Gobernanza y catálogo de los activos de datos de la instancia DTPM | gobernanza-de-datos | transporte | intermedio | implementado | 150 min | sí |
 | [`gtfs_red_movilidad`](../cases/gtfs_red_movilidad/README.md) | Expediciones por hora en la Red Metropolitana de Movilidad (datos públicos reales) | ingenieria-de-datos | transporte | especializado | implementado | 180 min | sí |
 | [`informe_decision_carga`](../cases/informe_decision_carga/README.md) | Informe ejecutivo para priorizar estudios de nuevos centros de carga | analisis-de-negocios | transporte | avanzado | implementado | 90 min | sí |
 | [`rendimiento_gtfs`](../cases/rendimiento_gtfs/README.md) | Cuándo conviene dejar Pandas: benchmark de una agregación GTFS | ingenieria-de-datos | transporte | avanzado | implementado | 120 min | sí |
@@ -32,21 +33,21 @@ declaradas en la hoja de ruta como brechas conocidas.
 
 | competencia | casos | cantidad |
 | --- | --- | --- |
+| calidad-datos | bip_lugares_carga, calendario_medicion, carga_nocturna, cobertura_de_carga, correspondencia_metro, education, evolucion_gtfs, frecuencia_programada, gobernanza_datos_dtpm, gtfs_red_movilidad, informe_decision_carga, rendimiento_gtfs, retail, transport | 14 |
 | agregacion-indicadores | bip_lugares_carga, calendario_medicion, carga_nocturna, cobertura_de_carga, correspondencia_metro, education, evolucion_gtfs, frecuencia_programada, gtfs_red_movilidad, informe_decision_carga, rendimiento_gtfs, retail, transport | 13 |
-| calidad-datos | bip_lugares_carga, calendario_medicion, carga_nocturna, cobertura_de_carga, correspondencia_metro, education, evolucion_gtfs, frecuencia_programada, gtfs_red_movilidad, informe_decision_carga, rendimiento_gtfs, retail, transport | 13 |
-| comunicacion-resultados | bip_lugares_carga, calendario_medicion, carga_nocturna, cobertura_de_carga, correspondencia_metro, education, evolucion_gtfs, frecuencia_programada, gtfs_red_movilidad, informe_decision_carga, rendimiento_gtfs, retail | 12 |
-| reproducibilidad | bip_lugares_carga, calendario_medicion, carga_nocturna, cobertura_de_carga, correspondencia_metro, evolucion_gtfs, frecuencia_programada, gtfs_red_movilidad, informe_decision_carga, rendimiento_gtfs, transport | 11 |
+| comunicacion-resultados | bip_lugares_carga, calendario_medicion, carga_nocturna, cobertura_de_carga, correspondencia_metro, education, evolucion_gtfs, frecuencia_programada, gobernanza_datos_dtpm, gtfs_red_movilidad, informe_decision_carga, rendimiento_gtfs, retail | 13 |
+| reproducibilidad | bip_lugares_carga, calendario_medicion, carga_nocturna, cobertura_de_carga, correspondencia_metro, evolucion_gtfs, frecuencia_programada, gobernanza_datos_dtpm, gtfs_red_movilidad, informe_decision_carga, rendimiento_gtfs, transport | 12 |
 | validacion-independiente | bip_lugares_carga, calendario_medicion, carga_nocturna, cobertura_de_carga, correspondencia_metro, evolucion_gtfs, frecuencia_programada, gtfs_red_movilidad, informe_decision_carga, rendimiento_gtfs, transport | 11 |
+| gobernanza-datos | bip_lugares_carga, calendario_medicion, carga_nocturna, correspondencia_metro, evolucion_gtfs, frecuencia_programada, gobernanza_datos_dtpm, informe_decision_carga | 8 |
 | lectura-escritura-datos | bip_lugares_carga, education, evolucion_gtfs, frecuencia_programada, gtfs_red_movilidad, rendimiento_gtfs, retail, transport | 8 |
 | cruce-consolidacion | bip_lugares_carga, carga_nocturna, cobertura_de_carga, correspondencia_metro, evolucion_gtfs, gtfs_red_movilidad, transport | 7 |
-| gobernanza-datos | bip_lugares_carga, calendario_medicion, carga_nocturna, correspondencia_metro, evolucion_gtfs, frecuencia_programada, informe_decision_carga | 7 |
+| apoyo-decision | calendario_medicion, carga_nocturna, cobertura_de_carga, correspondencia_metro, gobernanza_datos_dtpm, informe_decision_carga | 6 |
 | fechas-horarios | calendario_medicion, carga_nocturna, evolucion_gtfs, frecuencia_programada, gtfs_red_movilidad, transport | 6 |
 | limpieza-normalizacion | bip_lugares_carga, carga_nocturna, correspondencia_metro, gtfs_red_movilidad, retail, transport | 6 |
-| apoyo-decision | calendario_medicion, carga_nocturna, cobertura_de_carga, correspondencia_metro, informe_decision_carga | 5 |
 | estadistica-descriptiva | cobertura_de_carga, education, frecuencia_programada, transport | 4 |
 | hojas-de-calculo | bip_lugares_carga, education, retail, transport | 4 |
 | ingenieria-datos | evolucion_gtfs, gtfs_red_movilidad, rendimiento_gtfs | 3 |
-| visualizacion | informe_decision_carga, transport | 2 |
+| visualizacion | gobernanza_datos_dtpm, informe_decision_carga, transport | 3 |
 | sql | transport | 1 |
 
 ## Cómo agregar un caso

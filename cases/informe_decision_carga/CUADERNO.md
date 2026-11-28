@@ -1,6 +1,6 @@
 # P16 · Informe de una página para quien decide
 
-◀ [P14/P15 · Evolución GTFS](../evolucion_gtfs/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md)
+◀ [P14/P15 · Evolución GTFS](../evolucion_gtfs/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P17 · Gobernanza de datos DTPM](../gobernanza_datos_dtpm/CUADERNO.md) ▶
 
 [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/informe_decision_carga/cuaderno/colab.ipynb) — corre los pasos sin instalar nada: el cuaderno clona el repositorio y descarga los datos del portal.
 
@@ -610,4 +610,4 @@ Lo que este caso toca y se trata a fondo en otro sitio:
 - [P06 · Oferta programada](../gtfs_red_movilidad/CUADERNO.md)
 - [P08 · Cobertura espacial](../cobertura_de_carga/CUADERNO.md)
 
-◀ [P14/P15 · Evolución GTFS](../evolucion_gtfs/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md)
+◀ [P14/P15 · Evolución GTFS](../evolucion_gtfs/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P17 · Gobernanza de datos DTPM](../gobernanza_datos_dtpm/CUADERNO.md) ▶

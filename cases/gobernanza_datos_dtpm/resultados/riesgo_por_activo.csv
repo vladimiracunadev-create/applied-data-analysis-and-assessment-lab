@@ -1,0 +1,9 @@
+activo_id,nombre,criticidad,puntaje_brecha,puntaje_riesgo
+BIP-METRO,Lugares de carga bip! en Metro,alta,7,21
+BIP-PCMA,Puntos bip!,alta,7,21
+BIP-RETAIL,Centros bip! en retail,alta,7,21
+GTFS-VIGENTE,GTFS vigente de Red Movilidad,alta,7,21
+BIP-CAE,Centros bip! de alto estándar,media,7,14
+BIP-CE,Centros bip! estándar,media,7,14
+GTFS-HIST,Archivo histórico GTFS,media,7,14
+DIPRES-IND,Definiciones de indicadores de desempeño,alta,4,12

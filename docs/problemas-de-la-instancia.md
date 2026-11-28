@@ -6,8 +6,8 @@ no se puede contestar**.
 
 > **Dos documentos por caso.** El `README.md` de un caso cuenta **qué se encontró**;
 > su `CUADERNO.md` muestra **cómo se hace**, paso a paso, con Pandas, la salida real,
-> Excel, Polars, R y gráficos estadísticos. Los dieciséis problemas están cubiertos por
-> [diez cuadernos ejecutables](cuadernos.md); los problemas que comparten datos y
+> Excel, Polars, R y gráficos estadísticos. Los diecisiete problemas están cubiertos por
+> [once cuadernos ejecutables](cuadernos.md); los problemas que comparten datos y
 > método se integran en un mismo cuaderno.
 
 Cada problema indica su estado: **resuelto** (hay código y resultado en el
@@ -439,6 +439,29 @@ se puede decir dónde hay más **necesidad**, porque eso exige demanda, y no la 
 [cuaderno P16](../cases/informe_decision_carga/CUADERNO.md). El informe prioriza zonas
 para estudiar y clasifica explícitamente como no demostrable que allí exista mayor
 necesidad de carga.
+
+---
+
+## Bloque 7 — Gobernanza de los activos
+
+### P17. ¿Qué falta documentar para gobernar los datos de la instancia DTPM?
+
+**La pregunta.** ¿Qué activos carecen de evidencia explícita sobre licencia, esquema,
+actualización, responsable operativo o retención, y cuáles conviene aclarar primero?
+
+**Datos.** Catálogo pedagógico versionado de ocho activos basado en la procedencia de
+P01–P16. No es un catálogo oficial del DTPM.
+
+**Tecnología.** Validación contractual, banderas binarias y matriz de brechas con una
+fórmula de prioridad publicada; comparación equivalente en Pandas, Polars y R.
+
+**Qué enseña.** Que «no declarado» no significa «incumplido» ni puede imputarse como
+«conforme»; significa que falta evidencia. La criticidad ordena el trabajo documental,
+pero el puntaje no es una probabilidad de incidente.
+
+**Estado:** **resuelto** —
+[`cases/gobernanza_datos_dtpm`](../cases/gobernanza_datos_dtpm/README.md), con
+[cuaderno P17](../cases/gobernanza_datos_dtpm/CUADERNO.md).
 
 ---
 

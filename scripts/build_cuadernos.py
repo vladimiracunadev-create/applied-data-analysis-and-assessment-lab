@@ -20,7 +20,7 @@ Qué escribe por cada caso
     cuaderno/svg/paso-NN*.svg        las figuras y las hojas de Excel de cada paso
     cuaderno/caso-completo.zip       todo lo anterior, más el caso, en un archivo
 
-Y un índice común en `docs/cuadernos.md`, con el estado de los dieciséis problemas.
+Y un índice común en `docs/cuadernos.md`, con el estado de los problemas publicados.
 
 Por qué se genera y no se escribe
     El código que aparece es el que se ejecutó y la salida es la que devolvió. Si el
@@ -72,7 +72,7 @@ NOMBRE_SALIDA = "CUADERNO.md"
 #: no se desvíe: un índice escrito a mano envejece en cuanto se agrega un cuaderno.
 INDICE_SALIDA = ROOT / "docs" / "cuadernos.md"
 
-#: Los dieciséis problemas de la instancia DTPM, con el caso que los resuelve. El estado
+#: Los problemas de la instancia DTPM, con el caso que los resuelve. El estado
 #: detallado vive en `docs/problemas-de-la-instancia.md`; aquí solo hace falta saber a
 #: qué caso mirar. Un problema sin caso necesita el análisis además del cuaderno, y el
 #: cuarto elemento dice en qué pasos de otro cuaderno queda cubierto, cuando no tiene
@@ -94,6 +94,7 @@ PROBLEMAS: tuple[tuple[str, str, str, str], ...] = (
     ("P14", "Qué cambió entre dos versiones del feed", "evolucion_gtfs", ""),
     ("P15", "Evolución de la oferta programada por año", "evolucion_gtfs", ""),
     ("P16", "Informe de una página para quien decide", "informe_decision_carga", ""),
+    ("P17", "Gobernanza y catálogo de activos de datos", "gobernanza_datos_dtpm", ""),
 )
 
 
@@ -159,7 +160,7 @@ def codigo_de(slug: str) -> str:
 
 
 def escribir_indice(con_cuaderno: set[str]) -> Path:
-    """Escribe el índice de cuadernos, con el estado de los dieciséis problemas."""
+    """Escribe el índice de cuadernos, con el estado de los problemas publicados."""
     lineas = [
         "# Cuadernos de trabajo",
         "",
@@ -175,7 +176,7 @@ def escribir_indice(con_cuaderno: set[str]) -> Path:
         "",
         "> Archivo generado por `scripts/build_cuadernos.py`. No lo edite a mano.",
         "",
-        "## Ruta lineal de los diez cuadernos",
+        "## Ruta lineal de los cuadernos",
         "",
         "La navegación anterior/siguiente sigue este orden, sin saltar del P01 al P08:",
         "",
@@ -188,7 +189,7 @@ def escribir_indice(con_cuaderno: set[str]) -> Path:
         )
     lineas += [
         "",
-        "## Los dieciséis problemas de la instancia DTPM",
+        f"## Los {len(PROBLEMAS)} problemas de la instancia DTPM",
         "",
         "| Problema | Cuaderno | Caso |",
         "| --- | --- | --- |",

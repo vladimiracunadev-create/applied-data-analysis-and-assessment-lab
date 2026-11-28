@@ -37,6 +37,7 @@ NOTEBOOK_CASES = (
     "frecuencia_programada",
     "evolucion_gtfs",
     "informe_decision_carga",
+    "gobernanza_datos_dtpm",
 )
 
 KEYS = {

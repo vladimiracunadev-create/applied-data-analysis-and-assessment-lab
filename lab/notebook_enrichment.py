@@ -120,6 +120,15 @@ SPECS: dict[str, CaseSpec] = {
         '.filter(pl.col("unidad") == "%").select(["indicador", "valor"])',
         'datos |> dplyr::filter(.data$unidad == "%") |> dplyr::select(.data$indicador, .data$valor)', 1,
     ),
+    "gobernanza_datos_dtpm": CaseSpec(
+        "riesgo_por_activo.csv", "activo_id", "puntaje_riesgo", "barh",
+        "Prioridad documental de los activos de la instancia DTPM",
+        "Puntaje de riesgo documental", "Activo", "corte documental 2026-11-28",
+        "Catálogo pedagógico P17; no es un registro oficial DTPM",
+        "ranking de brechas ponderadas por criticidad",
+        '.sort(["puntaje_riesgo", "activo_id"], descending=[True, False]).select(["activo_id", "puntaje_riesgo"])',
+        'datos |> dplyr::arrange(dplyr::desc(.data$puntaje_riesgo), .data$activo_id) |> dplyr::select(.data$activo_id, .data$puntaje_riesgo)', 7,
+    ),
 }
 
 
@@ -134,6 +143,7 @@ NAVIGATION: tuple[tuple[str, str], ...] = (
     ("frecuencia_programada", "P12/P13 · Frecuencia programada"),
     ("evolucion_gtfs", "P14/P15 · Evolución GTFS"),
     ("informe_decision_carga", "P16 · Informe de decisión"),
+    ("gobernanza_datos_dtpm", "P17 · Gobernanza de datos DTPM"),
 )
 
 
@@ -201,6 +211,12 @@ PEDAGOGY: dict[str, tuple[str, str, str, str]] = {
         "La brecha entre supuestos espaciales cuantifica sensibilidad y debe acompañar cualquier decisión.",
         "Poner porcentajes y recuentos en el mismo eje produce una comparación visual sin unidad común.",
     ),
+    "gobernanza_datos_dtpm": (
+        "Ordenar los activos según brechas documentales ponderadas por criticidad.",
+        "riesgo = (3·licencia + 2·esquema + 2·actualización + 2·responsable + retención) × peso_criticidad; cada brecha vale 0 o 1.",
+        "Una barra alta prioriza una aclaración; no demuestra mala calidad del dato ni estima la probabilidad de un incidente.",
+        "Imputar un campo no declarado como conforme reduce artificialmente el puntaje y fabrica evidencia.",
+    ),
 }
 
 PANDAS_QUERIES: dict[str, str] = {
@@ -214,6 +230,7 @@ PANDAS_QUERIES: dict[str, str] = {
     "frecuencia_programada": 'datos.assign(_orden=datos["estadistico"].map({"mínimo": 0, "P10": 1, "P25": 2, "P50": 3, "media": 4, "P75": 5, "P90": 6, "P95": 7, "máximo": 8})).sort_values("_orden")[["estadistico", "intervalo_min"]]',
     "evolucion_gtfs": 'datos.sort_values("publicacion")[["publicacion", "salidas"]]',
     "informe_decision_carga": 'datos.loc[datos["unidad"] == "%", ["indicador", "valor"]]',
+    "gobernanza_datos_dtpm": 'datos.sort_values(["puntaje_riesgo", "activo_id"], ascending=[False, True])[["activo_id", "puntaje_riesgo"]]',
 }
 
 
@@ -622,6 +639,10 @@ def _prepare_frame(slug: str, frame: pd.DataFrame) -> pd.DataFrame:
         return frame.sort_values("publicacion")[["publicacion", "salidas"]]
     if slug == "informe_decision_carga":
         return frame.loc[frame.unidad == "%", ["indicador", "valor"]]
+    if slug == "gobernanza_datos_dtpm":
+        return frame.sort_values(
+            ["puntaje_riesgo", "activo_id"], ascending=[False, True]
+        )[["activo_id", "puntaje_riesgo"]]
     raise KeyError(slug)
 
 

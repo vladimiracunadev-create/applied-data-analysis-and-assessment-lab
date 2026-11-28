@@ -1,0 +1,9 @@
+activo_id,nombre,publicador,formato,responsable_propietario,responsable_operativo,clasificacion,retencion_meses,licencia_estado,esquema_estado,actualizacion_declarada,datos_personales,criticidad,brecha_licencia,brecha_esquema,brecha_actualizacion,brecha_responsable,brecha_retencion,puntaje_brecha,peso_criticidad,puntaje_riesgo
+GTFS-VIGENTE,GTFS vigente de Red Movilidad,DTPM,ZIP/CSV,DTPM,Equipo de publicación,público,36.0,no_verificada,parcial,no,no,alta,1,1,1,0,0,7,3,21
+GTFS-HIST,Archivo histórico GTFS,DTPM,ZIP/CSV,DTPM,Equipo de publicación,público,120.0,no_verificada,parcial,no,no,media,1,1,1,0,0,7,2,14
+BIP-METRO,Lugares de carga bip! en Metro,Subsecretaría de Transportes,XLSX,Subsecretaría de Transportes,no_declarado,público,,verificada,parcial,no,no,alta,0,1,1,1,1,7,3,21
+BIP-PCMA,Puntos bip!,Subsecretaría de Transportes,XLSX,Subsecretaría de Transportes,no_declarado,público,,verificada,parcial,no,no,alta,0,1,1,1,1,7,3,21
+BIP-CAE,Centros bip! de alto estándar,Subsecretaría de Transportes,XLSX,Subsecretaría de Transportes,no_declarado,público,,verificada,parcial,no,no,media,0,1,1,1,1,7,2,14
+BIP-CE,Centros bip! estándar,Subsecretaría de Transportes,XLSX,Subsecretaría de Transportes,no_declarado,público,,verificada,parcial,no,no,media,0,1,1,1,1,7,2,14
+BIP-RETAIL,Centros bip! en retail,Subsecretaría de Transportes,XLSX,Subsecretaría de Transportes,no_declarado,público,,verificada,parcial,no,no,alta,0,1,1,1,1,7,3,21
+DIPRES-IND,Definiciones de indicadores de desempeño,DIPRES,PDF,DIPRES,no_declarado,público,120.0,pública,documental,sí,no,alta,0,1,0,1,0,4,3,12

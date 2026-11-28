@@ -1,6 +1,6 @@
 """Construye un ZIP determinista con todos los casos y sus soluciones publicables.
 
-El paquete incluye los trece casos, sus cuadernos y resultados versionados, las cuatro
+El paquete incluye todos los casos, sus cuadernos y resultados versionados, las cuatro
 implementaciones ejecutables de referencia (Pandas, Polars, R y SQL), los datos
 sintéticos y la documentación necesaria para orientarse. Nunca incluye descargas de
 terceros desde ``data/original``.

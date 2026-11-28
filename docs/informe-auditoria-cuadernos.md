@@ -48,3 +48,10 @@ reescritura total del pipeline.
 Las validaciones de servicios interactivos no se inventan: véase la
 [matriz](matriz-validacion-cuadernos.md). La fuente de verdad de los conteos finales es
 `pytest --collect-only`; la documentación se sincroniza después de ejecutar la suite.
+
+## Ampliación P17 · 28 de noviembre de 2026
+
+P17 agrega gobernanza explícita sin alterar P01–P16. Su catálogo es una elaboración
+pedagógica basada en la procedencia documentada del repositorio y se identifica como tal;
+no se presenta como catálogo oficial del DTPM. Las tres implementaciones confrontan el
+mismo ranking de brechas y las pruebas verifican identidad, fórmula y artefactos.

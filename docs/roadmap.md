@@ -17,14 +17,14 @@ Los recuentos se obtienen con los comandos indicados, no de memoria.
 | Intérprete de horarios en texto libre, con lo ilegible como desconocido | implementado | `python -m pytest tests/test_schedules.py` |
 | Conciliación de inventarios con grano distinto y dos criterios | implementado | `python -m pytest tests/test_correspondencia_metro.py` |
 | Análisis de claves: candidatas mínimas y clave subrogada determinista | implementado | `python -m pytest tests/test_keys.py` |
-| Cuadernos multiengine: 10 cuadernos cubren los 16 problemas con Pandas, Polars, R, Excel y gráficos | implementado | `python scripts/build_cuadernos.py --check` |
+| Cuadernos multiengine: 11 cuadernos cubren los 17 problemas con Pandas, Polars, R, Excel y gráficos | implementado | `python scripts/build_cuadernos.py --check` |
 | Simulaciones de cuatro horas (3) | implementado | `simulations/0{1,2,3}_enunciado.md` |
 | Solución de referencia en Pandas | implementado | `python solutions/reference.py 1` |
 | Implementación columnar en Polars | implementado | `python solutions/polars_reference.py transport 1` |
 | Implementación independiente en R base | implementado | `Rscript solutions/r_reference.R transport 1 reference_outputs/r/transport` |
 | Segunda implementación en SQL | implementado | `python solutions/sql_reference.py 1` |
 | Validación cruzada Pandas ↔ Polars ↔ R ↔ SQL, τ = 1e-9 | implementado | `python -m pytest tests/test_cross_validation.py tests/test_multiengine.py` |
-| Paquete general de los trece casos | implementado | `python scripts/build_all_cases.py --check` |
+| Paquete general de los catorce casos | implementado | `python scripts/build_all_cases.py --check` |
 | Libros de Excel resueltos con fórmulas vivas | implementado | `python scripts/build_excel_solutions.py` |
 | Motor de evaluaciones con banco de ítems y rúbricas | implementado | `python scripts/build_assessment.py --list` |
 | Programa de aprendizaje: 8 clases con 17 secciones | implementado | `python -m lab.learning` |
@@ -39,25 +39,13 @@ Los recuentos se obtienen con los comandos indicados, no de memoria.
 Estas brechas están **medidas**, no estimadas. Una prueba automática falla si alguna
 deja de estar declarada aquí.
 
-### 2.1 Competencias sin caso que las cubra
+### 2.1 Cobertura y competencias todavía sin caso
 
-- **`gobernanza-datos`** quedó cubierta en la versión 0.4.0 por la instancia
-  `bip_lugares_carga`, cuyo hallazgo central es de gobernanza y no de limpieza: la
-  distribución bimodal de los desvíos de coordenada muestra que las dos columnas de
-  ubicación del archivo no se produjeron con un único proceso consistente, y eso se
-  reporta al publicador en lugar de corregirse. El caso previsto `cases/governance`
-  sigue en pie para cubrir catálogo, propiedad del dato y políticas de retención, que
-  esta instancia no toca.
-
-- **El caso de gobernanza explícita, todavía pendiente.** Era una competencia
-  **núcleo** del perfil `gestor-de-datos` y del perfil `especialista-calidad-datos`. El laboratorio tiene las piezas técnicas
-  (contratos de datos, diccionarios, trazabilidad de decisiones) pero no un caso cuyo
-  objeto sea la gobernanza: catálogo de datos, propiedad y responsabilidad
-  (*stewardship*), ciclo de vida, políticas de retención y clasificación de
-  sensibilidad. Hasta que exista ese caso, la cobertura de esos dos perfiles es
-  parcial y así se informa.
-  *Caso previsto:* `cases/governance`, sobre un catálogo de datos de una organización
-  ficticia con responsables, clasificación y reglas de retención.
+- **`gobernanza-datos`**, brecha cerrada por P17. `cases/gobernanza_datos_dtpm`
+  convierte la procedencia de la instancia en un catálogo pedagógico, conserva lo no
+  declarado y prioriza licencia, esquema, actualización, responsable operativo y
+  retención. Validar responsables reales con los publicadores sigue fuera del alcance;
+  el repositorio no los inventa.
 
 - **`inferencia-estadistica`.** El núcleo (`lab.stats`) está implementado y probado
   contra tablas publicadas, pero ningún caso de estudio la declara entre sus
@@ -75,12 +63,12 @@ deja de estar declarada aquí.
 
 ### 2.2 Cuadernos de trabajo — brecha cerrada
 
-Diez cuadernos generados y ejecutables cubren los dieciséis problemas. P02 y P04 están
+Once cuadernos generados y ejecutables cubren los diecisiete problemas. P02 y P04 están
 integrados en P01; P09 en P05; P10 en P03; P13 en P12; y P15 en P14. Cada uno trae
 Markdown con salidas reales, pasos Pandas y laboratorio comparable Pandas/Polars/R,
 Colab, R Markdown, libro de
 práctica, al menos un gráfico estadístico, diagramas SVG y ZIP. La navegación recorre
-los diez cuadernos en orden y ya no salta de P01 a P08.
+los once cuadernos en orden y ya no salta de P01 a P08.
 
 P14/P15 se ejecuta sobre las últimas publicaciones oficiales de 2024 y 2025 y el feed
 vigente de 2026. Es una trayectoria reciente de tres puntos; ampliar hasta 2014 sigue
@@ -139,7 +127,7 @@ de contraste, no como requisitos del núcleo.
 
 ### Fase 2 — cerrar las brechas medidas
 
-5. `cases/governance`: el caso que cubre `gobernanza-datos`.
+5. Profundizar P17 con validación institucional del catálogo y responsables reales.
 6. Primera investigación aplicada completa bajo `research/`, con las 20 secciones.
 7. Dos clases del bloque `60-avanzado`: series temporales y análisis geoespacial.
    La de geoespacial ya tiene de dónde sacar el material: `cases/cobertura_de_carga`

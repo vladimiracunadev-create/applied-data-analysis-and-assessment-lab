@@ -21,14 +21,14 @@ def test_el_paquete_general_es_determinista_y_esta_al_dia():
         assert published.testzip() is None
 
 
-def test_el_paquete_contiene_los_trece_casos_y_los_cinco_motores():
+def test_el_paquete_contiene_los_casos_y_los_cinco_motores():
     with zipfile.ZipFile(io.BytesIO(build_bytes())) as archive:
         assert archive.testzip() is None
         names = set(archive.namelist())
         manifest = json.loads(archive.read(f"{ARCHIVE_ROOT}/MANIFEST.json"))
 
-    assert manifest["cases"] == 13
-    assert manifest["notebooks"] == 10
+    assert manifest["cases"] == 14
+    assert manifest["notebooks"] == 11
     assert manifest["engines"] == ["Pandas", "Polars", "R base", "SQL", "Excel"]
     assert manifest["third_party_data_included"] is False
     manifest_paths = [entry["path"] for entry in manifest["files"]]

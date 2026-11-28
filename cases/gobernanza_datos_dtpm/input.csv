@@ -1,0 +1,9 @@
+activo_id,nombre,publicador,formato,responsable_propietario,responsable_operativo,clasificacion,retencion_meses,licencia_estado,esquema_estado,actualizacion_declarada,datos_personales,criticidad
+GTFS-VIGENTE,GTFS vigente de Red Movilidad,DTPM,ZIP/CSV,DTPM,Equipo de publicación,público,36,no_verificada,parcial,no,no,alta
+GTFS-HIST,Archivo histórico GTFS,DTPM,ZIP/CSV,DTPM,Equipo de publicación,público,120,no_verificada,parcial,no,no,media
+BIP-METRO,Lugares de carga bip! en Metro,Subsecretaría de Transportes,XLSX,Subsecretaría de Transportes,no_declarado,público,,verificada,parcial,no,no,alta
+BIP-PCMA,Puntos bip!,Subsecretaría de Transportes,XLSX,Subsecretaría de Transportes,no_declarado,público,,verificada,parcial,no,no,alta
+BIP-CAE,Centros bip! de alto estándar,Subsecretaría de Transportes,XLSX,Subsecretaría de Transportes,no_declarado,público,,verificada,parcial,no,no,media
+BIP-CE,Centros bip! estándar,Subsecretaría de Transportes,XLSX,Subsecretaría de Transportes,no_declarado,público,,verificada,parcial,no,no,media
+BIP-RETAIL,Centros bip! en retail,Subsecretaría de Transportes,XLSX,Subsecretaría de Transportes,no_declarado,público,,verificada,parcial,no,no,alta
+DIPRES-IND,Definiciones de indicadores de desempeño,DIPRES,PDF,DIPRES,no_declarado,público,120,pública,documental,sí,no,alta
