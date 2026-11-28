@@ -8,8 +8,8 @@ repositorio.
 
 ## Vengo a aprender a hacerlo, no a leer qué se encontró
 
-**[Ruta de cuadernos](cuadernos.md)** — doce cuadernos en orden lineal para los
-dieciocho problemas.
+**[Ruta de cuadernos](cuadernos.md)** — trece cuadernos en orden lineal para los
+diecinueve problemas.
 
 Los **cuadernos de trabajo** son el problema resuelto paso a paso, con Pandas y su
 salida real, la fórmula de Excel equivalente y un laboratorio ejecutable equivalente
@@ -20,8 +20,8 @@ y la [matriz de validación](matriz-validacion-cuadernos.md). El
 [informe de auditoría](informe-auditoria-cuadernos.md) registra los defectos corregidos
 y los límites que permanecen.
 
-El [`paquete general`](paquete-general.md) permite descargar juntos los quince casos,
-los doce cuadernos y las implementaciones comparables en Pandas, Polars, R, SQL y
+El [`paquete general`](paquete-general.md) permite descargar juntos los dieciséis casos,
+los trece cuadernos y las implementaciones comparables en Pandas, Polars, R, SQL y
 Excel, sin redistribuir datos de terceros.
 
 | Cuaderno | Problemas | Pasos |
@@ -38,12 +38,13 @@ Excel, sin redistribuir datos de terceros.
 | [Informe para decisión](../cases/informe_decision_carga/CUADERNO.md) | P16 | 8 |
 | [Gobernanza de datos DTPM](../cases/gobernanza_datos_dtpm/CUADERNO.md) | P17 | 8 |
 | [ETL histórico GTFS](../cases/etl_gtfs_automatizado/CUADERNO.md) | P18 | 8 |
+| [Red de correspondencias](../cases/red_correspondencias_dtpm/CUADERNO.md) | P19 | 8 |
 
 El Excel de cada paso va dibujado como hoja, con la fórmula en su celda y el resultado a
 la vista.
 
-Se generan ejecutando el caso, con `python scripts/build_cuadernos.py`. Los doce
-cuadernos siguen una ruta sin saltos y cubren los dieciocho problemas; el alcance y
+Se generan ejecutando el caso, con `python scripts/build_cuadernos.py`. Los trece
+cuadernos siguen una ruta sin saltos y cubren los diecinueve problemas; el alcance y
 los límites de cada uno están en el
 [mapa de problemas](problemas-de-la-instancia.md).
 
@@ -55,7 +56,7 @@ En orden, de lo que más rinde a lo que menos:
 
 | # | Documento | Qué te da |
 | --- | --- | --- |
-| 1 | [Mapa de problemas](problemas-de-la-instancia.md) | 18 problemas resueltos con su pregunta exacta, método, resultado y límites; además, 10 preguntas que los datos no permiten contestar |
+| 1 | [Mapa de problemas](problemas-de-la-instancia.md) | 19 problemas resueltos con su pregunta exacta, método, resultado y límites; además, 10 preguntas que los datos no permiten contestar |
 | 2 | [`cases/bip_lugares_carga`](../cases/bip_lugares_carga/README.md) | **P01, P02 y P04 resueltos**: consolidar cinco Excel reales con nueve defectos, y establecer qué identifica una fila cuando nada lo hace. Es lo más parecido a una prueba de cuatro horas |
 | 3 | [`cases/calendario_medicion`](../cases/calendario_medicion/README.md) | **P11 resuelto**: reconstruir el denominador de un indicador oficial |
 | 4 | [`cases/cobertura_de_carga`](../cases/cobertura_de_carga/README.md) | **P08 resuelto en parte**: el cruce que no tiene clave, y cuánto del resultado lo pone el analista |
@@ -67,8 +68,9 @@ En orden, de lo que más rinde a lo que menos:
 | 10 | [`cases/informe_decision_carga`](../cases/informe_decision_carga/README.md) | **P16 resuelto**: informe ejecutivo con evidencia, inferencia y límites |
 | 11 | [`cases/gobernanza_datos_dtpm`](../cases/gobernanza_datos_dtpm/README.md) | **P17 resuelto**: catálogo, brechas documentales y prioridad auditable |
 | 12 | [`cases/etl_gtfs_automatizado`](../cases/etl_gtfs_automatizado/README.md) | **P18 resuelto**: ETL contractual, controles y particiones incrementales |
-| 13 | [Equivalencias SQL / Pandas / Polars / Excel / R](equivalencias.md) | Traducción con las trampas donde las versiones dejan de ser equivalentes |
-| 14 | [`cases/transport`](../cases/transport/README.md) | Las tres simulaciones de cuatro horas y qué se corrige en cada una |
+| 13 | [`cases/red_correspondencias_dtpm`](../cases/red_correspondencias_dtpm/README.md) | **P19 resuelto**: grafo bipartito y escenarios estructurales |
+| 14 | [Equivalencias SQL / Pandas / Polars / Excel / R](equivalencias.md) | Traducción con las trampas donde las versiones dejan de ser equivalentes |
+| 15 | [`cases/transport`](../cases/transport/README.md) | Las tres simulaciones de cuatro horas y qué se corrige en cada una |
 
 Lo que **no** encontrarás: nada sobre el contenido de ninguna prueba real. No se
 conoce, y queda dicho en el mapa de problemas.
@@ -84,7 +86,7 @@ conoce, y queda dicho en el mapa de problemas.
 | [Método de investigación](research-method.md) | La versión corta, para un análisis acotado |
 | [Arquitectura](arquitectura.md) | Los contratos entre módulos y las decisiones técnicas con sus alternativas descartadas |
 | [Base de conocimiento](conocimiento.md) | 43 registros de cosas que costó descubrir. Búsqueda: `python -m lab.knowledge "consulta"` |
-| [Catálogo de casos](catalogo-casos.md) | Los quince casos con sus metadatos y la cobertura de competencias |
+| [Catálogo de casos](catalogo-casos.md) | Los dieciséis casos con sus metadatos y la cobertura de competencias |
 | [Paquete general](paquete-general.md) | Una descarga determinista con casos, cuadernos, resultados y cinco tecnologías |
 
 ---

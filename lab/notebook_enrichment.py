@@ -137,6 +137,14 @@ SPECS: dict[str, CaseSpec] = {
         '.sort("publicacion").select(["publicacion", "mb_stop_times"])',
         'datos |> dplyr::arrange(.data$publicacion) |> dplyr::select(.data$publicacion, .data$mb_stop_times)', 6,
     ),
+    "red_correspondencias_dtpm": CaseSpec(
+        "servicios_centrales.csv", "servicio", "estaciones_conectadas", "barh",
+        "Servicios programados con mayor alcance sobre estaciones de Metro",
+        "Estaciones conectadas (recuento)", "Servicio", "publicación GTFS analizada",
+        "Correspondencias reproducibles P03/P10", "grado de servicio en grafo bipartito",
+        '.sort(["estaciones_conectadas", "servicio"], descending=[True, False]).select(["servicio", "estaciones_conectadas"])',
+        'datos |> dplyr::arrange(dplyr::desc(.data$estaciones_conectadas), .data$servicio) |> dplyr::select(.data$servicio, .data$estaciones_conectadas)', 7,
+    ),
 }
 
 
@@ -153,6 +161,7 @@ NAVIGATION: tuple[tuple[str, str], ...] = (
     ("informe_decision_carga", "P16 · Informe de decisión"),
     ("gobernanza_datos_dtpm", "P17 · Gobernanza de datos DTPM"),
     ("etl_gtfs_automatizado", "P18 · ETL histórico GTFS"),
+    ("red_correspondencias_dtpm", "P19 · Red de correspondencias"),
 )
 
 
@@ -232,6 +241,12 @@ PEDAGOGY: dict[str, tuple[str, str, str, str]] = {
         "El cambio de volumen sirve como señal para inspección, pero no demuestra un cambio de servicio ni su causa.",
         "Comparar el ZIP completo de un corte con stop_times de otro mezcla unidades y vuelve engañosa la gráfica.",
     ),
+    "red_correspondencias_dtpm": (
+        "Comparar el grado de los quince servicios programados que conectan más estaciones.",
+        "grado(s) = #{estaciones distintas e para las que existe la arista (e,s)}; cada par se cuenta una sola vez.",
+        "El grado mide alcance estructural bajo el radio de P10; no mide pasajeros, frecuencia, capacidad ni puntualidad.",
+        "Contar filas antes de deduplicar pares estación–servicio puede inflar el grado.",
+    ),
 }
 
 PANDAS_QUERIES: dict[str, str] = {
@@ -247,6 +262,7 @@ PANDAS_QUERIES: dict[str, str] = {
     "informe_decision_carga": 'datos.loc[datos["unidad"] == "%", ["indicador", "valor"]]',
     "gobernanza_datos_dtpm": 'datos.sort_values(["puntaje_riesgo", "activo_id"], ascending=[False, True])[["activo_id", "puntaje_riesgo"]]',
     "etl_gtfs_automatizado": 'datos.sort_values("publicacion")[["publicacion", "mb_stop_times"]]',
+    "red_correspondencias_dtpm": 'datos.sort_values(["estaciones_conectadas", "servicio"], ascending=[False, True])[["servicio", "estaciones_conectadas"]]',
 }
 
 
@@ -661,6 +677,10 @@ def _prepare_frame(slug: str, frame: pd.DataFrame) -> pd.DataFrame:
         )[["activo_id", "puntaje_riesgo"]]
     if slug == "etl_gtfs_automatizado":
         return frame.sort_values("publicacion")[["publicacion", "mb_stop_times"]]
+    if slug == "red_correspondencias_dtpm":
+        return frame.sort_values(
+            ["estaciones_conectadas", "servicio"], ascending=[False, True]
+        )[["servicio", "estaciones_conectadas"]]
     raise KeyError(slug)
 
 

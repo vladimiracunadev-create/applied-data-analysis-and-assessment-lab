@@ -1,0 +1,127 @@
+stop_id,stop_name,servicios_conectados
+SL,Santa Lucía,55
+LM,La Moneda,50
+EL,Estación Central,47
+LH-HE,Los Héroes,44
+CH-UCH,Universidad de Chile,43
+PM,Plaza de Maipú,38
+BA-BQ,Baquedano,37
+RP,República,37
+AH,San Alberto Hurtado,36
+LC-LCI,La Cisterna,35
+UC,Universidad Católica,35
+US,Universidad de Santiago,35
+LA,Unión Latinoamericana,35
+LR,Las Rejas,32
+CA-PCA,Puente Cal y Canto,32
+EC,Ecuador,30
+EB,El Bosque,27
+AN-NA,Santa Ana,27
+EM,Escuela Militar,26
+LIB,Los Libertadores,26
+SRO,Santa Rosa,26
+PPA,Plaza de Puente Alto,25
+SA,Salvador,24
+LF,Bellavista de La Florida,23
+DS,Del Sol,22
+MAC,Macul,22
+LCR,Lo Cruzat,21
+VMA-VIM,Vicuña Mackenna,21
+LME,Las Mercedes,20
+QN,Quinta Normal,20
+SB,Santiago Bueras,20
+VVA-VV,Vicente Valdés,20
+MM,Manuel Montt,19
+PV,Pedro de Valdivia,19
+PQU,Plaza Quilicura,19
+TB-TOB,Tobalaba,19
+GL,Gruta de Lourdes,18
+IRA-IR,Irarrázaval,18
+LO,Lo Ovalle,18
+PU,Pudahuel,18
+LP,Las Parcelas,17
+MQ,Manquehue,17
+PE,Pedrero,17
+FRA-FR,Franklin,16
+RGR,Grecia,16
+HSR,Hospital Sótero del Río,16
+LD,Los Dominicos,16
+MAT,Matta,16
+PEG-PZE,Plaza Egaña,16
+SP-SO,San Pablo,16
+BR,Barrancas,15
+LE-LEN,Los Leones,15
+BIO,Bío Bío,14
+CER,Cerrillos,14
+DE,Departamental,14
+ESN,Estadio Nacional,14
+MT,Monte Tabor,14
+SI,Santa Isabel,14
+AV,Vespucio Norte,14
+ESP,Chile España,13
+PI,Hospital El Pino,13
+HOS,Hospitales,13
+MEY,Monseñor Eyzaguirre,13
+PZ-PZA,Plaza de Armas,13
+NUN-NUO,Ñuñoa,13
+BIL,Francisco Bilbao,12
+PJ,Pajaritos,12
+PB,Parque Bustamante,12
+SM,San Miguel,12
+ZA,Zapadores,12
+CB,Cerro Blanco,11
+CCH,Conchalí,11
+LL,El Llano,11
+FCV,Fernando Castillo Velasco,11
+FER,Ferrocarril,11
+LV,Lo Vial,11
+PQ,Parque O'Higgins,11
+PDG,Príncipe de Gales,11
+RMA,Rojas Magallanes,11
+AG,Camino Agrícola,10
+CAR,Cardenal Caro,10
+CN,Ciudad del Niño,10
+EP,El Parrón,10
+ECO,Elisa Correa,10
+MA,Mirador,10
+PAC,Presidente Pedro Aguirre Cerda,10
+VFR,Villa Frei,10
+BL,Blanqueado,9
+CV,Carlos Valdovinos,9
+DO,Dorsal,9
+LQU,Los Quillayes,9
+NP,Neptuno,9
+PZC,Plaza Chacabuco,9
+BE,Bellas Artes,8
+CM,Copa Lo Martinez,8
+COL,Cristóbal Colón,8
+LGR,La Granja,8
+LOR,Los Orientales,8
+PT,Patronato,8
+PIN,Protectora de la Infancia,8
+RO,Rondizzoni,8
+SJE,San José de la Estrella,8
+SRA,San Ramón,8
+TO,Toesca,8
+NU-NUB,Ñuble,8
+CE,Cementerios,7
+RC,Cumming,7
+EI,Einstein,7
+PR,Lo Prado,7
+PAL,Parque Almagro,7
+RQU,Quilín,7
+SJ,San Joaquín,7
+TRI,Trinidad,7
+VIV,Vivaceta,7
+AL,Alcántara,6
+GO,El Golf,6
+LS,Laguna Sur,6
+LVA,Lo Valledor,6
+SJU,Santa Julia,6
+HM,Hernando de Magallanes,5
+ISU,Inés de Suárez,5
+LPR,Los Presidentes,5
+OB,Observatorio,5
+RA,Rodrigo de Araya,5
+SBO,Simón Bolívar,5
+LTO,Las Torres,4

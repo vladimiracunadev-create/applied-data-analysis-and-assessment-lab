@@ -27,8 +27,8 @@ def test_el_paquete_contiene_los_casos_y_los_cinco_motores():
         names = set(archive.namelist())
         manifest = json.loads(archive.read(f"{ARCHIVE_ROOT}/MANIFEST.json"))
 
-    assert manifest["cases"] == 15
-    assert manifest["notebooks"] == 12
+    assert manifest["cases"] == 16
+    assert manifest["notebooks"] == 13
     assert manifest["engines"] == ["Pandas", "Polars", "R base", "SQL", "Excel"]
     assert manifest["third_party_data_included"] is False
     manifest_paths = [entry["path"] for entry in manifest["files"]]

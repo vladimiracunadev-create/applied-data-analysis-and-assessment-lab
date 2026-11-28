@@ -19,6 +19,7 @@ SHA-256 en un archivo `*.procedencia.json`.
 | `informe_decision_carga` · P16 | resultados reproducibles de P06 y P08 | CSV versionados | incluidos en el repositorio | heredan la trazabilidad de los casos fuente | `resultados/resumen.csv` |
 | `gobernanza_datos_dtpm` · P17 | procedencia documentada por P01–P16 | catálogo pedagógico CSV | incluido y versionado en el repositorio | no es catálogo oficial; conserva estados no declarados | `resultados/riesgo_por_activo.csv` |
 | `etl_gtfs_automatizado` · P18 | inventario reproducible de P14/P15 | CSV; Parquet opcional | incluido en el repositorio | hereda licencia GTFS no verificada; Parquet declara estado real | `resultados/volumen_por_publicacion.csv` |
+| `red_correspondencias_dtpm` · P19 | correspondencias P03/P10 | CSV versionado | incluido en el repositorio | hereda fuentes públicas GTFS/bip! y sus condiciones | `resultados/servicios_centrales.csv` |
 
 ## Estructura y diccionario
 

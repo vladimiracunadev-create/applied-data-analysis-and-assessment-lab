@@ -6,8 +6,8 @@ no se puede contestar**.
 
 > **Dos documentos por caso.** El `README.md` de un caso cuenta **qué se encontró**;
 > su `CUADERNO.md` muestra **cómo se hace**, paso a paso, con Pandas, la salida real,
-> Excel, Polars, R y gráficos estadísticos. Los dieciocho problemas están cubiertos por
-> [doce cuadernos ejecutables](cuadernos.md); los problemas que comparten datos y
+> Excel, Polars, R y gráficos estadísticos. Los diecinueve problemas están cubiertos por
+> [trece cuadernos ejecutables](cuadernos.md); los problemas que comparten datos y
 > método se integran en un mismo cuaderno.
 
 Cada problema indica su estado: **resuelto** (hay código y resultado en el
@@ -478,6 +478,21 @@ rompe el contrato, conservar el último resultado válido y registrar qué se ej
 
 **Estado:** **resuelto** — [`cases/etl_gtfs_automatizado`](../cases/etl_gtfs_automatizado/README.md),
 con [cuaderno P18](../cases/etl_gtfs_automatizado/CUADERNO.md).
+
+### P19. ¿Qué servicios conectan más estaciones de Metro?
+
+**La pregunta.** ¿Qué estructura forman las correspondencias programadas y qué cambia
+al retirar los servicios con mayor grado?
+
+**Datos.** Aristas derivadas del resultado reproducible de P03/P10.
+
+**Tecnología.** Grafo bipartito estación–servicio, grados, ranking y cinco escenarios.
+
+**Qué enseña.** El grado mide alcance estructural bajo el criterio de proximidad; no
+mide demanda, frecuencia, capacidad, puntualidad ni pasajeros afectados.
+
+**Estado:** **resuelto** — [`cases/red_correspondencias_dtpm`](../cases/red_correspondencias_dtpm/README.md),
+con [cuaderno P19](../cases/red_correspondencias_dtpm/CUADERNO.md).
 
 ---
 

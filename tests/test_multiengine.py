@@ -39,6 +39,7 @@ NOTEBOOK_CASES = (
     "informe_decision_carga",
     "gobernanza_datos_dtpm",
     "etl_gtfs_automatizado",
+    "red_correspondencias_dtpm",
 )
 
 KEYS = {

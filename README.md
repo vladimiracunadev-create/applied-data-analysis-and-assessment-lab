@@ -17,7 +17,7 @@ resultados numéricos, no sólo que los scripts terminen.
 ![Versión 0.11.0](https://img.shields.io/badge/versi%C3%B3n-0.11.0-11253B)
 ![Python 3.11–3.14](https://img.shields.io/badge/Python-3.11%E2%80%933.14-3776AB)
 ![Licencia MIT](https://img.shields.io/badge/licencia-MIT-147D70)
-![761 pruebas](https://img.shields.io/badge/pruebas-761-147D70)
+![766 pruebas](https://img.shields.io/badge/pruebas-766-147D70)
 [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/bip_lugares_carga/cuaderno/colab.ipynb)
 
 ---
@@ -33,16 +33,16 @@ reglas de exclusión escondidas en una nota al pie.
 
 **Este repositorio es el método para hacer ese trabajo bien, probado contra datos
 públicos reales.** No es un curso ni una colección de ejercicios: es un recorrido de
-nueve etapas, un núcleo de código reutilizable y quince casos resueltos que documentan
+nueve etapas, un núcleo de código reutilizable y dieciséis casos resueltos que documentan
 qué tecnología se usó, por qué, y qué trampa tenía cada dato.
 
 ### Si vienes a aprender a hacerlo: los cuadernos de trabajo
 
-> **[Ruta de los doce cuadernos y dieciocho problemas](docs/cuadernos.md)** — en
+> **[Ruta de los trece cuadernos y diecinueve problemas](docs/cuadernos.md)** — en
 > orden P01/P02/P04 → P03/P10 → P05/P09 → P06 → P07 → P08 → P11 →
-> P12/P13 → P14/P15 → P16 → P17 → P18.
+> P12/P13 → P14/P15 → P16 → P17 → P18 → P19.
 >
-> **[Descargar todos los casos](dist/todos-los-casos.zip)** — quince casos, doce
+> **[Descargar todos los casos](dist/todos-los-casos.zip)** — dieciséis casos, trece
 > cuadernos, resultados, datos sintéticos e implementaciones en Pandas, Polars, R,
 > SQL y Excel, con manifiesto SHA-256.
 
@@ -54,7 +54,7 @@ Un caso tiene dos documentos y sirven para cosas distintas:
 | `README.md` | qué se encontró, con las cifras y lo que no se puede concluir | cuando quieres **auditar** el resultado |
 
 El cuaderno se lee de arriba abajo y no hay que abrir nada más. La navegación sigue una
-ruta lineal entre los doce casos, sin saltos como P01 → P08. Y no se escribe a mano:
+ruta lineal entre los trece casos, sin saltos como P01 → P08. Y no se escribe a mano:
 se **genera ejecutando el caso**, de modo que el código que aparece es el que corrió y la
 salida es la que devolvió. Si el código deja de funcionar, el cuaderno no se genera.
 
@@ -72,6 +72,7 @@ salida es la que devolvió. Si el código deja de funcionar, el cuaderno no se g
 | [P16 · Informe para decisión](cases/informe_decision_carga/CUADERNO.md) | 8 | lista corta, regla de prioridad y clasificación de afirmaciones |
 | [P17 · Gobernanza de datos DTPM](cases/gobernanza_datos_dtpm/CUADERNO.md) | 8 | identidad del catálogo, banderas de brecha, pesos y prioridad auditable |
 | [P18 · ETL histórico GTFS](cases/etl_gtfs_automatizado/CUADERNO.md) | 8 | contrato de esquema, controles, particiones y estado real de formatos |
+| [P19 · Red de correspondencias](cases/red_correspondencias_dtpm/CUADERNO.md) | 8 | aristas, grados, escenarios y límites de interpretación |
 
 El Excel de cada paso va **dibujado como hoja**: la barra de fórmulas con su celda, las
 letras de columna, la columna donde va la fórmula resaltada, y el resultado en su sitio.
@@ -92,12 +93,12 @@ El libro de práctica **no trae los datos**: los archivos del portal son NoComer
 repositorio no los redistribuye. Se pega el consolidado que uno obtuvo, que además es
 parte del ejercicio.
 
-Los **dieciocho problemas están cubiertos** por doce cuadernos distintos: seis problemas
+Los **diecinueve problemas están cubiertos** por trece cuadernos distintos: seis problemas
 se integran en el cuaderno de otro porque comparten datos y método. El índice enlaza cada
 problema con su resolución y el [mapa de problemas](docs/problemas-de-la-instancia.md)
 declara qué se puede y qué no se puede concluir.
 
-Cada uno de esos doce cuadernos contiene al menos una visualización estadística visible,
+Cada uno de esos trece cuadernos contiene al menos una visualización estadística visible,
 con título, unidad, período y fuente. Pandas, Polars y R exportan el mismo contrato; las
 pruebas comparan sus valores con tolerancia 10⁻⁹ y exigen gráficos no vacíos. La
 [guía portable](docs/ejecucion-portable.md), la
@@ -118,7 +119,7 @@ python scripts/build_all_cases.py          # regenera la descarga general
 
 | Si necesitas… | Empieza por |
 | --- | --- |
-| **Prepararte para una evaluación técnica** de datos con Excel, Pandas, Polars o R | [Índice de los 18 problemas resueltos](docs/cuadernos.md) |
+| **Prepararte para una evaluación técnica** de datos con Excel, Pandas, Polars o R | [Índice de los 19 problemas resueltos](docs/cuadernos.md) |
 | **Resolver un problema de datos** de tu trabajo | [El recorrido de nueve etapas](docs/instancias.md) |
 | **Aprender** con material que explica el por qué | [Programa de aprendizaje](docs/programa.md) — 8 clases con 17 secciones cada una |
 | **Reproducir un indicador oficial** | [Indicadores oficiales del transporte](docs/indicadores-oficiales-transporte.md) |
@@ -128,7 +129,7 @@ python scripts/build_all_cases.py          # regenera la descarga general
 
 ## Lo que ya está resuelto, y qué encontró cada caso
 
-Quince casos: doce con **datos públicos reales, metadatos documentales o resultados reproducibles** y tres con datos sintéticos de semilla
+Dieciséis casos: trece con **datos públicos reales, metadatos documentales o resultados reproducibles** y tres con datos sintéticos de semilla
 fija. Lo que importa no es el tema de cada uno, es la clase de problema que enseña a
 detectar.
 
@@ -146,11 +147,12 @@ detectar.
 | [`informe_decision_carga`](cases/informe_decision_carga/README.md) | [P16](cases/informe_decision_carga/CUADERNO.md) | resultados reproducibles | Prioriza zonas para factibilidad sin presentar baja cobertura como demanda demostrada |
 | [`gobernanza_datos_dtpm`](cases/gobernanza_datos_dtpm/README.md) | [P17](cases/gobernanza_datos_dtpm/CUADERNO.md) | catálogo pedagógico trazable | Mide cinco brechas sin inventar responsables, licencias, periodicidad o retención |
 | [`etl_gtfs_automatizado`](cases/etl_gtfs_automatizado/README.md) | [P18](cases/etl_gtfs_automatizado/CUADERNO.md) | inventario reproducible P14/P15 | Valida tres cortes, crea particiones y no declara Parquet ejecutado sin motor |
+| [`red_correspondencias_dtpm`](cases/red_correspondencias_dtpm/README.md) | [P19](cases/red_correspondencias_dtpm/CUADERNO.md) | correspondencias reproducibles P03/P10 | Modela 2.024 aristas sin convertir grado estructural en demanda |
 | [`transport`](cases/transport/README.md) | — | sintéticos | Pandas, Polars, R y SQL coinciden; la comparación detectó que `julianday` invierte puntualidad en empates |
 | [`retail`](cases/retail/README.md) | — | sintéticos | El signo de devolución debe ser una columna explícita |
 | [`education`](cases/education/README.md) | — | sintéticos | La tasa ponderada y el promedio de porcentajes no son lo mismo |
 
-Los quince hallazgos salieron de ejecutar el código, no de la intuición. Cada uno está
+Los dieciséis hallazgos salieron de ejecutar el código, no de la intuición. Cada uno está
 documentado con su magnitud, su causa y su corrección en la
 [base de conocimiento](docs/conocimiento.md), que tiene 43 registros.
 
@@ -179,7 +181,7 @@ uv run --extra polars python solutions/polars_reference.py transport 1
 Rscript solutions/r_reference.R transport 1 reference_outputs/r/transport
 ```
 
-Tres comandos y 761 pruebas en verde. Después, el caso que mejor muestra de qué va
+Tres comandos y 766 pruebas en verde. Después, el caso que mejor muestra de qué va
 esto:
 
 ```powershell
@@ -308,7 +310,7 @@ fórmula que se puede abrir, sí.
 
 ## Qué comprueban las pruebas, y qué no
 
-761 pruebas en 39 archivos. Además de los cálculos:
+766 pruebas en 40 archivos. Además de los cálculos:
 
 - **Validación cruzada entre tecnologías**: Pandas contra Polars, R y SQL, indicador por
   indicador, con tolerancia 10⁻⁹; Excel conserva su control al abrir el libro.

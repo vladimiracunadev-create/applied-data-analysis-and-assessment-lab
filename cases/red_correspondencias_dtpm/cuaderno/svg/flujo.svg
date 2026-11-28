@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="914" height="169" viewBox="0 0 914 169" role="img">
+<rect width="914" height="169" fill="#FFFFFF"/>
+<text x="16.0" y="30.0" fill="#11253B" font-size="13.5" font-weight="700" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">De correspondencias a red bipartita</text>
+<rect x="16.0" y="46.0" width="186.0" height="107.0" rx="8" fill="#F4F7FA" stroke="#11253B" stroke-width="1.6"/>
+<text x="28.0" y="70.0" fill="#11253B" font-size="12.5" font-weight="700" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">P03/P10</text>
+<text x="28.0" y="92.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">126 estaciones</text>
+<text x="28.0" y="109.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">servicios cercanos</text>
+<text x="28.0" y="126.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">radio 200 m</text>
+<line x1="210.0" y1="99.5" x2="234.0" y2="99.5" stroke="#5C6B7A" stroke-width="1.6"/><path d="M 240.0 99.5 l -7 -4.5 l 0 9 z" fill="#5C6B7A"/>
+<rect x="248.0" y="46.0" width="186.0" height="107.0" rx="8" fill="#F4F7FA" stroke="#1A6FB5" stroke-width="1.6"/>
+<text x="260.0" y="70.0" fill="#1A6FB5" font-size="12.5" font-weight="700" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">Aristas</text>
+<text x="260.0" y="92.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">estación</text>
+<text x="260.0" y="109.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">servicio</text>
+<text x="260.0" y="126.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">sin duplicados</text>
+<line x1="442.0" y1="99.5" x2="466.0" y2="99.5" stroke="#5C6B7A" stroke-width="1.6"/><path d="M 472.0 99.5 l -7 -4.5 l 0 9 z" fill="#5C6B7A"/>
+<rect x="480.0" y="46.0" width="186.0" height="107.0" rx="8" fill="#F4F7FA" stroke="#B08A3E" stroke-width="1.6"/>
+<text x="492.0" y="70.0" fill="#B08A3E" font-size="12.5" font-weight="700" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">Grados</text>
+<text x="492.0" y="92.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">por estación</text>
+<text x="492.0" y="109.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">por servicio</text>
+<text x="492.0" y="126.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">ranking</text>
+<line x1="674.0" y1="99.5" x2="698.0" y2="99.5" stroke="#5C6B7A" stroke-width="1.6"/><path d="M 704.0 99.5 l -7 -4.5 l 0 9 z" fill="#5C6B7A"/>
+<rect x="712.0" y="46.0" width="186.0" height="107.0" rx="8" fill="#F4F7FA" stroke="#55D6BE" stroke-width="1.6"/>
+<text x="724.0" y="70.0" fill="#55D6BE" font-size="12.5" font-weight="700" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">Escenarios</text>
+<text x="724.0" y="92.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">retiro</text>
+<text x="724.0" y="109.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">conexiones</text>
+<text x="724.0" y="126.0" fill="#17283A" font-size="11.5" font-weight="normal" text-anchor="start" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">límites</text>
+</svg>

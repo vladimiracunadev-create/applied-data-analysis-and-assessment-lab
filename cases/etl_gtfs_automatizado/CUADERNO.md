@@ -1,6 +1,6 @@
 # P18 · ETL histórico y control automatizado de publicaciones GTFS
 
-◀ [P17 · Gobernanza de datos DTPM](../gobernanza_datos_dtpm/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md)
+◀ [P17 · Gobernanza de datos DTPM](../gobernanza_datos_dtpm/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P19 · Red de correspondencias](../red_correspondencias_dtpm/CUADERNO.md) ▶
 
 [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vladimiracunadev-create/applied-data-analysis-and-assessment-lab/blob/main/cases/etl_gtfs_automatizado/cuaderno/colab.ipynb) — corre los pasos sin instalar nada: el cuaderno clona el repositorio y descarga los datos del portal.
 
@@ -591,4 +591,4 @@ Lo que este caso toca y se trata a fondo en otro sitio:
 - [P14/P15 · Origen del inventario](../evolucion_gtfs/CUADERNO.md)
 - [P17 · Gobernanza](../gobernanza_datos_dtpm/CUADERNO.md)
 
-◀ [P17 · Gobernanza de datos DTPM](../gobernanza_datos_dtpm/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md)
+◀ [P17 · Gobernanza de datos DTPM](../gobernanza_datos_dtpm/CUADERNO.md) · [Todos los cuadernos](../../docs/cuadernos.md) · [P19 · Red de correspondencias](../red_correspondencias_dtpm/CUADERNO.md) ▶
